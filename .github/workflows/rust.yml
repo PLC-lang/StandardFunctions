@@ -10,6 +10,7 @@ on:
   workflow_dispatch:
   
 env:
+  IMAGE_REPO: plc-lang
   IMAGE_NAME: rust-llvm
   IMAGE_VERSION: 12-1.56.1
 
@@ -17,7 +18,7 @@ jobs:
   check: 
     name: Check
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/$IMAGE_NAME:$IMAGE_VERSION-linux 
+    container: ghcr.io/${{env.IMAGE_REPO}}/${{env.IMAGE_NAME}}:${{env.IMAGE_VERSION}}-linux 
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,7 +31,7 @@ jobs:
   test:
     name: Test Linux
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/$IMAGE_NAME:$IMAGE_VERSION-linux 
+    container: ghcr.io/${{env.IMAGE_REPO}}/${{env.IMAGE_NAME}}:${{env.IMAGE_VERSION}}-linux 
     needs: check
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +44,7 @@ jobs:
   styple:
     name: Style check
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/$IMAGE_NAME:$IMAGE_VERSION-linux 
+    container: ghcr.io/${{env.IMAGE_REPO}}/${{env.IMAGE_NAME}}:${{env.IMAGE_VERSION}}-linux 
     needs: check
     steps:
       - uses: actions/checkout@v2
