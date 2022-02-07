@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  check: 
+    name: Check
+    runs-on: ubuntu-latest
+    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Run Check
+        run: |
+          cargo check
+
+  test:
+    name: Test Linux
+    runs-on: ubuntu-latest
+    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
+    needs: check
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cargo test
+        shell: bash
+        run: |
+          cargo test
+
+  styple:
+    name: Style check
+    runs-on: ubuntu-latest
+    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
+    needs: check
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cargo test
+        shell: bash
+        run: |
+          cargo fmt -- --check
+          cargo clippy -- -Dwarnings
