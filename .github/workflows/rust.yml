@@ -17,7 +17,7 @@ jobs:
   check: 
     name: Check
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$IMAGE_VERSION-linux 
+    container: ghcr.io/plc-lang/$IMAGE_NAME:$IMAGE_VERSION-linux 
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,7 +30,7 @@ jobs:
   test:
     name: Test Linux
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$IMAGE_VERSION-linux 
+    container: ghcr.io/plc-lang/$IMAGE_NAME:$IMAGE_VERSION-linux 
     needs: check
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
   styple:
     name: Style check
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$IMAGE_VERSION-linux 
+    container: ghcr.io/plc-lang/$IMAGE_NAME:$IMAGE_VERSION-linux 
     needs: check
     steps:
       - uses: actions/checkout@v2
