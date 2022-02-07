@@ -13,7 +13,7 @@ jobs:
   check: 
     name: Check
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/rust-llvm/latest-linux 
+    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,7 +26,7 @@ jobs:
   test:
     name: Test Linux
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/rust-llvm/latest-linux 
+    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
     needs: check
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
   styple:
     name: Style check
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/rust-llvm/latest-linux 
+    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
     needs: check
     steps:
       - uses: actions/checkout@v2
