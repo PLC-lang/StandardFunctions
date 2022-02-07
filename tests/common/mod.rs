@@ -5,7 +5,7 @@ use rusty::{FilePath, SourceCode, SourceContainer};
 macro_rules! add_std {
     ($src:expr, $($name:expr),* ) => {
         {
-            let mut res = Vec::new();
+            let mut res = vec![$src.into()];
             res.push($src.into());
             $(
                res.push(crate::common::get_st_file($name));
