@@ -1,6 +1,5 @@
 // Definitions of the core standard function modules for IEC61131-3
 
-
 /// .
 /// Rounds a REAL (f32) value
 ///
@@ -16,7 +15,7 @@
 /// ```
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn ROUND__REAL(input : f32) -> f32 {
+pub fn ROUND__REAL(input: f32) -> f32 {
     input.round()
 }
 
@@ -35,6 +34,6 @@ pub fn ROUND__REAL(input : f32) -> f32 {
 /// ```
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn ROUND__LREAL(input : f64) -> f64 {
+pub fn ROUND__LREAL(input: f64) -> f64 {
     input.round()
 }

@@ -1,5 +1,5 @@
 use inkwell::context::Context;
-use rusty::runner::{compile_and_run, MainType, run};
+use rusty::runner::{compile_and_run, run, MainType};
 
 // Import common functionality into the integration tests
 mod common;
@@ -90,7 +90,7 @@ fn test_round_real() {
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::default();
     let engine = compile_with_native(&context, sources);
-    let res : f32 = run(&engine, "main", &mut maintype);
+    let res: f32 = run(&engine, "main", &mut maintype);
     assert_eq!(res, 3.0f32);
 }
 
@@ -105,6 +105,6 @@ fn test_round_lreal() {
     let mut maintype = MainType::default();
     let sources = add_std!(src, "num.st");
     let engine = compile_with_native(&context, sources);
-    let res : f64 = run(&engine, "main", &mut maintype);
+    let res: f64 = run(&engine, "main", &mut maintype);
     assert_eq!(res, 3.0f64);
 }
