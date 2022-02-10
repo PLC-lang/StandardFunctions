@@ -1,9 +1,12 @@
-use rusty::runner::{compile_and_run, MainType};
+use inkwell::context::Context;
+use rusty::runner::{compile_and_run, MainType, run};
 
 // Import common functionality into the integration tests
 mod common;
 
 use common::add_std;
+
+use crate::common::compile_with_native;
 
 #[test]
 fn absolute_on_sint_test() {
@@ -74,4 +77,34 @@ fn absolute_on_lreal_test() {
     let mut maintype = MainType::default();
     let res: f64 = compile_and_run(sources, &mut maintype);
     assert_eq!(res, 2.5f64);
+}
+
+#[test]
+fn test_round_real() {
+    let src = r"
+        FUNCTION main : REAL
+            main := ROUND(REAL#2.5);
+        END_FUNCTION
+        ";
+    let context = Context::create();
+    let sources = add_std!(src, "num.st");
+    let mut maintype = MainType::default();
+    let engine = compile_with_native(&context, sources);
+    let res : f32 = run(&engine, "main", &mut maintype);
+    assert_eq!(res, 3.0f32);
+}
+
+#[test]
+fn test_round_lreal() {
+    let src = r"
+        FUNCTION main : LREAL
+            main := ROUND(LREAL#2.5);
+        END_FUNCTION
+        ";
+    let context = Context::create();
+    let mut maintype = MainType::default();
+    let sources = add_std!(src, "num.st");
+    let engine = compile_with_native(&context, sources);
+    let res : f64 = run(&engine, "main", &mut maintype);
+    assert_eq!(res, 3.0f64);
 }

@@ -1,6 +1,14 @@
 use std::path::PathBuf;
 
-use rusty::{FilePath, SourceCode, SourceContainer};
+use inkwell::{
+    context::Context,
+    execution_engine::ExecutionEngine,
+    targets::{InitializationConfig, Target},
+};
+use rusty::{
+    compile_module, diagnostics::Diagnostician, runner::Compilable, FilePath, SourceCode,
+    SourceContainer,
+};
 
 macro_rules! add_std {
     ($src:expr, $($name:expr),* ) => {
@@ -26,4 +34,36 @@ pub fn get_st_file(name: &str) -> SourceCode {
 
     let path: FilePath = data_path.display().to_string().into();
     path.load_source(None).expect("Could not load source")
+}
+
+/// Compiles code with all native functions included
+/// Should be updated for each native function we add
+pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> ExecutionEngine {
+    let functions = vec![
+        ("ROUND__REAL", iec61131_std::ROUND__REAL as usize),
+        ("ROUND__LREAL", iec61131_std::ROUND__LREAL as usize),
+    ];
+    Target::initialize_native(&InitializationConfig::default()).unwrap();
+    let code_gen = compile_module(
+        &context,
+        source.containers(),
+        vec![],
+        None,
+        Diagnostician::default(),
+    )
+    .unwrap();
+    let exec_engine = code_gen
+        .module
+        .create_jit_execution_engine(inkwell::OptimizationLevel::None)
+        .unwrap();
+
+    for (fn_name, fn_addr) in functions {
+        if let Some(fn_value) = code_gen.module.get_function(fn_name) {
+            exec_engine.add_global_mapping(&fn_value, fn_addr);
+        } else {
+            println!("No definition for {} in test", fn_name)
+        }
+    }
+
+    exec_engine
 }
