@@ -78,6 +78,7 @@ struct I8Type {
     max_overflow: i8,
     min_overflow: i8,
 }
+
 #[derive(Default)]
 struct U8Type {
     zero: u8,
@@ -89,12 +90,34 @@ struct U8Type {
     min_overflow: u8,
 }
 
+#[derive(Default)]
+struct F32Type {
+    zero: f32,
+    negative: f32,
+    positive: f32,
+    max_minus_one: f32,
+    min_plus_one: f32,
+    max_overflow: f32,
+    min_overflow: f32,
+}
+
+#[derive(Default)]
+struct F64Type {
+    zero: f64,
+    negative: f64,
+    positive: f64,
+    max_minus_one: f64,
+    min_plus_one: f64,
+    max_overflow: f64,
+    min_overflow: f64,
+}
+
 // #[test]
-// fn LREAL_to_REAL_conversion() {
+// fn lreal_to_real_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : REAL; negative : REAL; positive : REAL;
+// 		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -111,9 +134,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_REAL(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_REAL(MAX-1);
 // 		ret.min_plus_one := LREAL_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_REAL(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -130,11 +151,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_LINT_conversion() {
+// fn lreal_to_lint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : LINT; negative : LINT; positive : LINT;
+// 		max_minus_one : LINT; min_plus_one : LINT; max_overflow : LINT; min_overflow : LINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -151,9 +172,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_LINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_LINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_LINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_LINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_LINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -170,7 +189,7 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_DINT_conversion() {
+// fn lreal_to_dint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
 // 		zero : DINT; negative : DINT; positive : DINT;
@@ -191,9 +210,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_DINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_DINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_DINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_DINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_DINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -210,11 +227,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_INT_conversion() {
+// fn lreal_to_int_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : INT; negative : INT; positive : INT;
+// 		max_minus_one : INT; min_plus_one : INT; max_overflow : INT; min_overflow : INT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -231,9 +248,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_INT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_INT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_INT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_INT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_INT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -250,11 +265,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_SINT_conversion() {
+// fn lreal_to_sint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : SINT; negative : SINT; positive : SINT;
+// 		max_minus_one : SINT; min_plus_one : SINT; max_overflow : SINT; min_overflow : SINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -271,9 +286,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_SINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_SINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_SINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_SINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_SINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -290,11 +303,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_ULINT_conversion() {
+// fn lreal_to_ulint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : ULINT; negative : ULINT; positive : ULINT;
+// 		max_minus_one : ULINT; min_plus_one : ULINT; max_overflow : ULINT; min_overflow : ULINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -311,9 +324,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_ULINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_ULINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_ULINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_ULINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_ULINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -330,11 +341,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_UDINT_conversion() {
+// fn lreal_to_udint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : UDINT; negative : UDINT; positive : UDINT;
+// 		max_minus_one : UDINT; min_plus_one : UDINT; max_overflow : UDINT; min_overflow : UDINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -351,9 +362,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_UDINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_UDINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_UDINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_UDINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_UDINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -370,11 +379,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_UINT_conversion() {
+// fn lreal_to_uint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : UINT; negative : UINT; positive : UINT;
+// 		max_minus_one : UINT; min_plus_one : UINT; max_overflow : UINT; min_overflow : UINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -391,9 +400,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_UINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_UINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_UINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_UINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_UINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -410,11 +417,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn LREAL_to_USINT_conversion() {
+// fn lreal_to_usint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : USINT; negative : USINT; positive : USINT;
+// 		max_minus_one : USINT; min_plus_one : USINT; max_overflow : USINT; min_overflow : USINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -431,9 +438,7 @@ struct U8Type {
 // 		ret.positive := LREAL_to_USINT(LREAL#22);
 // 		ret.max_minus_one := LREAL_to_USINT(MAX-1);
 // 		ret.min_plus_one := LREAL_to_USINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := LREAL_to_USINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := LREAL_to_USINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -450,11 +455,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_LREAL_conversion() {
+// fn real_to_lreal_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : LREAL; negative : LREAL; positive : LREAL;
+// 		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -471,9 +476,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_LREAL(REAL#22);
 // 		ret.max_minus_one := REAL_to_LREAL(MAX-1);
 // 		ret.min_plus_one := REAL_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_LREAL(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -490,11 +493,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_LINT_conversion() {
+// fn real_to_lint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : LINT; negative : LINT; positive : LINT;
+// 		max_minus_one : LINT; min_plus_one : LINT; max_overflow : LINT; min_overflow : LINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -511,9 +514,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_LINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_LINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_LINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_LINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_LINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -530,7 +531,7 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_DINT_conversion() {
+// fn real_to_dint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
 // 		zero : DINT; negative : DINT; positive : DINT;
@@ -551,9 +552,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_DINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_DINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_DINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_DINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_DINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -570,11 +569,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_INT_conversion() {
+// fn real_to_int_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : INT; negative : INT; positive : INT;
+// 		max_minus_one : INT; min_plus_one : INT; max_overflow : INT; min_overflow : INT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -591,9 +590,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_INT(REAL#22);
 // 		ret.max_minus_one := REAL_to_INT(MAX-1);
 // 		ret.min_plus_one := REAL_to_INT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_INT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_INT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -610,11 +607,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_SINT_conversion() {
+// fn real_to_sint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : SINT; negative : SINT; positive : SINT;
+// 		max_minus_one : SINT; min_plus_one : SINT; max_overflow : SINT; min_overflow : SINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -631,9 +628,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_SINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_SINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_SINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_SINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_SINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -650,11 +645,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_ULINT_conversion() {
+// fn real_to_ulint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : ULINT; negative : ULINT; positive : ULINT;
+// 		max_minus_one : ULINT; min_plus_one : ULINT; max_overflow : ULINT; min_overflow : ULINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -671,9 +666,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_ULINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_ULINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_ULINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_ULINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_ULINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -690,11 +683,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_UDINT_conversion() {
+// fn real_to_udint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : UDINT; negative : UDINT; positive : UDINT;
+// 		max_minus_one : UDINT; min_plus_one : UDINT; max_overflow : UDINT; min_overflow : UDINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -711,9 +704,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_UDINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_UDINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_UDINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_UDINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_UDINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -730,11 +721,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_UINT_conversion() {
+// fn real_to_uint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : UINT; negative : UINT; positive : UINT;
+// 		max_minus_one : UINT; min_plus_one : UINT; max_overflow : UINT; min_overflow : UINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -751,9 +742,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_UINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_UINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_UINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_UINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_UINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -770,11 +759,11 @@ struct U8Type {
 // }
 
 // #[test]
-// fn REAL_to_USINT_conversion() {
+// fn real_to_usint_conversion() {
 //     let src = r"
 // 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
+// 		zero : USINT; negative : USINT; positive : USINT;
+// 		max_minus_one : USINT; min_plus_one : USINT; max_overflow : USINT; min_overflow : USINT;
 // 	END_STRUCT END_TYPE
 
 // 	VAR_GLOBAL
@@ -791,9 +780,7 @@ struct U8Type {
 // 		ret.positive := REAL_to_USINT(REAL#22);
 // 		ret.max_minus_one := REAL_to_USINT(MAX-1);
 // 		ret.min_plus_one := REAL_to_USINT(MIN+1);
-// 		// overflow DINT max = MAX by 1
 // 		ret.max_overflow := REAL_to_USINT(MAX+1);
-// 		// overflow DINT min = MIN by 1
 // 		ret.min_overflow := REAL_to_USINT(MIN-1);
 //     END_PROGRAM
 //         ";
@@ -809,85 +796,81 @@ struct U8Type {
 //     assert_eq!(maintype.min_overflow, 0TYPE);
 // }
 
-// #[test]
-// fn LINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn lint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : LINT := 1;
-// 		MIN : LINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : LINT := 9223372036854775807;
+		MIN : LINT := -9223372036854775808;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := LINT_to_LREAL(LINT#0);
-// 		ret.negative := LINT_to_LREAL(LINT#-11);
-// 		ret.positive := LINT_to_LREAL(LINT#22);
-// 		ret.max_minus_one := LINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := LINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := LINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := LINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := LINT_to_LREAL(LINT#0);
+		ret.negative := LINT_to_LREAL(LINT#-11);
+		ret.positive := LINT_to_LREAL(LINT#22);
+		ret.max_minus_one := LINT_to_LREAL(MAX-1);
+		ret.min_plus_one := LINT_to_LREAL(MIN+1);
+		ret.max_overflow := LINT_to_LREAL(MAX+1);
+		ret.min_overflow := LINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, -11.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 9223372036854775806.0f64);
+    assert_eq!(maintype.min_plus_one, -9223372036854775807.0f64);
+    assert_eq!(maintype.max_overflow, -9223372036854775808.0f64);
+    assert_eq!(maintype.min_overflow, 9223372036854775807.0f64);
+}
 
-// #[test]
-// fn LINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn lint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : LINT := 1;
-// 		MIN : LINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : LINT := 9223372036854775807;
+		MIN : LINT := -9223372036854775808;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := LINT_to_REAL(LINT#0);
-// 		ret.negative := LINT_to_REAL(LINT#-11);
-// 		ret.positive := LINT_to_REAL(LINT#22);
-// 		ret.max_minus_one := LINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := LINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := LINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := LINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := LINT_to_REAL(LINT#0);
+		ret.negative := LINT_to_REAL(LINT#-11);
+		ret.positive := LINT_to_REAL(LINT#22);
+		ret.max_minus_one := LINT_to_REAL(MAX-1);
+		ret.min_plus_one := LINT_to_REAL(MIN+1);
+		ret.max_overflow := LINT_to_REAL(MAX+1);
+		ret.min_overflow := LINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, -11.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 9223372036854775806.0f32);
+    assert_eq!(maintype.min_plus_one, -9223372036854775807.0f32);
+    assert_eq!(maintype.max_overflow, -9223372036854775808.0f32);
+    assert_eq!(maintype.min_overflow, 9223372036854775807.0f32);
+}
 
 #[test]
 fn lint_to_dint_conversion() {
@@ -1155,85 +1138,81 @@ fn lint_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 255u8);
 }
 
-// #[test]
-// fn DINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn dint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : DINT := 1;
-// 		MIN : DINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : DINT := 2147483647;
+		MIN : DINT := -2147483648;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := DINT_to_LREAL(DINT#0);
-// 		ret.negative := DINT_to_LREAL(DINT#-11);
-// 		ret.positive := DINT_to_LREAL(DINT#22);
-// 		ret.max_minus_one := DINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := DINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := DINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := DINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := DINT_to_LREAL(DINT#0);
+		ret.negative := DINT_to_LREAL(DINT#-11);
+		ret.positive := DINT_to_LREAL(DINT#22);
+		ret.max_minus_one := DINT_to_LREAL(MAX-1);
+		ret.min_plus_one := DINT_to_LREAL(MIN+1);
+		ret.max_overflow := DINT_to_LREAL(MAX+1);
+		ret.min_overflow := DINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, -11.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 2147483646.0f64);
+    assert_eq!(maintype.min_plus_one, -2147483647.0f64);
+    assert_eq!(maintype.max_overflow, -2147483648.0f64);
+    assert_eq!(maintype.min_overflow, 2147483647.0f64);
+}
 
-// #[test]
-// fn DINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn dint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : DINT := 1;
-// 		MIN : DINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : DINT := 2147483647;
+		MIN : DINT := -2147483648;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := DINT_to_REAL(DINT#0);
-// 		ret.negative := DINT_to_REAL(DINT#-11);
-// 		ret.positive := DINT_to_REAL(DINT#22);
-// 		ret.max_minus_one := DINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := DINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := DINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := DINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := DINT_to_REAL(DINT#0);
+		ret.negative := DINT_to_REAL(DINT#-11);
+		ret.positive := DINT_to_REAL(DINT#22);
+		ret.max_minus_one := DINT_to_REAL(MAX-1);
+		ret.min_plus_one := DINT_to_REAL(MIN+1);
+		ret.max_overflow := DINT_to_REAL(MAX+1);
+		ret.min_overflow := DINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, -11.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 2147483646.0f32);
+    assert_eq!(maintype.min_plus_one, -2147483647.0f32);
+    assert_eq!(maintype.max_overflow, -2147483648.0f32);
+    assert_eq!(maintype.min_overflow, 2147483647.0f32);
+}
 
 #[test]
 fn dint_to_lint_conversion() {
@@ -1501,85 +1480,81 @@ fn dint_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 255u8);
 }
 
-// #[test]
-// fn INT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn int_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : INT := 1;
-// 		MIN : INT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : INT := 32767;
+		MIN : INT := -32768;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := INT_to_LREAL(INT#0);
-// 		ret.negative := INT_to_LREAL(INT#-11);
-// 		ret.positive := INT_to_LREAL(INT#22);
-// 		ret.max_minus_one := INT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := INT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := INT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := INT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := INT_to_LREAL(INT#0);
+		ret.negative := INT_to_LREAL(INT#-11);
+		ret.positive := INT_to_LREAL(INT#22);
+		ret.max_minus_one := INT_to_LREAL(MAX-1);
+		ret.min_plus_one := INT_to_LREAL(MIN+1);
+		ret.max_overflow := INT_to_LREAL(MAX+1);
+		ret.min_overflow := INT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, -11.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 32766.0f64);
+    assert_eq!(maintype.min_plus_one, -32767.0f64);
+    assert_eq!(maintype.max_overflow, -32768.0f64);
+    assert_eq!(maintype.min_overflow, 32767.0f64);
+}
 
-// #[test]
-// fn INT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn int_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : INT := 1;
-// 		MIN : INT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : INT := 32767;
+		MIN : INT := -32768;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := INT_to_REAL(INT#0);
-// 		ret.negative := INT_to_REAL(INT#-11);
-// 		ret.positive := INT_to_REAL(INT#22);
-// 		ret.max_minus_one := INT_to_REAL(MAX-1);
-// 		ret.min_plus_one := INT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := INT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := INT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := INT_to_REAL(INT#0);
+		ret.negative := INT_to_REAL(INT#-11);
+		ret.positive := INT_to_REAL(INT#22);
+		ret.max_minus_one := INT_to_REAL(MAX-1);
+		ret.min_plus_one := INT_to_REAL(MIN+1);
+		ret.max_overflow := INT_to_REAL(MAX+1);
+		ret.min_overflow := INT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, -11.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 32766.0f32);
+    assert_eq!(maintype.min_plus_one, -32767.0f32);
+    assert_eq!(maintype.max_overflow, -32768.0f32);
+    assert_eq!(maintype.min_overflow, 32767.0f32);
+}
 
 #[test]
 fn int_to_lint_conversion() {
@@ -1847,85 +1822,81 @@ fn int_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 255u8);
 }
 
-// #[test]
-// fn SINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn sint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : SINT := 1;
-// 		MIN : SINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : SINT := 127;
+		MIN : SINT := -128;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := SINT_to_LREAL(SINT#0);
-// 		ret.negative := SINT_to_LREAL(SINT#-11);
-// 		ret.positive := SINT_to_LREAL(SINT#22);
-// 		ret.max_minus_one := SINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := SINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := SINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := SINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := SINT_to_LREAL(SINT#0);
+		ret.negative := SINT_to_LREAL(SINT#-11);
+		ret.positive := SINT_to_LREAL(SINT#22);
+		ret.max_minus_one := SINT_to_LREAL(MAX-1);
+		ret.min_plus_one := SINT_to_LREAL(MIN+1);
+		ret.max_overflow := SINT_to_LREAL(MAX+1);
+		ret.min_overflow := SINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, -11.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 126.0f64);
+    assert_eq!(maintype.min_plus_one, -127.0f64);
+    assert_eq!(maintype.max_overflow, -128.0f64);
+    assert_eq!(maintype.min_overflow, 127.0f64);
+}
 
-// #[test]
-// fn SINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn sint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : SINT := 1;
-// 		MIN : SINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : SINT := 127;
+		MIN : SINT := -128;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := SINT_to_REAL(SINT#0);
-// 		ret.negative := SINT_to_REAL(SINT#-11);
-// 		ret.positive := SINT_to_REAL(SINT#22);
-// 		ret.max_minus_one := SINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := SINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := SINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := SINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := SINT_to_REAL(SINT#0);
+		ret.negative := SINT_to_REAL(SINT#-11);
+		ret.positive := SINT_to_REAL(SINT#22);
+		ret.max_minus_one := SINT_to_REAL(MAX-1);
+		ret.min_plus_one := SINT_to_REAL(MIN+1);
+		ret.max_overflow := SINT_to_REAL(MAX+1);
+		ret.min_overflow := SINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, -11.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 126.0f32);
+    assert_eq!(maintype.min_plus_one, -127.0f32);
+    assert_eq!(maintype.max_overflow, -128.0f32);
+    assert_eq!(maintype.min_overflow, 127.0f32);
+}
 
 #[test]
 fn sint_to_lint_conversion() {
@@ -2193,85 +2164,81 @@ fn sint_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 127u8);
 }
 
-// #[test]
-// fn ULINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn ulint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : ULINT := 1;
-// 		MIN : ULINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : ULINT := 18446744073709551615;
+		MIN : ULINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := ULINT_to_LREAL(ULINT#0);
-// 		ret.negative := ULINT_to_LREAL(ULINT#-11);
-// 		ret.positive := ULINT_to_LREAL(ULINT#22);
-// 		ret.max_minus_one := ULINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := ULINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := ULINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := ULINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := ULINT_to_LREAL(ULINT#0);
+		ret.negative := ULINT_to_LREAL(ULINT#-2);
+		ret.positive := ULINT_to_LREAL(ULINT#22);
+		ret.max_minus_one := ULINT_to_LREAL(MAX-1);
+		ret.min_plus_one := ULINT_to_LREAL(MIN+1);
+		ret.max_overflow := ULINT_to_LREAL(MAX+1);
+		ret.min_overflow := ULINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, 18446744073709551614.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 18446744073709551614.0f64);
+    assert_eq!(maintype.min_plus_one, 1.0f64);
+    assert_eq!(maintype.max_overflow, 0.0f64);
+    assert_eq!(maintype.min_overflow, 18446744073709551615.0f64);
+}
 
-// #[test]
-// fn ULINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn ulint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : ULINT := 1;
-// 		MIN : ULINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : ULINT := 18446744073709551615;
+		MIN : ULINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := ULINT_to_REAL(ULINT#0);
-// 		ret.negative := ULINT_to_REAL(ULINT#-11);
-// 		ret.positive := ULINT_to_REAL(ULINT#22);
-// 		ret.max_minus_one := ULINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := ULINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := ULINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := ULINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := ULINT_to_REAL(ULINT#0);
+		ret.negative := ULINT_to_REAL(ULINT#-2);
+		ret.positive := ULINT_to_REAL(ULINT#22);
+		ret.max_minus_one := ULINT_to_REAL(MAX-1);
+		ret.min_plus_one := ULINT_to_REAL(MIN+1);
+		ret.max_overflow := ULINT_to_REAL(MAX+1);
+		ret.min_overflow := ULINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, 18446744073709551614.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 18446744073709551614.0f32);
+    assert_eq!(maintype.min_plus_one, 1.0f32);
+    assert_eq!(maintype.max_overflow, 0.0f32);
+    assert_eq!(maintype.min_overflow, 18446744073709551615.0f32);
+}
 
 #[test]
 fn ulint_to_lint_conversion() {
@@ -2523,85 +2490,81 @@ fn ulint_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 255u8);
 }
 
-// #[test]
-// fn UDINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn udint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : UDINT := 1;
-// 		MIN : UDINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : UDINT := 4294967295;
+		MIN : UDINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := UDINT_to_LREAL(UDINT#0);
-// 		ret.negative := UDINT_to_LREAL(UDINT#-11);
-// 		ret.positive := UDINT_to_LREAL(UDINT#22);
-// 		ret.max_minus_one := UDINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := UDINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := UDINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := UDINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := UDINT_to_LREAL(UDINT#0);
+		ret.negative := UDINT_to_LREAL(UDINT#-2);
+		ret.positive := UDINT_to_LREAL(UDINT#22);
+		ret.max_minus_one := UDINT_to_LREAL(MAX-1);
+		ret.min_plus_one := UDINT_to_LREAL(MIN+1);
+		ret.max_overflow := UDINT_to_LREAL(MAX+1);
+		ret.min_overflow := UDINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, 4294967294.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 4294967294.0f64);
+    assert_eq!(maintype.min_plus_one, 1.0f64);
+    assert_eq!(maintype.max_overflow, 0.0f64);
+    assert_eq!(maintype.min_overflow, 4294967295.0f64);
+}
 
-// #[test]
-// fn UDINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn udint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : UDINT := 1;
-// 		MIN : UDINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : UDINT := 4294967295;
+		MIN : UDINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := UDINT_to_REAL(UDINT#0);
-// 		ret.negative := UDINT_to_REAL(UDINT#-11);
-// 		ret.positive := UDINT_to_REAL(UDINT#22);
-// 		ret.max_minus_one := UDINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := UDINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := UDINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := UDINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := UDINT_to_REAL(UDINT#0);
+		ret.negative := UDINT_to_REAL(UDINT#-2);
+		ret.positive := UDINT_to_REAL(UDINT#22);
+		ret.max_minus_one := UDINT_to_REAL(MAX-1);
+		ret.min_plus_one := UDINT_to_REAL(MIN+1);
+		ret.max_overflow := UDINT_to_REAL(MAX+1);
+		ret.min_overflow := UDINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, 4294967294.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 4294967294.0f32);
+    assert_eq!(maintype.min_plus_one, 1.0f32);
+    assert_eq!(maintype.max_overflow, 0.0f32);
+    assert_eq!(maintype.min_overflow, 4294967295.0f32);
+}
 
 #[test]
 fn udint_to_lint_conversion() {
@@ -2857,85 +2820,81 @@ fn udint_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 255u8);
 }
 
-// #[test]
-// fn UINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn uint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : UINT := 1;
-// 		MIN : UINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : UINT := 65535;
+		MIN : UINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := UINT_to_LREAL(UINT#0);
-// 		ret.negative := UINT_to_LREAL(UINT#-11);
-// 		ret.positive := UINT_to_LREAL(UINT#22);
-// 		ret.max_minus_one := UINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := UINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := UINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := UINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := UINT_to_LREAL(UINT#0);
+		ret.negative := UINT_to_LREAL(UINT#-2);
+		ret.positive := UINT_to_LREAL(UINT#22);
+		ret.max_minus_one := UINT_to_LREAL(MAX-1);
+		ret.min_plus_one := UINT_to_LREAL(MIN+1);
+		ret.max_overflow := UINT_to_LREAL(MAX+1);
+		ret.min_overflow := UINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, 65534.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 65534.0f64);
+    assert_eq!(maintype.min_plus_one, 1.0f64);
+    assert_eq!(maintype.max_overflow, 0.0f64);
+    assert_eq!(maintype.min_overflow, 65535.0f64);
+}
 
-// #[test]
-// fn UINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn uint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : UINT := 1;
-// 		MIN : UINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : UINT := 65535;
+		MIN : UINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := UINT_to_REAL(UINT#0);
-// 		ret.negative := UINT_to_REAL(UINT#-11);
-// 		ret.positive := UINT_to_REAL(UINT#22);
-// 		ret.max_minus_one := UINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := UINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := UINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := UINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := UINT_to_REAL(UINT#0);
+		ret.negative := UINT_to_REAL(UINT#-2);
+		ret.positive := UINT_to_REAL(UINT#22);
+		ret.max_minus_one := UINT_to_REAL(MAX-1);
+		ret.min_plus_one := UINT_to_REAL(MIN+1);
+		ret.max_overflow := UINT_to_REAL(MAX+1);
+		ret.min_overflow := UINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, 65534.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 65534.0f32);
+    assert_eq!(maintype.min_plus_one, 1.0f32);
+    assert_eq!(maintype.max_overflow, 0.0f32);
+    assert_eq!(maintype.min_overflow, 65535.0f32);
+}
 
 #[test]
 fn uint_to_lint_conversion() {
@@ -3195,85 +3154,81 @@ fn uint_to_usint_conversion() {
     assert_eq!(maintype.min_overflow, 255u8);
 }
 
-// #[test]
-// fn USINT_to_LREAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn usint_to_lreal_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : LREAL; negative : LREAL; positive : LREAL;
+		max_minus_one : LREAL; min_plus_one : LREAL; max_overflow : LREAL; min_overflow : LREAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : USINT := 1;
-// 		MIN : USINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : USINT := 255;
+		MIN : USINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := USINT_to_LREAL(USINT#0);
-// 		ret.negative := USINT_to_LREAL(USINT#-11);
-// 		ret.positive := USINT_to_LREAL(USINT#22);
-// 		ret.max_minus_one := USINT_to_LREAL(MAX-1);
-// 		ret.min_plus_one := USINT_to_LREAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := USINT_to_LREAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := USINT_to_LREAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := USINT_to_LREAL(USINT#0);
+		ret.negative := USINT_to_LREAL(USINT#-2);
+		ret.positive := USINT_to_LREAL(USINT#22);
+		ret.max_minus_one := USINT_to_LREAL(MAX-1);
+		ret.min_plus_one := USINT_to_LREAL(MIN+1);
+		ret.max_overflow := USINT_to_LREAL(MAX+1);
+		ret.min_overflow := USINT_to_LREAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F64Type::default();
+    let _res: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.negative, 254.0f64);
+    assert_eq!(maintype.positive, 22.0f64);
+    assert_eq!(maintype.max_minus_one, 254.0f64);
+    assert_eq!(maintype.min_plus_one, 1.0f64);
+    assert_eq!(maintype.max_overflow, 0.0f64);
+    assert_eq!(maintype.min_overflow, 255.0f64);
+}
 
-// #[test]
-// fn USINT_to_REAL_conversion() {
-//     let src = r"
-// 	TYPE myType : STRUCT
-// 		zero : DINT; negative : DINT; positive : DINT;
-// 		max_minus_one : DINT; min_plus_one : DINT; max_overflow : DINT; min_overflow : DINT;
-// 	END_STRUCT END_TYPE
+#[test]
+fn usint_to_real_conversion() {
+    let src = r"
+	TYPE myType : STRUCT
+		zero : REAL; negative : REAL; positive : REAL;
+		max_minus_one : REAL; min_plus_one : REAL; max_overflow : REAL; min_overflow : REAL;
+	END_STRUCT END_TYPE
 
-// 	VAR_GLOBAL
-// 		MAX : USINT := 1;
-// 		MIN : USINT := 1;
-// 	END_VAR
+	VAR_GLOBAL
+		MAX : USINT := 255;
+		MIN : USINT := 0;
+	END_VAR
 
-// 	PROGRAM main
-// 	VAR
-// 		ret : myType;
-// 	END_VAR
-// 		ret.zero := USINT_to_REAL(USINT#0);
-// 		ret.negative := USINT_to_REAL(USINT#-11);
-// 		ret.positive := USINT_to_REAL(USINT#22);
-// 		ret.max_minus_one := USINT_to_REAL(MAX-1);
-// 		ret.min_plus_one := USINT_to_REAL(MIN+1);
-// 		// overflow DINT max = MAX by 1
-// 		ret.max_overflow := USINT_to_REAL(MAX+1);
-// 		// overflow DINT min = MIN by 1
-// 		ret.min_overflow := USINT_to_REAL(MIN-1);
-//     END_PROGRAM
-//         ";
-//     let sources = add_std!(src, "num_conversion.st");
-//     let mut maintype = TYPE::default();
-//     let _res: TYPE = compile_and_run(sources, &mut maintype);
-//     assert_eq!(maintype.zero, 0TYPE);
-//     assert_eq!(maintype.negative, 0TYPE);
-//     assert_eq!(maintype.positive, 0TYPE);
-//     assert_eq!(maintype.max_minus_one, 0TYPE);
-//     assert_eq!(maintype.min_plus_one, 0TYPE);
-//     assert_eq!(maintype.max_overflow, 0TYPE);
-//     assert_eq!(maintype.min_overflow, 0TYPE);
-// }
+	PROGRAM main
+	VAR
+		ret : myType;
+	END_VAR
+		ret.zero := USINT_to_REAL(USINT#0);
+		ret.negative := USINT_to_REAL(USINT#-2);
+		ret.positive := USINT_to_REAL(USINT#22);
+		ret.max_minus_one := USINT_to_REAL(MAX-1);
+		ret.min_plus_one := USINT_to_REAL(MIN+1);
+		ret.max_overflow := USINT_to_REAL(MAX+1);
+		ret.min_overflow := USINT_to_REAL(MIN-1);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "num_conversion.st");
+    let mut maintype = F32Type::default();
+    let _res: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.negative, 254.0f32);
+    assert_eq!(maintype.positive, 22.0f32);
+    assert_eq!(maintype.max_minus_one, 254.0f32);
+    assert_eq!(maintype.min_plus_one, 1.0f32);
+    assert_eq!(maintype.max_overflow, 0.0f32);
+    assert_eq!(maintype.min_overflow, 255.0f32);
+}
 
 #[test]
 fn usint_to_lint_conversion() {
