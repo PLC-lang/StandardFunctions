@@ -6,8 +6,10 @@ use inkwell::{
     targets::{InitializationConfig, Target},
 };
 use rusty::{
-    compile_module, diagnostics::Diagnostician, runner::Compilable, FilePath, SourceCode,
-    SourceContainer,
+    compile_module,
+    diagnostics::Diagnostician,
+    runner::{run, Compilable},
+    FilePath, SourceCode, SourceContainer,
 };
 
 macro_rules! add_std {
@@ -66,4 +68,13 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
     }
 
     exec_engine
+}
+
+///
+/// A Convenience method to compile and then run the given source
+///
+pub fn compile_and_run<T, U, S: Compilable>(source: S, params: &mut T) -> U {
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    run::<T, U>(&exec_engine, "main", params)
 }
