@@ -15,7 +15,7 @@
 /// ```
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn ROUND__REAL(input: f32) -> f32 {
+pub extern "C" fn ROUND__REAL(input: f32) -> f32 {
     input.round()
 }
 
@@ -34,6 +34,6 @@ pub fn ROUND__REAL(input: f32) -> f32 {
 /// ```
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn ROUND__LREAL(input: f64) -> f64 {
+pub extern "C" fn ROUND__LREAL(input: f64) -> f64 {
     input.round()
 }
