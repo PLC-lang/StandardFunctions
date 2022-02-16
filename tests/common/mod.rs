@@ -68,7 +68,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ATAN2__LREAL", iec61131_std::ATAN2__LREAL as usize),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
-    let code_gen = compile_module(
+    let (_, code_gen) = compile_module(
         &context,
         source.containers(),
         vec![],

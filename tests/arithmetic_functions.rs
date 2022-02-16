@@ -393,6 +393,7 @@ fn atan2_called_on_real() {
     let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert!(maintype.a <= f32::EPSILON);
+    assert!(maintype.b <= f32::EPSILON);
 }
 
 #[test]
