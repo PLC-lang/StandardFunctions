@@ -141,3 +141,112 @@ pub extern "C" fn EXP__REAL(input: f32) -> f32 {
 pub extern "C" fn EXP__LREAL(input: f64) -> f64 {
     f64::exp(input)
 }
+
+///
+/// .
+/// Calculates the sine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::SIN__REAL;
+///
+/// assert_eq!(SIN__REAL(0.0), 0.0);
+/// assert!(SIN__REAL(std::f32::consts::PI) - 1.0 <= f32::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SIN__REAL(input: f32) -> f32 {
+    f32::sin(input)
+}
+
+/// .
+/// Calculates the sine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::SIN__LREAL;
+///
+/// assert_eq!(SIN__LREAL(0.0), 0.0);
+/// assert!(SIN__LREAL(std::f64::consts::PI) - 1.0 <= f64::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SIN__LREAL(input: f64) -> f64 {
+    f64::sin(input)
+}
+
+/// .
+/// Calculates the cosine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::COS__REAL;
+///
+/// assert!(COS__REAL(std::f32::consts::PI) + 1.0 <= f32::EPSILON);
+/// assert!(COS__REAL(0.0) - 1.0 <= f32::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn COS__REAL(input: f32) -> f32 {
+    f32::cos(input)
+}
+
+/// .
+/// Calculates the cosine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::COS__LREAL;
+///
+/// assert!(COS__LREAL(std::f64::consts::PI) + 1.0 <= f64::EPSILON);
+/// assert!(COS__LREAL(0.0) - 1.0 <= f64::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn COS__LREAL(input: f64) -> f64 {
+    f64::cos(input)
+}
+
+/// .
+/// Calculates the tangent of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::TAN__REAL;
+///
+/// assert!(TAN__REAL(std::f32::consts::FRAC_PI_4) - 1.0 <= f32::EPSILON);
+/// assert!(TAN__REAL(std::f32::consts::PI) <= f32::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn TAN__REAL(input: f32) -> f32 {
+    f32::tan(input)
+}
+
+/// .
+/// Calculates the tangent of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::TAN__LREAL;
+///
+/// assert!(TAN__LREAL(std::f64::consts::FRAC_PI_4) - 1.0 <= f64::EPSILON);
+/// assert!(TAN__LREAL(std::f64::consts::PI) <= f64::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn TAN__LREAL(input: f64) -> f64 {
+    f64::tan(input)
+}

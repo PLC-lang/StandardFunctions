@@ -50,6 +50,12 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("LN__LREAL", iec61131_std::LN__LREAL as usize),
         ("EXP__REAL", iec61131_std::EXP__REAL as usize),
         ("EXP__LREAL", iec61131_std::EXP__LREAL as usize),
+        ("SIN__REAL", iec61131_std::SIN__REAL as usize),
+        ("SIN__LREAL", iec61131_std::SIN__LREAL as usize),
+        ("COS__REAL", iec61131_std::COS__REAL as usize),
+        ("COS__LREAL", iec61131_std::COS__LREAL as usize),
+        ("TAN__REAL", iec61131_std::TAN__REAL as usize),
+        ("TAN__LREAL", iec61131_std::TAN__LREAL as usize),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
     let code_gen = compile_module(
