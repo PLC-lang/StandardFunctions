@@ -48,6 +48,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("SQRT__LREAL", iec61131_std::SQRT__LREAL as usize),
         ("LN__REAL", iec61131_std::LN__REAL as usize),
         ("LN__LREAL", iec61131_std::LN__LREAL as usize),
+        ("LOG__REAL", iec61131_std::LOG__REAL as usize),
+        ("LOG__LREAL", iec61131_std::LOG__LREAL as usize),
         ("EXP__REAL", iec61131_std::EXP__REAL as usize),
         ("EXP__LREAL", iec61131_std::EXP__LREAL as usize),
         ("SIN__REAL", iec61131_std::SIN__REAL as usize),

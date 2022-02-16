@@ -103,6 +103,42 @@ fn ln_called_on_lreal() {
 }
 
 #[test]
+fn log_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+                a := LOG(REAL#10);
+                b := LOG(REAL#100);
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert_eq!(maintype.a, 1.0f32);
+    assert_eq!(maintype.b, 2.0f32);
+}
+
+#[test]
+fn log_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+                a := LOG(LREAL#10);
+                b := LOG(LREAL#100);
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert_eq!(maintype.a, 1.0f64);
+    assert_eq!(maintype.b, 2.0f64);
+}
+
+#[test]
 fn exp_called_on_real() {
     let src = r"FUNCTION main : DINT
             VAR

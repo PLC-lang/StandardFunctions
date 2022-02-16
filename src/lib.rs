@@ -107,6 +107,44 @@ pub extern "C" fn LN__LREAL(input: f64) -> f64 {
 }
 
 /// .
+/// Calculates the base 10 logarithm of the given (f32) value
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::LOG__REAL;
+///
+/// assert_eq!(LOG__REAL(1.0), 0.0);
+/// assert_eq!(LOG__REAL(10.0), 1.0);
+/// assert_eq!(LOG__REAL(100.0), 2.0);
+/// assert_eq!(LOG__REAL(1000.0), 3.0);
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn LOG__REAL(input: f32) -> f32 {
+    f32::log10(input)
+}
+
+/// .
+/// Calculates the natural logarithm of the given (f64) value
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::LOG__LREAL;
+///
+/// assert_eq!(LOG__LREAL(1.0), 0.0);
+/// assert_eq!(LOG__LREAL(10.0), 1.0);
+/// assert_eq!(LOG__LREAL(100.0), 2.0);
+/// assert_eq!(LOG__LREAL(1000.0), 3.0);
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn LOG__LREAL(input: f64) -> f64 {
+    f64::log10(input)
+}
+
+/// .
 /// The natural exponential function (e)
 ///
 /// # Examples
