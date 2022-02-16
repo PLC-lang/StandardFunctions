@@ -58,10 +58,46 @@ fn sqrt_called_on_none_real() {
             b := SQRT(DINT_TO_REAL(1));
             END_FUNCTION
         ";
-    let sources = add_std!(src, "math.st","num.st");
+    let sources = add_std!(src, "math.st", "num.st");
     let mut maintype = MainType::<i32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert_eq!(maintype.a, 2);
     assert_eq!(maintype.b, 1);
+}
+
+#[test]
+fn ln_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+            a := LN(REAL#2.7182818) - 1.0;
+            b := LN(REAL#1.0);
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f32::EPSILON);
+    assert!(maintype.b <= f32::EPSILON);
+}
+
+#[test]
+fn ln_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+            a := LN(LREAL#2.7182818) - 1.0;
+            b := LN(LREAL#1.0);
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f64::EPSILON);
+    assert!(maintype.b <= f64::EPSILON);
 }

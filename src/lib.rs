@@ -39,7 +39,7 @@ pub extern "C" fn ROUND__LREAL(input: f64) -> f64 {
 }
 
 /// .
-/// Calculates tne square root of the given (f32) value
+/// Calculates the square root of the given (f32) value
 ///
 /// # Examples
 ///
@@ -56,7 +56,7 @@ pub extern "C" fn SQRT__REAL(input: f32) -> f32 {
 }
 
 /// .
-/// Calculates tne square root of the given (f64) value
+/// Calculates the square root of the given (f64) value
 ///
 /// # Examples
 ///
@@ -70,4 +70,38 @@ pub extern "C" fn SQRT__REAL(input: f32) -> f32 {
 #[no_mangle]
 pub extern "C" fn SQRT__LREAL(input: f64) -> f64 {
     f64::sqrt(input)
+}
+
+/// .
+/// Calculates the natural logarithm of the given (f32) value
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::LN__REAL;
+///
+/// assert_eq!(LN__REAL(1.0), 0.0);
+/// assert!(LN__REAL(2.718281828) - 1.0 <= f32::EPSILON);
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn LN__REAL(input: f32) -> f32 {
+    f32::ln(input)
+}
+
+/// .
+/// Calculates the natural logarithm of the given (f64) value
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::LN__LREAL;
+///
+/// assert_eq!(LN__LREAL(1.0), 0.0);
+/// assert!(LN__LREAL(2.718281828) - 1.0 <= f64::EPSILON);
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn LN__LREAL(input: f64) -> f64 {
+    f64::ln(input)
 }

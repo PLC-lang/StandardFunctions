@@ -46,6 +46,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ROUND__LREAL", iec61131_std::ROUND__LREAL as usize),
         ("SQRT__REAL", iec61131_std::SQRT__REAL as usize),
         ("SQRT__LREAL", iec61131_std::SQRT__LREAL as usize),
+        ("LN__REAL", iec61131_std::LN__REAL as usize),
+        ("LN__LREAL", iec61131_std::LN__LREAL as usize),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
     let code_gen = compile_module(
