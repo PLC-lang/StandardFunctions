@@ -281,3 +281,134 @@ fn tan_called_on_lreal() {
     assert!(maintype.a <= f64::EPSILON);
     assert!(maintype.b <= f64::EPSILON);
 }
+
+#[test]
+fn asin_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+            a := ASIN(REAL#1.0) - REAL#3.14159274;
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f32::EPSILON);
+}
+
+#[test]
+fn asin_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+            a := ASIN(LREAL#1.0) - LREAL#3.1415926535897931;
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f64::EPSILON);
+}
+
+#[test]
+fn acos_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+            a := ACOS(REAL#0.0) - REAL#3.1415926535897931;
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f32::EPSILON);
+}
+
+#[test]
+fn acos_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+            a := ACOS(LREAL#0.0) - LREAL#3.1415926535897931;
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f64::EPSILON);
+}
+
+#[test]
+fn atan_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+            a := ATAN(REAL#1.0) - REAL#3.1415926535897931/4; 
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f32::EPSILON);
+}
+
+#[test]
+fn atan_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+            a := ATAN(LREAL#1.0) - LREAL#3.1415926535897931/4; 
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f64::EPSILON);
+}
+
+#[test]
+fn atan2_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+            a := ATAN2(REAL#3.0, REAL#-3.0) + REAL#3.1415926535897931/4; 
+            b := ATAN2(REAL#-3.0, REAL#3.0) - (REAL#3.0 * REAL#3.1415926535897931/4); 
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f32::EPSILON);
+}
+
+#[test]
+fn atan2_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+            a := ATAN2(LREAL#3.0, LREAL#-3.0) + LREAL#3.1415926535897931/4; 
+            b := ATAN2(LREAL#-3.0, LREAL#3.0) - (LREAL#3.0 * LREAL#3.1415926535897931/4); 
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f64::EPSILON);
+    assert!(maintype.b <= f64::EPSILON);
+}

@@ -87,8 +87,7 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-(* Calculates the angle between the positive x-Axis of a surface 
-* and a point specified by the parameters x,y *)
+(* Calculate the four quadrant arc tangent of the given values *)
 @EXTERNAL
 FUNCTION ATAN2<T : ANY_REAL> : T
 VAR_INPUT

@@ -58,6 +58,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("COS__LREAL", iec61131_std::COS__LREAL as usize),
         ("TAN__REAL", iec61131_std::TAN__REAL as usize),
         ("TAN__LREAL", iec61131_std::TAN__LREAL as usize),
+        ("ASIN__REAL", iec61131_std::ASIN__REAL as usize),
+        ("ASIN__LREAL", iec61131_std::ASIN__LREAL as usize),
+        ("ACOS__REAL", iec61131_std::ACOS__REAL as usize),
+        ("ACOS__LREAL", iec61131_std::ACOS__LREAL as usize),
+        ("ATAN__REAL", iec61131_std::ATAN__REAL as usize),
+        ("ATAN__LREAL", iec61131_std::ATAN__LREAL as usize),
+        ("ATAN2__REAL", iec61131_std::ATAN2__REAL as usize),
+        ("ATAN2__LREAL", iec61131_std::ATAN2__LREAL as usize),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
     let code_gen = compile_module(

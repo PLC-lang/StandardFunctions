@@ -288,3 +288,142 @@ pub extern "C" fn TAN__REAL(input: f32) -> f32 {
 pub extern "C" fn TAN__LREAL(input: f64) -> f64 {
     f64::tan(input)
 }
+
+///
+/// .
+/// Calculates the arc sine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ASIN__REAL;
+///
+/// assert_eq!(ASIN__REAL(1.0), std::f32::consts::FRAC_PI_2);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ASIN__REAL(input: f32) -> f32 {
+    f32::asin(input)
+}
+
+/// .
+/// Calculates the arc sine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ASIN__LREAL;
+///
+/// assert_eq!(ASIN__LREAL(1.0), std::f64::consts::FRAC_PI_2);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ASIN__LREAL(input: f64) -> f64 {
+    f64::asin(input)
+}
+
+/// .
+/// Calculates the arc cosine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ACOS__REAL;
+///
+/// assert_eq!(ACOS__REAL(0.0), std::f32::consts::FRAC_PI_2);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ACOS__REAL(input: f32) -> f32 {
+    f32::acos(input)
+}
+
+/// .
+/// Calculates the arc cosine of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ACOS__LREAL;
+///
+/// assert_eq!(ACOS__LREAL(0.0), std::f64::consts::FRAC_PI_2);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ACOS__LREAL(input: f64) -> f64 {
+    f64::acos(input)
+}
+
+/// .
+/// Calculates the arc tangent of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ATAN__REAL;
+///
+/// assert_eq!(ATAN__REAL(1.0), std::f32::consts::FRAC_PI_4);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ATAN__REAL(input: f32) -> f32 {
+    f32::atan(input)
+}
+
+/// .
+/// Calculates the arc tangent of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ATAN__LREAL;
+///
+/// assert_eq!(ATAN__LREAL(1.0), std::f64::consts::FRAC_PI_4);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ATAN__LREAL(input: f64) -> f64 {
+    f64::atan(input)
+}
+
+/// .
+/// Calculates the four quadrant arc tangent of the value with another value
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ATAN2__REAL;
+///
+/// assert_eq!(ATAN2__REAL(-3.0, 3.0), -std::f32::consts::FRAC_PI_4);
+/// assert_eq!(ATAN2__REAL(3.0, -3.0), 3.0*std::f32::consts::FRAC_PI_4);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ATAN2__REAL(x: f32, y: f32) -> f32 {
+    x.atan2(y)
+}
+
+/// .
+/// Calculates the arc tangent of the given value in radiants
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::ATAN2__LREAL;
+///
+/// assert_eq!(ATAN2__LREAL(-3.0, 3.0), -std::f64::consts::FRAC_PI_4);
+/// assert_eq!(ATAN2__LREAL(3.0, -3.0), 3.0*std::f64::consts::FRAC_PI_4);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ATAN2__LREAL(x: f64, y: f64) -> f64 {
+    x.atan2(y)
+}
