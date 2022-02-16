@@ -101,3 +101,39 @@ fn ln_called_on_lreal() {
     assert!(maintype.a <= f64::EPSILON);
     assert!(maintype.b <= f64::EPSILON);
 }
+
+#[test]
+fn exp_called_on_real() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : REAL;
+            END_VAR
+            a := EXP(REAL#1.0) - REAL#2.7182818;
+            b := EXP(REAL#0.0) - REAL#1.0;
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f32>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f32::EPSILON);
+    assert!(maintype.b <= f32::EPSILON);
+}
+
+#[test]
+fn exp_called_on_lreal() {
+    let src = r"FUNCTION main : DINT
+            VAR
+                a,b : LREAL;
+            END_VAR
+            a := EXP(LREAL#1.0) - LREAL#2.718281849;
+            b := EXP(LREAL#0.0) - LREAL#1.0;
+            END_FUNCTION
+        ";
+    let sources = add_std!(src, "math.st");
+    let mut maintype = MainType::<f64>::default();
+    let _: i32 = compile_and_run(sources, &mut maintype);
+
+    assert!(maintype.a <= f64::EPSILON);
+    assert!(maintype.b <= f64::EPSILON);
+}

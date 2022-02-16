@@ -105,3 +105,39 @@ pub extern "C" fn LN__REAL(input: f32) -> f32 {
 pub extern "C" fn LN__LREAL(input: f64) -> f64 {
     f64::ln(input)
 }
+
+/// .
+/// The natural exponential function (e)
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::EXP__REAL;
+///
+/// assert_eq!(EXP__REAL(0.0), 1.0);
+/// assert!(EXP__REAL(1.0) - 2.718281828 <= f32::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXP__REAL(input: f32) -> f32 {
+    f32::exp(input)
+}
+
+/// .
+/// The natural exponential function (e)
+///
+/// # Examples
+///
+/// ```
+/// use iec61131_std::EXP__LREAL;
+///
+/// assert_eq!(EXP__LREAL(0.0), 1.0);
+/// assert!(EXP__LREAL(1.0) - 2.71828182849 <= f64::EPSILON);
+///
+/// ```
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXP__LREAL(input: f64) -> f64 {
+    f64::exp(input)
+}
