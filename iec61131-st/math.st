@@ -1,5 +1,17 @@
 (* Definitions of arithmetic functions defined by the IEC61131-3 standard *)
 
+@EXTERNAL
+VAR_GLOBAL
+	PI_REAL : REAL;
+	PI_LREAL : LREAL;
+	FRAC_PI_2_REAL : REAL;
+	FRAC_PI_2_LREAL : LREAL;
+	FRAC_PI_4_REAL : REAL;
+	FRAC_PI_4_LREAL : LREAL;
+	E_REAL : REAL;
+	E_LREAL : LREAL;
+END_VAR
+
 (* Calculates the square root of a given value *)
 @EXTERNAL
 FUNCTION SQRT<T : ANY_REAL> : T
@@ -43,7 +55,7 @@ END_FUNCTION
 @EXTERNAL
 FUNCTION SIN<T : ANY_REAL> : T
 VAR_INPUT
-	in : T;
+	rad : T;
 END_VAR
 END_FUNCTION
 
@@ -51,7 +63,7 @@ END_FUNCTION
 @EXTERNAL
 FUNCTION COS<T : ANY_REAL> : T
 VAR_INPUT
-	in : T;
+	rad : T;
 END_VAR
 END_FUNCTION
 
@@ -59,7 +71,7 @@ END_FUNCTION
 @EXTERNAL
 FUNCTION TAN<T : ANY_REAL> : T
 VAR_INPUT
-	in : T;
+	rad : T;
 END_VAR
 END_FUNCTION
 
@@ -91,7 +103,7 @@ END_FUNCTION
 @EXTERNAL
 FUNCTION ATAN2<T : ANY_REAL> : T
 VAR_INPUT
-	x : T;
 	y : T;
+	x : T;
 END_VAR
 END_FUNCTION

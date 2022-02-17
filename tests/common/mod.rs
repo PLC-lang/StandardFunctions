@@ -67,6 +67,38 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ATAN2__REAL", iec61131_std::ATAN2__REAL as usize),
         ("ATAN2__LREAL", iec61131_std::ATAN2__LREAL as usize),
     ];
+
+    let variables = vec![
+        (
+            "PI_REAL",
+            std::ptr::addr_of!(iec61131_std::PI_REAL) as usize,
+        ),
+        (
+            "PI_LREAL",
+            std::ptr::addr_of!(iec61131_std::PI_LREAL) as usize,
+        ),
+        (
+            "FRAC_PI_2_REAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_2_REAL) as usize,
+        ),
+        (
+            "FRAC_PI_2_LREAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_2_LREAL) as usize,
+        ),
+        (
+            "FRAC_PI_4_REAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_4_REAL) as usize,
+        ),
+        (
+            "FRAC_PI_4_LREAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_4_LREAL) as usize,
+        ),
+        ("E_REAL", std::ptr::addr_of!(iec61131_std::E_REAL) as usize),
+        (
+            "E_LREAL",
+            std::ptr::addr_of!(iec61131_std::E_LREAL) as usize,
+        ),
+    ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
     let (_, code_gen) = compile_module(
         &context,
@@ -76,6 +108,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         Diagnostician::default(),
     )
     .unwrap();
+    println!("{}", code_gen.module.print_to_string());
     let exec_engine = code_gen
         .module
         .create_jit_execution_engine(inkwell::OptimizationLevel::None)
@@ -86,6 +119,13 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             exec_engine.add_global_mapping(&fn_value, fn_addr);
         } else {
             println!("No definition for {} in test", fn_name)
+        }
+    }
+    for (var_name, var_address) in variables {
+        if let Some(var_value) = code_gen.module.get_global(var_name) {
+            exec_engine.add_global_mapping(&var_value, var_address);
+        } else {
+            println!("No definition for {} in test", var_name)
         }
     }
 
