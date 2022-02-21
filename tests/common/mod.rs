@@ -44,9 +44,63 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
     let functions = vec![
         ("ROUND__REAL", iec61131_std::ROUND__REAL as usize),
         ("ROUND__LREAL", iec61131_std::ROUND__LREAL as usize),
+        ("SQRT__REAL", iec61131_std::SQRT__REAL as usize),
+        ("SQRT__LREAL", iec61131_std::SQRT__LREAL as usize),
+        ("LN__REAL", iec61131_std::LN__REAL as usize),
+        ("LN__LREAL", iec61131_std::LN__LREAL as usize),
+        ("LOG__REAL", iec61131_std::LOG__REAL as usize),
+        ("LOG__LREAL", iec61131_std::LOG__LREAL as usize),
+        ("EXP__REAL", iec61131_std::EXP__REAL as usize),
+        ("EXP__LREAL", iec61131_std::EXP__LREAL as usize),
+        ("SIN__REAL", iec61131_std::SIN__REAL as usize),
+        ("SIN__LREAL", iec61131_std::SIN__LREAL as usize),
+        ("COS__REAL", iec61131_std::COS__REAL as usize),
+        ("COS__LREAL", iec61131_std::COS__LREAL as usize),
+        ("TAN__REAL", iec61131_std::TAN__REAL as usize),
+        ("TAN__LREAL", iec61131_std::TAN__LREAL as usize),
+        ("ASIN__REAL", iec61131_std::ASIN__REAL as usize),
+        ("ASIN__LREAL", iec61131_std::ASIN__LREAL as usize),
+        ("ACOS__REAL", iec61131_std::ACOS__REAL as usize),
+        ("ACOS__LREAL", iec61131_std::ACOS__LREAL as usize),
+        ("ATAN__REAL", iec61131_std::ATAN__REAL as usize),
+        ("ATAN__LREAL", iec61131_std::ATAN__LREAL as usize),
+        ("ATAN2__REAL", iec61131_std::ATAN2__REAL as usize),
+        ("ATAN2__LREAL", iec61131_std::ATAN2__LREAL as usize),
+    ];
+
+    let variables = vec![
+        (
+            "PI_REAL",
+            std::ptr::addr_of!(iec61131_std::PI_REAL) as usize,
+        ),
+        (
+            "PI_LREAL",
+            std::ptr::addr_of!(iec61131_std::PI_LREAL) as usize,
+        ),
+        (
+            "FRAC_PI_2_REAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_2_REAL) as usize,
+        ),
+        (
+            "FRAC_PI_2_LREAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_2_LREAL) as usize,
+        ),
+        (
+            "FRAC_PI_4_REAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_4_REAL) as usize,
+        ),
+        (
+            "FRAC_PI_4_LREAL",
+            std::ptr::addr_of!(iec61131_std::FRAC_PI_4_LREAL) as usize,
+        ),
+        ("E_REAL", std::ptr::addr_of!(iec61131_std::E_REAL) as usize),
+        (
+            "E_LREAL",
+            std::ptr::addr_of!(iec61131_std::E_LREAL) as usize,
+        ),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
-    let code_gen = compile_module(
+    let (_, code_gen) = compile_module(
         &context,
         source.containers(),
         vec![],
@@ -54,6 +108,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         Diagnostician::default(),
     )
     .unwrap();
+    println!("{}", code_gen.module.print_to_string());
     let exec_engine = code_gen
         .module
         .create_jit_execution_engine(inkwell::OptimizationLevel::None)
@@ -64,6 +119,13 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             exec_engine.add_global_mapping(&fn_value, fn_addr);
         } else {
             println!("No definition for {} in test", fn_name)
+        }
+    }
+    for (var_name, var_address) in variables {
+        if let Some(var_value) = code_gen.module.get_global(var_name) {
+            exec_engine.add_global_mapping(&var_value, var_address);
+        } else {
+            println!("No definition for {} in test", var_name)
         }
     }
 
