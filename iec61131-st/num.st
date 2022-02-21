@@ -67,3 +67,15 @@ END_VAR
 		ABS__LREAL := -1.0 * ABS__LREAL;
 	END_IF
 END_FUNCTION
+
+(**************************
+ * 
+ * Rounds a given ANY_REAL to the nearest integer
+ * Rounds half values away from zero
+ * 
+*************************)
+@EXTERNAL FUNCTION ROUND<T : ANY_REAL> : T 
+VAR_INPUT
+	in : T;
+END_VAR
+END_FUNCTION
