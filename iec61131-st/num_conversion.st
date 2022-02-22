@@ -1,3 +1,15 @@
+(**************************
+ * 
+ * Rounds a given ANY_REAL to the nearest integer
+ * Rounds half values away from zero
+ * 
+*************************)
+@EXTERNAL FUNCTION ROUND<T : ANY_REAL> : T 
+VAR_INPUT
+	in : T;
+END_VAR
+END_FUNCTION
+
 (********************
 *
 * Converts LREAL to REAL
@@ -19,7 +31,7 @@ FUNCTION LREAL_TO_LINT : LINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_LINT := in;
+	LREAL_TO_LINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -31,7 +43,7 @@ FUNCTION LREAL_TO_DINT : DINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_DINT := in;
+	LREAL_TO_DINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -43,7 +55,7 @@ FUNCTION LREAL_TO_INT : INT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_INT := in;
+	LREAL_TO_INT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -55,7 +67,7 @@ FUNCTION LREAL_TO_SINT : SINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_SINT := in;
+	LREAL_TO_SINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -67,7 +79,7 @@ FUNCTION LREAL_TO_ULINT : ULINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_ULINT := in;
+	LREAL_TO_ULINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -79,7 +91,7 @@ FUNCTION LREAL_TO_UDINT : UDINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_UDINT := in;
+	LREAL_TO_UDINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -91,7 +103,7 @@ FUNCTION LREAL_TO_UINT : UINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_UINT := in;
+	LREAL_TO_UINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -103,7 +115,7 @@ FUNCTION LREAL_TO_USINT : USINT
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_USINT := in;
+	LREAL_TO_USINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -127,7 +139,7 @@ FUNCTION REAL_TO_LINT : LINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_LINT := in;
+	REAL_TO_LINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -139,7 +151,7 @@ FUNCTION REAL_TO_DINT : DINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_DINT := in;
+	REAL_TO_DINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -151,7 +163,7 @@ FUNCTION REAL_TO_INT : INT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_INT := in;
+	REAL_TO_INT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -163,7 +175,7 @@ FUNCTION REAL_TO_SINT : SINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_SINT := in;
+	REAL_TO_SINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -175,7 +187,7 @@ FUNCTION REAL_TO_ULINT : ULINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_ULINT := in;
+	REAL_TO_ULINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -187,7 +199,7 @@ FUNCTION REAL_TO_UDINT : UDINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_UDINT := in;
+	REAL_TO_UDINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -199,7 +211,7 @@ FUNCTION REAL_TO_UINT : UINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_UINT := in;
+	REAL_TO_UINT := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -211,7 +223,7 @@ FUNCTION REAL_TO_USINT : USINT
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_USINT := in;
+	REAL_TO_USINT := ROUND(in);
 END_FUNCTION
 
 (********************
