@@ -1980,7 +1980,7 @@ fn ulint_to_lreal_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := ULINT_to_LREAL(ULINT#0);
-		ret.negative := ULINT_to_LREAL(ULINT#-2);
+		ret.negative := ULINT_to_LREAL(-2);
 		ret.positive := ULINT_to_LREAL(ULINT#22);
 		ret.max_minus_one := ULINT_to_LREAL(MAX-1);
 		ret.min_plus_one := ULINT_to_LREAL(MIN+1);
@@ -2018,7 +2018,7 @@ fn ulint_to_real_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := ULINT_to_REAL(ULINT#0);
-		ret.negative := ULINT_to_REAL(ULINT#-2);
+		ret.negative := ULINT_to_REAL(-2);
 		ret.positive := ULINT_to_REAL(ULINT#22);
 		ret.max_minus_one := ULINT_to_REAL(MAX-1);
 		ret.min_plus_one := ULINT_to_REAL(MIN+1);
@@ -2192,7 +2192,7 @@ fn ulint_to_udint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := ULINT_to_UDINT(ULINT#0);
-		ret.negative := ULINT_to_UDINT(ULINT#-1);
+		ret.negative := ULINT_to_UDINT(-1);
 		ret.positive := ULINT_to_UDINT(ULINT#22);
 		ret.max_minus_one := ULINT_to_UDINT(MAX-1);
 		ret.min_plus_one := ULINT_to_UDINT(MIN+1);
@@ -2230,7 +2230,7 @@ fn ulint_to_uint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := ULINT_to_UINT(ULINT#0);
-		ret.negative := ULINT_to_UINT(ULINT#-1);
+		ret.negative := ULINT_to_UINT(-1);
 		ret.positive := ULINT_to_UINT(ULINT#22);
 		ret.max_minus_one := ULINT_to_UINT(MAX-1);
 		ret.min_plus_one := ULINT_to_UINT(MIN+1);
@@ -2268,7 +2268,7 @@ fn ulint_to_usint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := ULINT_to_USINT(ULINT#0);
-		ret.negative := ULINT_to_USINT(ULINT#-1);
+		ret.negative := ULINT_to_USINT(-1);
 		ret.positive := ULINT_to_USINT(ULINT#22);
 		ret.max_minus_one := ULINT_to_USINT(MAX-1);
 		ret.min_plus_one := ULINT_to_USINT(MIN+1);
@@ -2306,7 +2306,7 @@ fn udint_to_lreal_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UDINT_to_LREAL(UDINT#0);
-		ret.negative := UDINT_to_LREAL(UDINT#-2);
+		ret.negative := UDINT_to_LREAL(-2);
 		ret.positive := UDINT_to_LREAL(UDINT#22);
 		ret.max_minus_one := UDINT_to_LREAL(MAX-1);
 		ret.min_plus_one := UDINT_to_LREAL(MIN+1);
@@ -2344,7 +2344,7 @@ fn udint_to_real_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UDINT_to_REAL(UDINT#0);
-		ret.negative := UDINT_to_REAL(UDINT#-2);
+		ret.negative := UDINT_to_REAL(-2);
 		ret.positive := UDINT_to_REAL(UDINT#22);
 		ret.max_minus_one := UDINT_to_REAL(MAX-1);
 		ret.min_plus_one := UDINT_to_REAL(MIN+1);
@@ -2382,7 +2382,7 @@ fn udint_to_lint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UDINT_to_LINT(UDINT#0);
-		ret.negative := UDINT_to_LINT(UDINT#-1);
+		ret.negative := UDINT_to_LINT(-1);
 		ret.positive := UDINT_to_LINT(UDINT#22);
 		ret.max_minus_one := UDINT_to_LINT(MAX-1);
 		ret.min_plus_one := UDINT_to_LINT(MIN+1);
@@ -2522,7 +2522,7 @@ fn udint_to_ulint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UDINT_to_ULINT(UDINT#0);
-		ret.negative := UDINT_to_ULINT(UDINT#-1);
+		ret.negative := UDINT_to_ULINT(-1);
 		ret.positive := UDINT_to_ULINT(UDINT#22);
 		ret.max_minus_one := UDINT_to_ULINT(MAX-1);
 		ret.min_plus_one := UDINT_to_ULINT(MIN+1);
@@ -2560,7 +2560,7 @@ fn udint_to_uint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UDINT_to_UINT(UDINT#0);
-		ret.negative := UDINT_to_UINT(UDINT#-1);
+		ret.negative := UDINT_to_UINT(-1);
 		ret.positive := UDINT_to_UINT(UDINT#22);
 		ret.max_minus_one := UDINT_to_UINT(MAX-1);
 		ret.min_plus_one := UDINT_to_UINT(MIN+1);
@@ -2598,7 +2598,7 @@ fn udint_to_usint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UDINT_to_USINT(UDINT#0);
-		ret.negative := UDINT_to_USINT(UDINT#-1);
+		ret.negative := UDINT_to_USINT(-1);
 		ret.positive := UDINT_to_USINT(UDINT#22);
 		ret.max_minus_one := UDINT_to_USINT(MAX-1);
 		ret.min_plus_one := UDINT_to_USINT(MIN+1);
@@ -2636,7 +2636,7 @@ fn uint_to_lreal_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_LREAL(UINT#0);
-		ret.negative := UINT_to_LREAL(UINT#-2);
+		ret.negative := UINT_to_LREAL(-2);
 		ret.positive := UINT_to_LREAL(UINT#22);
 		ret.max_minus_one := UINT_to_LREAL(MAX-1);
 		ret.min_plus_one := UINT_to_LREAL(MIN+1);
@@ -2674,7 +2674,7 @@ fn uint_to_real_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_REAL(UINT#0);
-		ret.negative := UINT_to_REAL(UINT#-2);
+		ret.negative := UINT_to_REAL(-2);
 		ret.positive := UINT_to_REAL(UINT#22);
 		ret.max_minus_one := UINT_to_REAL(MAX-1);
 		ret.min_plus_one := UINT_to_REAL(MIN+1);
@@ -2712,7 +2712,7 @@ fn uint_to_lint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_LINT(UINT#0);
-		ret.negative := UINT_to_LINT(UINT#-1);
+		ret.negative := UINT_to_LINT(-1);
 		ret.positive := UINT_to_LINT(UINT#22);
 		ret.max_minus_one := UINT_to_LINT(MAX-1);
 		ret.min_plus_one := UINT_to_LINT(MIN+1);
@@ -2750,7 +2750,7 @@ fn uint_to_dint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_DINT(UINT#0);
-		ret.negative := UINT_to_DINT(UINT#-1);
+		ret.negative := UINT_to_DINT(-1);
 		ret.positive := UINT_to_DINT(UINT#22);
 		ret.max_minus_one := UINT_to_DINT(MAX-1);
 		ret.min_plus_one := UINT_to_DINT(MIN+1);
@@ -2856,7 +2856,7 @@ fn uint_to_ulint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_ULINT(UINT#0);
-		ret.negative := UINT_to_ULINT(UINT#-1);
+		ret.negative := UINT_to_ULINT(-1);
 		ret.positive := UINT_to_ULINT(UINT#22);
 		ret.max_minus_one := UINT_to_ULINT(MAX-1);
 		ret.min_plus_one := UINT_to_ULINT(MIN+1);
@@ -2894,7 +2894,7 @@ fn uint_to_udint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_UDINT(UINT#0);
-		ret.negative := UINT_to_UDINT(UINT#-1);
+		ret.negative := UINT_to_UDINT(-1);
 		ret.positive := UINT_to_UDINT(UINT#22);
 		ret.max_minus_one := UINT_to_UDINT(MAX-1);
 		ret.min_plus_one := UINT_to_UDINT(MIN+1);
@@ -2932,7 +2932,7 @@ fn uint_to_usint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := UINT_to_USINT(UINT#0);
-		ret.negative := UINT_to_USINT(UINT#-1);
+		ret.negative := UINT_to_USINT(-1);
 		ret.positive := UINT_to_USINT(UINT#22);
 		ret.max_minus_one := UINT_to_USINT(MAX-1);
 		ret.min_plus_one := UINT_to_USINT(MIN+1);
@@ -2970,7 +2970,7 @@ fn usint_to_lreal_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_LREAL(USINT#0);
-		ret.negative := USINT_to_LREAL(USINT#-2);
+		ret.negative := USINT_to_LREAL(-2);
 		ret.positive := USINT_to_LREAL(USINT#22);
 		ret.max_minus_one := USINT_to_LREAL(MAX-1);
 		ret.min_plus_one := USINT_to_LREAL(MIN+1);
@@ -3008,7 +3008,7 @@ fn usint_to_real_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_REAL(USINT#0);
-		ret.negative := USINT_to_REAL(USINT#-2);
+		ret.negative := USINT_to_REAL(-2);
 		ret.positive := USINT_to_REAL(USINT#22);
 		ret.max_minus_one := USINT_to_REAL(MAX-1);
 		ret.min_plus_one := USINT_to_REAL(MIN+1);
@@ -3046,7 +3046,7 @@ fn usint_to_lint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_LINT(USINT#0);
-		ret.negative := USINT_to_LINT(USINT#-1);
+		ret.negative := USINT_to_LINT(-1);
 		ret.positive := USINT_to_LINT(USINT#22);
 		ret.max_minus_one := USINT_to_LINT(MAX-1);
 		ret.min_plus_one := USINT_to_LINT(MIN+1);
@@ -3084,7 +3084,7 @@ fn usint_to_dint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_DINT(USINT#0);
-		ret.negative := USINT_to_DINT(USINT#-1);
+		ret.negative := USINT_to_DINT(-1);
 		ret.positive := USINT_to_DINT(USINT#22);
 		ret.max_minus_one := USINT_to_DINT(MAX-1);
 		ret.min_plus_one := USINT_to_DINT(MIN+1);
@@ -3122,7 +3122,7 @@ fn usint_to_int_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_INT(USINT#0);
-		ret.negative := USINT_to_INT(USINT#-1);
+		ret.negative := USINT_to_INT(-1);
 		ret.positive := USINT_to_INT(USINT#22);
 		ret.max_minus_one := USINT_to_INT(MAX-1);
 		ret.min_plus_one := USINT_to_INT(MIN+1);
@@ -3194,7 +3194,7 @@ fn usint_to_ulint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_ULINT(USINT#0);
-		ret.negative := USINT_to_ULINT(USINT#-1);
+		ret.negative := USINT_to_ULINT(-1);
 		ret.positive := USINT_to_ULINT(USINT#22);
 		ret.max_minus_one := USINT_to_ULINT(MAX-1);
 		ret.min_plus_one := USINT_to_ULINT(MIN+1);
@@ -3232,7 +3232,7 @@ fn usint_to_udint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_UDINT(USINT#0);
-		ret.negative := USINT_to_UDINT(USINT#-1);
+		ret.negative := USINT_to_UDINT(-1);
 		ret.positive := USINT_to_UDINT(USINT#22);
 		ret.max_minus_one := USINT_to_UDINT(MAX-1);
 		ret.min_plus_one := USINT_to_UDINT(MIN+1);
@@ -3270,7 +3270,7 @@ fn usint_to_uint_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := USINT_to_UINT(USINT#0);
-		ret.negative := USINT_to_UINT(USINT#-1);
+		ret.negative := USINT_to_UINT(-1);
 		ret.positive := USINT_to_UINT(USINT#22);
 		ret.max_minus_one := USINT_to_UINT(MAX-1);
 		ret.min_plus_one := USINT_to_UINT(MIN+1);
