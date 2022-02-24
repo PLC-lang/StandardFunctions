@@ -10,6 +10,7 @@ struct U64Type {
     zero: u64,
     positive: u64,
     negative: u64,
+    max_overflow: u64,
 }
 
 #[derive(Default)]
@@ -504,10 +505,40 @@ fn byte_to_bool() {
 }
 
 #[test]
+fn byte_to_char() {
+    #[derive(Default)]
+    struct Main {
+        a: u8,
+        b: u8,
+        c: u8,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : CHAR;
+		b : CHAR;
+		c : CHAR;
+	END_VAR
+		a := BYTE_TO_CHAR(BYTE#97);
+		b := BYTE_TO_CHAR(BYTE#98);
+		c := BYTE_TO_CHAR(BYTE#99);
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u8 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, "a".as_bytes()[0]);
+    assert_eq!(maintype.b, "b".as_bytes()[0]);
+    assert_eq!(maintype.c, "c".as_bytes()[0]);
+}
+
+#[test]
 fn bool_to_lword() {
     let src = r"
 	TYPE myType : STRUCT
 		zero : LWORD; positive : LWORD; negative : LWORD;
+		max_overflow : LWORD;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -517,6 +548,7 @@ fn bool_to_lword() {
 		ret.zero := BOOL_TO_LWORD(BOOL#0);
 		ret.positive := BOOL_TO_LWORD(BOOL#1);
 		ret.negative := BOOL_TO_LWORD(-1);
+		ret.max_overflow := BOOL_TO_LWORD(10);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_conversion.st");
@@ -524,7 +556,8 @@ fn bool_to_lword() {
     let _res: u64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0u64);
     assert_eq!(maintype.positive, 1u64);
-    assert_eq!(maintype.negative, 2u64);
+    assert_eq!(maintype.negative, 1u64);
+    assert_eq!(maintype.max_overflow, 1u64);
 }
 
 #[test]
@@ -532,6 +565,7 @@ fn bool_to_dword() {
     let src = r"
 	TYPE myType : STRUCT
 		zero : DWORD; positive : DWORD; negative : DWORD;
+		max_overflow : DWORD;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -541,6 +575,7 @@ fn bool_to_dword() {
 		ret.zero := BOOL_TO_DWORD(BOOL#0);
 		ret.positive := BOOL_TO_DWORD(BOOL#1);
 		ret.negative := BOOL_TO_DWORD(-1);
+		ret.max_overflow := BOOL_TO_DWORD(10);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_conversion.st");
@@ -548,7 +583,8 @@ fn bool_to_dword() {
     let _res: u32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0u32);
     assert_eq!(maintype.positive, 1u32);
-    assert_eq!(maintype.negative, 2u32);
+    assert_eq!(maintype.negative, 1u32);
+    assert_eq!(maintype.max_overflow, 1u32);
 }
 
 #[test]
@@ -556,6 +592,7 @@ fn bool_to_word() {
     let src = r"
 	TYPE myType : STRUCT
 		zero : WORD; positive : WORD; negative : WORD;
+		max_overflow : WORD;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -565,6 +602,7 @@ fn bool_to_word() {
 		ret.zero := BOOL_TO_WORD(BOOL#0);
 		ret.positive := BOOL_TO_WORD(BOOL#1);
 		ret.negative := BOOL_TO_WORD(-1);
+		ret.max_overflow := BOOL_TO_WORD(10);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_conversion.st");
@@ -572,7 +610,8 @@ fn bool_to_word() {
     let _res: u16 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0u16);
     assert_eq!(maintype.positive, 1u16);
-    assert_eq!(maintype.negative, 2u16);
+    assert_eq!(maintype.negative, 1u16);
+    assert_eq!(maintype.max_overflow, 1u16);
 }
 
 #[test]
@@ -580,6 +619,7 @@ fn bool_to_byte() {
     let src = r"
 	TYPE myType : STRUCT
 		zero : BYTE; positive : BYTE; negative : BYTE;
+		max_overflow : BYTE;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -589,6 +629,7 @@ fn bool_to_byte() {
 		ret.zero := BOOL_TO_BYTE(BOOL#0);
 		ret.positive := BOOL_TO_BYTE(BOOL#1);
 		ret.negative := BOOL_TO_BYTE(-1);
+		ret.max_overflow := BOOL_TO_BYTE(10);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_conversion.st");
@@ -596,5 +637,209 @@ fn bool_to_byte() {
     let _res: u8 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0u8);
     assert_eq!(maintype.positive, 1u8);
-    assert_eq!(maintype.negative, 2u8);
+    assert_eq!(maintype.negative, 1u8);
+    assert_eq!(maintype.max_overflow, 1u8);
+}
+
+#[test]
+fn char_to_byte() {
+    #[derive(Default)]
+    struct Main {
+        a: u8,
+        b: u8,
+        c: u8,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : BYTE;
+		b : BYTE;
+		c : BYTE;
+	END_VAR
+		a := CHAR_TO_BYTE(CHAR#'a');
+		b := CHAR_TO_BYTE(CHAR#'b');
+		c := CHAR_TO_BYTE(CHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u8 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u8);
+    assert_eq!(maintype.b, 98u8);
+    assert_eq!(maintype.c, 99u8);
+}
+
+#[test]
+fn char_to_word() {
+    #[derive(Default)]
+    struct Main {
+        a: u16,
+        b: u16,
+        c: u16,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : WORD;
+		b : WORD;
+		c : WORD;
+	END_VAR
+		a := CHAR_TO_WORD(CHAR#'a');
+		b := CHAR_TO_WORD(CHAR#'b');
+		c := CHAR_TO_WORD(CHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u16 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u16);
+    assert_eq!(maintype.b, 98u16);
+    assert_eq!(maintype.c, 99u16);
+}
+
+#[test]
+fn char_to_dword() {
+    #[derive(Default)]
+    struct Main {
+        a: u32,
+        b: u32,
+        c: u32,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : DWORD;
+		b : DWORD;
+		c : DWORD;
+	END_VAR
+		a := CHAR_TO_DWORD(CHAR#'a');
+		b := CHAR_TO_DWORD(CHAR#'b');
+		c := CHAR_TO_DWORD(CHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u32);
+    assert_eq!(maintype.b, 98u32);
+    assert_eq!(maintype.c, 99u32);
+}
+
+#[test]
+fn char_to_lword() {
+    #[derive(Default)]
+    struct Main {
+        a: u64,
+        b: u64,
+        c: u64,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : LWORD;
+		b : LWORD;
+		c : LWORD;
+	END_VAR
+		a := CHAR_TO_LWORD(CHAR#'a');
+		b := CHAR_TO_LWORD(CHAR#'b');
+		c := CHAR_TO_LWORD(CHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u64);
+    assert_eq!(maintype.b, 98u64);
+    assert_eq!(maintype.c, 99u64);
+}
+
+#[test]
+fn wchar_to_word() {
+    #[derive(Default)]
+    struct Main {
+        a: u16,
+        b: u16,
+        c: u16,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : WORD;
+		b : WORD;
+		c : WORD;
+	END_VAR
+		a := WCHAR_TO_WORD(WCHAR#'a');
+		b := WCHAR_TO_WORD(WCHAR#'b');
+		c := WCHAR_TO_WORD(WCHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u16 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u16);
+    assert_eq!(maintype.b, 98u16);
+    assert_eq!(maintype.c, 99u16);
+}
+
+#[test]
+fn wchar_to_dword() {
+    #[derive(Default)]
+    struct Main {
+        a: u32,
+        b: u32,
+        c: u32,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : DWORD;
+		b : DWORD;
+		c : DWORD;
+	END_VAR
+		a := WCHAR_TO_DWORD(WCHAR#'a');
+		b := WCHAR_TO_DWORD(WCHAR#'b');
+		c := WCHAR_TO_DWORD(WCHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u32);
+    assert_eq!(maintype.b, 98u32);
+    assert_eq!(maintype.c, 99u32);
+}
+
+#[test]
+fn wchar_to_lword() {
+    #[derive(Default)]
+    struct Main {
+        a: u64,
+        b: u64,
+        c: u64,
+    }
+
+    let src = r"
+	PROGRAM main
+	VAR
+		a : LWORD;
+		b : LWORD;
+		c : LWORD;
+	END_VAR
+		a := WCHAR_TO_LWORD(WCHAR#'a');
+		b := WCHAR_TO_LWORD(WCHAR#'b');
+		c := WCHAR_TO_LWORD(WCHAR#'c');
+    END_PROGRAM
+        ";
+    let sources = add_std!(src, "bit_conversion.st");
+    let mut maintype = Main::default();
+    let _res: u64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 97u64);
+    assert_eq!(maintype.b, 98u64);
+    assert_eq!(maintype.c, 99u64);
 }
