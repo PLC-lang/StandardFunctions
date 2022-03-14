@@ -511,7 +511,7 @@ FUNCTION LREAL_TO_LWORD : LWORD
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_LWORD := in;
+	LREAL_TO_LWORD := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -523,7 +523,7 @@ FUNCTION REAL_TO_DWORD : DWORD
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_DWORD := in;
+	REAL_TO_DWORD := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -908,4 +908,16 @@ VAR_INPUT
 	in : USINT;
 END_VAR
 	USINT_TO_BYTE := in;
+END_FUNCTION
+
+(**************************
+ * 
+ * Rounds a given ANY_REAL to the nearest integer
+ * Rounds half values away from zero
+ * 
+*************************)
+@EXTERNAL FUNCTION ROUND<T : ANY_REAL> : T 
+VAR_INPUT
+	in : T;
+END_VAR
 END_FUNCTION

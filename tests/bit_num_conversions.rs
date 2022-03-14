@@ -8,11 +8,13 @@ use common::add_std;
 #[derive(Default)]
 struct F64Type {
     zero: f64,
+    max: f64,
 }
 
 #[derive(Default)]
 struct F32Type {
     zero: f32,
+    max: f32,
 }
 
 #[derive(Default)]
@@ -69,7 +71,7 @@ struct U8Type {
 fn lword_to_lreal_conversion() {
     let src = r"
 	TYPE myType : STRUCT
-		zero : LREAL;
+		zero : LREAL; max : LREAL;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -77,12 +79,14 @@ fn lword_to_lreal_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := LWORD_TO_LREAL(LWORD#0);
+		ret.max := LWORD_TO_LREAL(LWORD#18446744073709551615);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_num_conversion.st");
     let mut maintype = F64Type::default();
     let _res: f64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0.0f64);
+    assert_eq!(maintype.max, 18446744073709551615.0f64);
 }
 
 #[test]
@@ -265,7 +269,7 @@ fn lword_to_usint_conversion() {
 fn dword_to_real_conversion() {
     let src = r"
 	TYPE myType : STRUCT
-		zero : REAL;
+		zero : REAL; max : REAL;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -273,12 +277,14 @@ fn dword_to_real_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := DWORD_TO_REAL(DWORD#0);
+		ret.max := DWORD_TO_REAL(DWORD#4294967295);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_num_conversion.st");
     let mut maintype = F32Type::default();
     let _res: f32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0.0f32);
+    assert_eq!(maintype.max, 4294967295.0f32);
 }
 
 #[test]
@@ -993,7 +999,7 @@ fn bool_to_usint_conversion() {
 fn lreal_to_lword_conversion() {
     let src = r"
 	TYPE myType : STRUCT
-		zero : LWORD;
+		zero : LWORD; max : LWORD;
 	END_STRUCT END_TYPE
 
 	PROGRAM main
@@ -1001,12 +1007,14 @@ fn lreal_to_lword_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := LREAL_TO_LWORD(LREAL#0);
+		ret.max := LREAL_TO_LWORD(LREAL#1.84467429742e+19);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_num_conversion.st");
     let mut maintype = U64Type::default();
     let _res: u64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0u64);
+    assert_eq!(maintype.max, 18446742974200000512u64);
 }
 
 #[test]
@@ -1021,12 +1029,14 @@ fn real_to_dword_conversion() {
 		ret : myType;
 	END_VAR
 		ret.zero := REAL_TO_DWORD(REAL#0);
+		ret.max := REAL_TO_DWORD(REAL#4294967040.0);
     END_PROGRAM
         ";
     let sources = add_std!(src, "bit_num_conversion.st");
     let mut maintype = U32Type::default();
     let _res: u32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.zero, 0u32);
+    assert_eq!(maintype.max, 4294967040u32);
 }
 
 #[test]
