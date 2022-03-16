@@ -3,11 +3,11 @@
 * Converts LWORD to LREAL
 *
 *********************)
+@EXTERNAL
 FUNCTION LWORD_TO_LREAL : LREAL
 VAR_INPUT
 	in : LWORD;
 END_VAR
-	LWORD_TO_LREAL := in;
 END_FUNCTION
 
 (********************
@@ -111,11 +111,11 @@ END_FUNCTION
 * Converts DWORD to REAL
 *
 *********************)
+@EXTERNAL
 FUNCTION DWORD_TO_REAL : REAL
 VAR_INPUT
 	in : DWORD;
 END_VAR
-	DWORD_TO_REAL := in;
 END_FUNCTION
 
 (********************
@@ -507,11 +507,11 @@ END_FUNCTION
 * Converts LREAL to LWORD
 *
 *********************)
+@EXTERNAL
 FUNCTION LREAL_TO_LWORD : LWORD
 VAR_INPUT
 	in : LREAL;
 END_VAR
-	LREAL_TO_LWORD := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -519,11 +519,11 @@ END_FUNCTION
 * Converts REAL to DWORD
 *
 *********************)
+@EXTERNAL
 FUNCTION REAL_TO_DWORD : DWORD
 VAR_INPUT
 	in : REAL;
 END_VAR
-	REAL_TO_DWORD := ROUND(in);
 END_FUNCTION
 
 (********************
@@ -908,16 +908,4 @@ VAR_INPUT
 	in : USINT;
 END_VAR
 	USINT_TO_BYTE := in;
-END_FUNCTION
-
-(**************************
- * 
- * Rounds a given ANY_REAL to the nearest integer
- * Rounds half values away from zero
- * 
-*************************)
-@EXTERNAL FUNCTION ROUND<T : ANY_REAL> : T 
-VAR_INPUT
-	in : T;
-END_VAR
 END_FUNCTION
