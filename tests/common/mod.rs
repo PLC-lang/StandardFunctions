@@ -66,6 +66,10 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ATAN__LREAL", iec61131_std::ATAN__LREAL as usize),
         ("ATAN2__REAL", iec61131_std::ATAN2__REAL as usize),
         ("ATAN2__LREAL", iec61131_std::ATAN2__LREAL as usize),
+        ("LWORD_TO_LREAL", iec61131_std::LWORD_TO_LREAL as usize),
+        ("DWORD_TO_REAL", iec61131_std::DWORD_TO_REAL as usize),
+        ("LREAL_TO_LWORD", iec61131_std::LREAL_TO_LWORD as usize),
+        ("REAL_TO_DWORD", iec61131_std::REAL_TO_DWORD as usize),
     ];
 
     let variables = vec![
