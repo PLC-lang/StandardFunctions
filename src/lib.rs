@@ -236,6 +236,42 @@ pub extern "C" fn ATAN2__LREAL(inter: &DoubleParam<f64>) -> f64 {
     inter.in1.atan2(inter.in2)
 }
 
+/// .
+/// Converts LWORD to LREAL
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn LWORD_TO_LREAL(input: &SingleParam<u64>) -> f64 {
+    f64::from_bits(input.in1)
+}
+
+/// .
+/// Converts DWORD to REAL
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DWORD_TO_REAL(input: &SingleParam<u32>) -> f32 {
+    f32::from_bits(input.in1)
+}
+
+/// .
+/// Converts LREAL to LWORD
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn LREAL_TO_LWORD(input: &SingleParam<f64>) -> u64 {
+    f64::to_bits(input.in1)
+}
+
+/// .
+/// Converts REAL to DWORD
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
+    f32::to_bits(input.in1)
+}
+
 #[repr(C)]
 pub struct SingleParam<T> {
     pub in1: T,
