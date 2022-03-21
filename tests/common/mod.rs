@@ -121,7 +121,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
     let (_, code_gen) = compile_module(
-        &context,
+        context,
         source.containers(),
         vec![],
         None,

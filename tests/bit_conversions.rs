@@ -171,10 +171,10 @@ fn lword_to_bool() {
     let sources = add_std!(src, "bit_conversion.st");
     let mut maintype = BoolType::default();
     let _res: bool = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.true_, true);
-    assert_eq!(maintype.false_, false);
-    assert_eq!(maintype.max_overflow, false);
-    assert_eq!(maintype.min_overflow, true);
+    assert!(maintype.true_);
+    assert!(!maintype.false_);
+    assert!(!maintype.max_overflow);
+    assert!(maintype.min_overflow);
 }
 
 #[test]
@@ -290,10 +290,10 @@ fn dword_to_bool() {
     let sources = add_std!(src, "bit_conversion.st");
     let mut maintype = BoolType::default();
     let _res: bool = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.true_, true);
-    assert_eq!(maintype.false_, false);
-    assert_eq!(maintype.max_overflow, false);
-    assert_eq!(maintype.min_overflow, true);
+    assert!(maintype.true_);
+    assert!(!maintype.false_);
+    assert!(!maintype.max_overflow);
+    assert!(maintype.min_overflow);
 }
 
 #[test]
@@ -399,10 +399,10 @@ fn word_to_bool() {
     let sources = add_std!(src, "bit_conversion.st");
     let mut maintype = BoolType::default();
     let _res: bool = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.true_, true);
-    assert_eq!(maintype.false_, false);
-    assert_eq!(maintype.max_overflow, false);
-    assert_eq!(maintype.min_overflow, true);
+    assert!(maintype.true_);
+    assert!(!maintype.false_);
+    assert!(!maintype.max_overflow);
+    assert!(maintype.min_overflow);
 }
 
 #[test]
@@ -498,10 +498,10 @@ fn byte_to_bool() {
     let sources = add_std!(src, "bit_conversion.st");
     let mut maintype = BoolType::default();
     let _res: bool = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.true_, true);
-    assert_eq!(maintype.false_, false);
-    assert_eq!(maintype.max_overflow, false);
-    assert_eq!(maintype.min_overflow, true);
+    assert!(maintype.true_);
+    assert!(!maintype.false_);
+    assert!(!maintype.max_overflow);
+    assert!(maintype.min_overflow);
 }
 
 #[test]
