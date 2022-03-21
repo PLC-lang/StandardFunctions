@@ -70,6 +70,22 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("DWORD_TO_REAL", iec61131_std::DWORD_TO_REAL as usize),
         ("LREAL_TO_LWORD", iec61131_std::LREAL_TO_LWORD as usize),
         ("REAL_TO_DWORD", iec61131_std::REAL_TO_DWORD as usize),
+        ("SHL__BYTE", iec61131_std::bit_shift::SHL__BYTE as usize),
+        ("SHL__WORD", iec61131_std::bit_shift::SHL__WORD as usize),
+        ("SHL__DWORD", iec61131_std::bit_shift::SHL__DWORD as usize),
+        ("SHL__LWORD", iec61131_std::bit_shift::SHL__LWORD as usize),
+        ("SHR__BYTE", iec61131_std::bit_shift::SHR__BYTE as usize),
+        ("SHR__WORD", iec61131_std::bit_shift::SHR__WORD as usize),
+        ("SHR__DWORD", iec61131_std::bit_shift::SHR__DWORD as usize),
+        ("SHR__LWORD", iec61131_std::bit_shift::SHR__LWORD as usize),
+        ("ROL__BYTE", iec61131_std::bit_shift::ROL__BYTE as usize),
+        ("ROL__WORD", iec61131_std::bit_shift::ROL__WORD as usize),
+        ("ROL__DWORD", iec61131_std::bit_shift::ROL__DWORD as usize),
+        ("ROL__LWORD", iec61131_std::bit_shift::ROL__LWORD as usize),
+        ("ROR__BYTE", iec61131_std::bit_shift::ROR__BYTE as usize),
+        ("ROR__WORD", iec61131_std::bit_shift::ROR__WORD as usize),
+        ("ROR__DWORD", iec61131_std::bit_shift::ROR__DWORD as usize),
+        ("ROR__LWORD", iec61131_std::bit_shift::ROR__LWORD as usize),
     ];
 
     let variables = vec![
