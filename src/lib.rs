@@ -272,6 +272,52 @@ pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
     f32::to_bits(input.in1)
 }
 
+/// .
+/// Converts WSTRING to STRING
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+#[allow(improper_ctypes_definitions)]
+pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> [u8; 81] {
+    let mut arr: [u8; 81] = [0; 81];
+    for (i, e) in input.in1.iter().enumerate() {
+        arr[i] = e.to_owned() as u8;
+    }
+    arr
+}
+
+/// .
+/// Converts STRING to WSTRING
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+#[allow(improper_ctypes_definitions)]
+pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> [u16; 81] {
+    let mut arr: [u16; 81] = [0; 81];
+    for (i, e) in input.in1.iter().enumerate() {
+        arr[i] = e.to_owned() as u16;
+    }
+    arr
+}
+
+/// .
+/// Converts WCHAR to CHAR
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn WCHAR_TO_CHAR(input: &SingleParam<u16>) -> u8 {
+    input.in1 as u8
+}
+
+/// .
+/// Converts CHAR to WCHAR
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CHAR_TO_WCHAR(input: &SingleParam<u8>) -> u16 {
+    input.in1 as u16
+}
+
 #[repr(C)]
 pub struct SingleParam<T> {
     pub in1: T,

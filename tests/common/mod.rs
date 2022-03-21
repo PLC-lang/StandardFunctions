@@ -70,6 +70,16 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("DWORD_TO_REAL", iec61131_std::DWORD_TO_REAL as usize),
         ("LREAL_TO_LWORD", iec61131_std::LREAL_TO_LWORD as usize),
         ("REAL_TO_DWORD", iec61131_std::REAL_TO_DWORD as usize),
+        (
+            "WSTRING_TO_STRING",
+            iec61131_std::WSTRING_TO_STRING as usize,
+        ),
+        (
+            "STRING_TO_WSTRING",
+            iec61131_std::STRING_TO_WSTRING as usize,
+        ),
+        ("WCHAR_TO_CHAR", iec61131_std::WCHAR_TO_CHAR as usize),
+        ("CHAR_TO_WCHAR", iec61131_std::CHAR_TO_WCHAR as usize),
     ];
 
     let variables = vec![
