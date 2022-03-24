@@ -1,5 +1,7 @@
 // Definitions of the core standard function modules for IEC61131-3
 
+pub mod bit_shift;
+
 #[no_mangle]
 pub static PI_LREAL: f64 = std::f64::consts::PI;
 #[no_mangle]
