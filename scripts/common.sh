@@ -25,6 +25,28 @@ function check_env() {
 	fi
 }
 
+function get_compiler() {
+	log "Trying clang"
+	res=
+	if command -v clang &> /dev/null
+	then
+		log "Found clang, using as default"
+		res=clang-13
+	else
+		log "Trying clang-13"
+		if command -v clang-13 &> /dev/null
+		then
+			log "Found clang, using as default"
+			res=clang-13
+		else 
+			echo 'Error : clang / clang-13 not found'
+			exit 1
+		fi
+	fi
+	log "Compiler found : $res"
+	echo $res
+}
+
 function get_container_engine() {
 	log "Trying docker" 
 	if command -v docker &> /dev/null 
