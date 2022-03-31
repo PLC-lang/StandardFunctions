@@ -48,7 +48,6 @@ fn wstring_to_string_extra_conversion() {
     let _res: i32 = compile_and_run(sources, &mut maintype);
     assert_eq!(&String::from_utf8_lossy(&maintype.res), "hèßlo👽️\0");
     assert_eq!(&maintype.res, "hèßlo👽️\0".as_bytes());
-
 }
 
 #[test]
@@ -107,12 +106,12 @@ fn string_to_wstring_extra_conversion() {
     END_PROGRAM
         "#;
 
-    let mut exp = [0;8];
-    for (i,c) in "Hèßlo😀\0".encode_utf16().into_iter().enumerate() {
+    let mut exp = [0; 8];
+    for (i, c) in "Hèßlo😀\0".encode_utf16().into_iter().enumerate() {
         exp[i] = c;
     }
     let sources = add_std!(src, "string_conversion.st");
-    let mut maintype = MainType{ res : [0;8]};
+    let mut maintype = MainType { res: [0; 8] };
     let _res: i32 = compile_and_run(sources, &mut maintype);
     assert_eq!(&String::from_utf16_lossy(&maintype.res), "Hèßlo😀\0");
     assert_eq!(&maintype.res, &exp);

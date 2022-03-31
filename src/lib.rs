@@ -280,12 +280,12 @@ pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[u8; 81]> {
-    let iter = dbg!(input
-        .in1)
+    let iter = input
+        .in1
         .into_iter()
         .take_while(|u| *u > 0)
         .collect::<Vec<u16>>();
-    let string = dbg!(String::from_utf16_lossy(iter.as_slice()));
+    let string = String::from_utf16_lossy(iter.as_slice());
     let mut arr = [0; 81];
     for (idx, b) in string.bytes().enumerate() {
         if idx < arr.len() {
@@ -301,12 +301,12 @@ pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> Wrapper<[u16; 81]> {
-    let iter = dbg!(input
-        .in1)
+    let iter = input
+        .in1
         .into_iter()
         .take_while(|u| *u > 0)
         .collect::<Vec<u8>>();
-    let string = dbg!(String::from_utf8_lossy(iter.as_slice()));
+    let string = String::from_utf8_lossy(iter.as_slice());
     let mut arr: [u16; 81] = [0; 81];
     for (i, e) in string.encode_utf16().enumerate() {
         if i < arr.len() {
