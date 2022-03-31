@@ -1,5 +1,7 @@
 // Definitions of the core standard function modules for IEC61131-3
 
+use std::ffi::CStr;
+
 pub mod bit_shift;
 
 #[no_mangle]
@@ -280,12 +282,12 @@ pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[u8; 81]> {
-    let iter = input
+    let terminator = input
         .in1
-        .into_iter()
-        .take_while(|u| *u > 0)
-        .collect::<Vec<u16>>();
-    let string = String::from_utf16_lossy(iter.as_slice());
+        .iter()
+        .position(|c| *c == 0)
+        .unwrap_or(input.in1.len());
+    let string = String::from_utf16_lossy(&input.in1[..terminator]);
     let mut arr = [0; 81];
     for (idx, b) in string.bytes().enumerate() {
         if idx < arr.len() {
@@ -301,12 +303,16 @@ pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> Wrapper<[u16; 81]> {
-    let iter = input
+    //find the \0
+    let terminator = input
         .in1
-        .into_iter()
-        .take_while(|u| *u > 0)
-        .collect::<Vec<u8>>();
-    let string = String::from_utf8_lossy(iter.as_slice());
+        .iter()
+        .position(|c| *c == 0)
+        .map(|it| it + 1)
+        .unwrap_or(input.in1.len());
+    let string = CStr::from_bytes_with_nul(&input.in1[..terminator])
+        .map_or(Ok(""), CStr::to_str)
+        .unwrap_or("");
     let mut arr: [u16; 81] = [0; 81];
     for (i, e) in string.encode_utf16().enumerate() {
         if i < arr.len() {
@@ -323,15 +329,15 @@ pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> Wrapper<[u
 #[no_mangle]
 pub extern "C" fn WCHAR_TO_CHAR(input: &SingleParam<u16>) -> u8 {
     let u16_arr = [input.in1];
-    let res = char::decode_utf16(u16_arr.into_iter())
-        .map(|r| r.unwrap_or(std::char::REPLACEMENT_CHARACTER))
-        .collect::<String>();
-    if res.as_bytes().len() > 1 || res.is_empty() {
-        //Something went wrong, or we could not convert to a single byte char
-        u8::MAX
-    } else {
-        res.as_bytes()[0]
+    let mut res_iter = char::decode_utf16(u16_arr.into_iter())
+        .map(|r| r.unwrap_or(std::char::REPLACEMENT_CHARACTER));
+    let mut res_arr = [u8::MAX; 80];
+    if let Some(res) = res_iter.next() {
+        if res_iter.next().is_none() {
+            res.encode_utf8(&mut res_arr);
+        }
     }
+    res_arr[0]
 }
 
 /// .
