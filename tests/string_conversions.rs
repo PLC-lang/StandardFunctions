@@ -28,6 +28,30 @@ fn wstring_to_string_conversion() {
 }
 
 #[test]
+fn wstring_to_string_extra_conversion() {
+    #[derive(Default)]
+    struct MainType {
+        res: [u8; 15],
+    }
+
+    let src = r#"
+	PROGRAM main
+	VAR
+		res : STRING;
+		ptr : REF_TO STRING;
+	END_VAR
+		res := WSTRING_TO_STRING(WSTRING#"hèßlo👽️");
+    END_PROGRAM
+        "#;
+    let sources = add_std!(src, "string_conversion.st");
+    let mut maintype = MainType::default();
+    let _res: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(&String::from_utf8_lossy(&maintype.res), "hèßlo👽️\0");
+    assert_eq!(&maintype.res, "hèßlo👽️\0".as_bytes());
+
+}
+
+#[test]
 fn wstring_to_wchar_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -67,6 +91,31 @@ fn string_to_wstring_conversion() {
     let mut maintype = MainType::default();
     let _res: i32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.res, [72u16, 101u16, 108u16, 108u16, 111u16, 0u16]);
+}
+
+#[test]
+fn string_to_wstring_extra_conversion() {
+    struct MainType {
+        res: [u16; 8],
+    }
+    let src = r#"
+	PROGRAM main
+	VAR
+		res : WSTRING;
+	END_VAR
+		res := STRING_TO_WSTRING('Hèßlo😀');
+    END_PROGRAM
+        "#;
+
+    let mut exp = [0;8];
+    for (i,c) in "Hèßlo😀\0".encode_utf16().into_iter().enumerate() {
+        exp[i] = c;
+    }
+    let sources = add_std!(src, "string_conversion.st");
+    let mut maintype = MainType{ res : [0;8]};
+    let _res: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(&String::from_utf16_lossy(&maintype.res), "Hèßlo😀\0");
+    assert_eq!(&maintype.res, &exp);
 }
 
 #[test]
