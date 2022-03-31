@@ -274,6 +274,78 @@ pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
     f32::to_bits(input.in1)
 }
 
+/// .
+/// Converts WSTRING to STRING
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[u8; 81]> {
+    let iter = input
+        .in1
+        .into_iter()
+        .take_while(|u| *u > 0)
+        .collect::<Vec<u16>>();
+    let string = String::from_utf16_lossy(iter.as_slice());
+    let mut arr = [0; 81];
+    for (idx, b) in string.bytes().enumerate() {
+        if idx < arr.len() {
+            arr[idx] = b;
+        }
+    }
+    Wrapper { inner: arr }
+}
+
+/// .
+/// Converts STRING to WSTRING
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> Wrapper<[u16; 81]> {
+    let iter = input
+        .in1
+        .into_iter()
+        .take_while(|u| *u > 0)
+        .collect::<Vec<u8>>();
+    let string = String::from_utf8_lossy(iter.as_slice());
+    let mut arr: [u16; 81] = [0; 81];
+    for (i, e) in string.encode_utf16().enumerate() {
+        if i < arr.len() {
+            arr[i] = e;
+        }
+    }
+    Wrapper { inner: arr }
+}
+
+/// .
+/// Converts WCHAR to CHAR
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn WCHAR_TO_CHAR(input: &SingleParam<u16>) -> u8 {
+    let u16_arr = [input.in1];
+    let res = char::decode_utf16(u16_arr.into_iter())
+        .map(|r| r.unwrap_or(std::char::REPLACEMENT_CHARACTER))
+        .collect::<String>();
+    if res.as_bytes().len() > 1 || res.is_empty() {
+        //Something went wrong, or we could not convert to a single byte char
+        u8::MAX
+    } else {
+        res.as_bytes()[0]
+    }
+}
+
+/// .
+/// Converts CHAR to WCHAR
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CHAR_TO_WCHAR(input: &SingleParam<u8>) -> u16 {
+    let res: char = input.in1.into();
+    let mut arr = [u16::MAX; 2];
+    res.encode_utf16(&mut arr);
+    arr[0]
+}
+
 #[repr(C)]
 pub struct SingleParam<T> {
     pub in1: T,
@@ -283,4 +355,9 @@ pub struct SingleParam<T> {
 pub struct DoubleParam<T> {
     pub in1: T,
     pub in2: T,
+}
+
+#[repr(C)]
+pub struct Wrapper<T> {
+    pub inner: T,
 }
