@@ -13,4 +13,4 @@ inkwell = {git = "https://github.com/TheDan64/inkwell", branch="master", feature
 rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" } 
 
 [lib]
-crate-type = ["staticlib", "lib"]
+crate-type = ["staticlib", "lib", "cdylib"]

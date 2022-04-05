@@ -149,16 +149,16 @@ function run_package() {
 	log "Removing previous output folder"
 	rm -rf $OUTPUT_DIR
 	target_dir="$project_location/target"
+	include_dir=$OUTPUT_DIR/include 
+	make_dir $include_dir
+	#Copy the iec61131-st folder
+	cp -r "$project_location"/iec61131-st/*.st "$include_dir"
 
 	if [[ ! -z $target ]]; then
 		for val in ${target//,/ }
 		do
-			include_dir=$OUTPUT_DIR/$val/include 
 			lib_dir=$OUTPUT_DIR/$val/lib
-			make_dir $include_dir
 			make_dir $lib_dir
-			#Copy the iec61131-st folder
-			cp -r "$project_location"/iec61131-st/*.st "$include_dir"
 			rel_dir="$target_dir/$val"
 			if [[ $release -ne 0 ]]; then
 				rel_dir="$rel_dir/release"
@@ -184,33 +184,46 @@ function run_package() {
 			cp "$rel_dir/"*.a "$lib_dir" 2>/dev/null  || log "$rel_dir does not contain *.a files" 
 			# Create an SO file from the copied a file
 			log "Creating a shared library from the compiled static library"
-			log "$cc --shared -L$lib_dir --target=$val -Wl,--whole-archive -liec61131_std "
-			log "-o $lib_dir/out.so -Wl,--no-whole-archive "
-			log "-fuse-ld=lld $sysroot --verbose"
-
-			$cc --shared -L"$lib_dir" --target=$val -Wl,--whole-archive -liec61131_std \
+			log "Running : $cc --shared -L"$lib_dir" \
+				-Wl,--whole-archive -liec61131_std \
 				-o "$lib_dir/out.so" -Wl,--no-whole-archive \
+				-lm \
 				-fuse-ld=lld \
+				--target=$val \
+				$lib \
+				$sysroot"
+			$cc --shared -L"$lib_dir" \
+				-Wl,--whole-archive -liec61131_std \
+				-o "$lib_dir/out.so" -Wl,--no-whole-archive \
+				-lm \
+				-fuse-ld=lld \
+				--target=$val \
 				$lib \
 				$sysroot
 			
 			mv "$lib_dir/out.so" "$lib_dir/libiec61131_std.so"
 		done
 	else
-		include_dir=$OUTPUT_DIR/include 
 		lib_dir=$OUTPUT_DIR/lib
-		make_dir $include_dir
 		make_dir $lib_dir
-		cp -r "$project_location"/iec61131-st/*.st "$include_dir"
 		if [[ $release -ne 0 ]]; then
 			rel_dir="$target_dir/release"
 		else 
 			rel_dir="$target_dir/debug"
 		fi
 		cp "$rel_dir/"*.a "$lib_dir" 2>/dev/null || log "$rel_dir does not contain *.a files"
-			# Create an SO file from the copied a file
+		# Create an SO file from the copied a file
 		log "Creating a shared library from the compiled static library"
-		$cc --shared -L"$lib_dir" -Wl,--whole-archive -liec61131_std -o "$lib_dir/out.so" -Wl,--no-whole-archive -fuse-ld=lld
+		log "Running : $cc --shared -L"$lib_dir" \
+			-Wl,--whole-archive -liec61131_std \
+			-o "$lib_dir/out.so" -Wl,--no-whole-archive \
+			-lm \
+			-fuse-ld=lld "
+		$cc --shared -L"$lib_dir" \
+			-Wl,--whole-archive -liec61131_std \
+			-o "$lib_dir/out.so" -Wl,--no-whole-archive \
+			-lm \
+			-fuse-ld=lld 
 		mv "$lib_dir/out.so" "$lib_dir/libiec61131_std.so"
 	fi
 	
