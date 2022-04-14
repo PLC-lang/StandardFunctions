@@ -128,10 +128,12 @@ function run_test() {
 		rm -rf "$project_location/test_results"
 		make_dir "$project_location/test_results"
 		#Passing through tail here will remove the first line which is currently empty.
-		cargo test $CARGO_OPTIONS --lib -- --format=junit -Zunstable-options | tail -n +2 > "$project_location"/test_results/std_unit_tests.xml
 		# Run only the integration tests
 		#https://stackoverflow.com/questions/62447864/how-can-i-run-only-integration-tests
-		cargo test $CARGO_OPTIONS --test '*' -- --format=junit -Zunstable-options | tail -n +2 > "$project_location"/test_results/std_integration_tests.xml
+		cargo test $CARGO_OPTIONS --test '*' -- --format=junit \
+		 -Zunstable-options | tail -n +2 | \
+		 split -l1 - "$project_location"/test_results/std_integration_tests \
+		 -d --additional-suffix=.xml
 	else
 		cargo test $CARGO_OPTIONS
 	fi
