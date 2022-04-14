@@ -16,12 +16,10 @@ jobs:
     container: ghcr.io/plc-lang/rust-llvm:latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
 
       - name: Run Check
         run: |
-          cargo check
+          ./scripts/build.sh --verbose --check
 
   test:
     name: Test Linux
@@ -33,7 +31,7 @@ jobs:
       - name: Cargo test
         shell: bash
         run: |
-          cargo test
+          ./scripts/build.sh --verbose --test
   package:
     name: Package
     runs-on: ubuntu-latest
