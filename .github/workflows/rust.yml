@@ -13,33 +13,49 @@ jobs:
   check: 
     name: Check
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
+    container: ghcr.io/plc-lang/rust-llvm:latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
 
       - name: Run Check
         run: |
-          cargo check
+          ./scripts/build.sh --verbose --check
 
   test:
     name: Test Linux
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
+    container: ghcr.io/plc-lang/rust-llvm:latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cargo test
+        shell: bash
+        run: |
+          ./scripts/build.sh --verbose --test
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+    container: ghcr.io/plc-lang/rust-llvm:latest
     needs: check
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cargo test
+      - name: Build and Package
         shell: bash
         run: |
-          cargo test
-
-  styple:
+          ./scripts/build.sh --verbose --build --package \
+          --target x86_64-unknown-linux-gnu,aarch64-unknown-linux-gnu \
+          --release
+          
+      - uses: actions/upload-artifact@master
+        with:
+          name: StandardFunctions
+          path: output
+          
+  style:
     name: Style check
     runs-on: ubuntu-latest
-    container: ghcr.io/plc-lang/rust-llvm:latest-linux 
+    container: ghcr.io/plc-lang/rust-llvm:latest
     needs: check
     steps:
       - uses: actions/checkout@v2
