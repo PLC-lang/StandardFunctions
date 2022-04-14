@@ -172,7 +172,7 @@ function run_package() {
 			cp "$rel_dir/"*.a "$lib_dir" 2>/dev/null  || log "$rel_dir does not contain *.a files" 
 			# Create an SO file from the copied a file
 			log "Creating a shared library from the compiled static library"
-			log "Running : $cc --shared -L"$lib_dir" \
+			log "Running : $cc --shared -L$lib_dir \
 				-Wl,--whole-archive -liec61131_std \
 				-o $lib_dir/out.so -Wl,--no-whole-archive \
 				-lm \
