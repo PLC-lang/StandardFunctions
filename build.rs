@@ -32,7 +32,7 @@ fn main() {
     };
     let target = get_target_triple(compile_options.target.as_deref());
     //Build the object file
-    let _ = build(files, vec![], &compile_options, None, &target);
+    let _ = build(files, vec![], &compile_options, None, &rusty::ErrorFormat::Rich, &target);
 
     Command::new("ar")
         .args(&["crs", "libst.a", "st.o"])
