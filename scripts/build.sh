@@ -169,37 +169,21 @@ function run_package() {
 				echo "Compilation directory $rel_dir not found"
 				exit 1
 			fi
-			sysroot=
-			lib=
-			if [[ $val == aarch64* ]]; then
-				log "Using the aarch64 gnu sysroot"
-				sysroot=--sysroot=/usr/aarch64-linux-gnu
-				if [[ $val == *musl ]]; then
-					log "Using the musl lib"
-					if [[ -d /usr/lib/aarch64-linux-musl ]]; then
-						lib=-L/usr/lib/aarch64-linux-musl
-					fi
-				fi
-			fi
 			cp "$rel_dir/"*.a "$lib_dir" 2>/dev/null  || log "$rel_dir does not contain *.a files" 
 			# Create an SO file from the copied a file
 			log "Creating a shared library from the compiled static library"
 			log "Running : $cc --shared -L"$lib_dir" \
 				-Wl,--whole-archive -liec61131_std \
-				-o "$lib_dir/out.so" -Wl,--no-whole-archive \
+				-o $lib_dir/out.so -Wl,--no-whole-archive \
 				-lm \
 				-fuse-ld=lld \
-				--target=$val \
-				$lib \
-				$sysroot"
+				--target=$val"
 			$cc --shared -L"$lib_dir" \
 				-Wl,--whole-archive -liec61131_std \
 				-o "$lib_dir/out.so" -Wl,--no-whole-archive \
 				-lm \
 				-fuse-ld=lld \
-				--target=$val \
-				$lib \
-				$sysroot
+				--target="$val"
 			
 			mv "$lib_dir/out.so" "$lib_dir/libiec61131_std.so"
 		done
