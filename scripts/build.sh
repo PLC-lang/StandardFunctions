@@ -187,19 +187,19 @@ function run_package() {
 			# Create an SO file from the copied a file
 			log "Creating a shared library from the compiled static library"
 			log "Running : $cc --shared -L$lib_dir \
-				-Wl,--whole-archive -liec61131_std \
+				-Wl,--whole-archive -liec61131std \
 				-o $lib_dir/out.so -Wl,--no-whole-archive \
 				-lm \
 				-fuse-ld=lld \
 				--target=$val"
 			$cc --shared -L"$lib_dir" \
-				-Wl,--whole-archive -liec61131_std \
+				-Wl,--whole-archive -liec61131std \
 				-o "$lib_dir/out.so" -Wl,--no-whole-archive \
 				-lm \
 				-fuse-ld=lld \
 				--target="$val"
 			
-			mv "$lib_dir/out.so" "$lib_dir/libiec61131_std.so"
+			mv "$lib_dir/out.so" "$lib_dir/libiec61131std.so"
 		done
 	else
 		lib_dir=$OUTPUT_DIR/lib
@@ -213,16 +213,16 @@ function run_package() {
 		# Create an SO file from the copied a file
 		log "Creating a shared library from the compiled static library"
 		log "Running : $cc --shared -L"$lib_dir" \
-			-Wl,--whole-archive -liec61131_std \
+			-Wl,--whole-archive -liec61131std \
 			-o "$lib_dir/out.so" -Wl,--no-whole-archive \
 			-lm \
 			-fuse-ld=lld "
 		$cc --shared -L"$lib_dir" \
-			-Wl,--whole-archive -liec61131_std \
+			-Wl,--whole-archive -liec61131std \
 			-o "$lib_dir/out.so" -Wl,--no-whole-archive \
 			-lm \
 			-fuse-ld=lld 
-		mv "$lib_dir/out.so" "$lib_dir/libiec61131_std.so"
+		mv "$lib_dir/out.so" "$lib_dir/libiec61131std.so"
 	fi
 	
 	log "Enabling read/write on the output folder"

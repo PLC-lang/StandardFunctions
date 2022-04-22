@@ -1,5 +1,5 @@
 [package]
-name = "iec61131-std"
+name = "iec61131std"
 version = "0.1.0"
 edition = "2021"
 
