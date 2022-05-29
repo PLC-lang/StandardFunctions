@@ -282,6 +282,7 @@ pub extern "C" fn REAL_TO_DWORD(input: f32) -> u32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn WSTRING_TO_STRING(input: Wrapper<[u16; 81]>) -> Wrapper<[u8; 81]> {
+    let input = dbg!(input);
     let terminator = input
         .inner
         .iter()
@@ -364,6 +365,7 @@ pub struct DoubleParam<T> {
 }
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct Wrapper<T> {
     pub inner: T,
 }

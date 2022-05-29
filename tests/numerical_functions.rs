@@ -10,25 +10,26 @@ struct MainType<T: Default> {
     a: T,
     b: T,
     c: T,
+    res: T,
 }
 
 #[test]
 fn absolute_on_sint_test() {
-    let src = r"FUNCTION main : SINT
+    let src = r"PROGRAM main
             VAR
-                a,b,c : SINT;
+                a,b,c,res : SINT;
             END_VAR
             a := ABS(SINT#-120);
             b := ABS(SINT#-0);
             c := ABS(SINT#121);
-            main := ABS(SINT#0);
-            END_FUNCTION
+            res := ABS(SINT#0);
+            END_PROGRAM
         ";
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::<i8>::default();
-    let res: i8 = compile_and_run(sources, &mut maintype);
+    let _: i8 = compile_and_run(sources, &mut maintype);
 
-    assert_eq!(res, 0i8);
+    assert_eq!(maintype.res, 0i8);
     assert_eq!(maintype.a, 120i8);
     assert_eq!(maintype.b, 0i8);
     assert_eq!(maintype.c, 121i8);
@@ -36,20 +37,20 @@ fn absolute_on_sint_test() {
 
 #[test]
 fn absolute_on_int_test() {
-    let src = r"FUNCTION main : INT
+    let src = r"PROGRAM main
             VAR
-                a,b,c : INT;
+                a,b,c,res : INT;
             END_VAR
             a := ABS(INT#-99);
             b := ABS(INT#-0);
             c := ABS(INT#98);
-            main := ABS(INT#0);
-            END_FUNCTION
+            res := ABS(INT#0);
+            END_PROGRAM
         ";
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::<i16>::default();
-    let res: i16 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 0i16);
+    let _: i16 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, 0i16);
     assert_eq!(maintype.a, 99i16);
     assert_eq!(maintype.b, 0i16);
     assert_eq!(maintype.c, 98i16);
@@ -57,20 +58,20 @@ fn absolute_on_int_test() {
 
 #[test]
 fn absolute_on_dint_test() {
-    let src = r"FUNCTION main : DINT
+    let src = r"PROGRAM main
             VAR
-                a,b,c : DINT;
+                a,b,c,res : DINT;
             END_VAR
             a := ABS(-77);
             b := ABS(-0);
             c := ABS(78);
-            main := ABS(0);
-            END_FUNCTION
+            res := ABS(0);
+            END_PROGRAM
         ";
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::<i32>::default();
-    let res: i32 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 0i32);
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, 0i32);
     assert_eq!(maintype.a, 77i32);
     assert_eq!(maintype.b, 0i32);
     assert_eq!(maintype.c, 78i32);
@@ -78,20 +79,20 @@ fn absolute_on_dint_test() {
 
 #[test]
 fn absolute_on_lint_test() {
-    let src = r"FUNCTION main : LINT
+    let src = r"PROGRAM main
             VAR
-                a,b,c : LINT;
+                a,b,c,res : LINT;
             END_VAR
             a := ABS(LINT#-88);
             b := ABS(LINT#-0);
             c := ABS(LINT#89);
-            main := ABS(LINT#0);
-            END_FUNCTION
+            res := ABS(LINT#0);
+            END_PROGRAM
         ";
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::<i64>::default();
-    let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 0i64);
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, 0i64);
     assert_eq!(maintype.a, 88i64);
     assert_eq!(maintype.b, 0i64);
     assert_eq!(maintype.c, 89i64);
@@ -99,20 +100,20 @@ fn absolute_on_lint_test() {
 
 #[test]
 fn absolute_on_real_test() {
-    let src = r"FUNCTION main : REAL
+    let src = r"PROGRAM main
             VAR
-                a,b,c : REAL;
+                a,b,c,res : REAL;
             END_VAR
             a := ABS(REAL#-3.2);
             b := ABS(REAL#-0);
             c := ABS(REAL#3.3);
-            main := ABS(REAL#0);
-            END_FUNCTION
+            res := ABS(REAL#0);
+            END_PROGRAM
         ";
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::<f32>::default();
-    let res: f32 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 0.0f32);
+    let _: f32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, 0.0f32);
     assert_eq!(maintype.a, 3.2f32);
     assert_eq!(maintype.b, 0.0f32);
     assert_eq!(maintype.c, 3.3f32);
@@ -120,20 +121,20 @@ fn absolute_on_real_test() {
 
 #[test]
 fn absolute_on_lreal_test() {
-    let src = r"FUNCTION main : LREAL
+    let src = r"PROGRAM main
             VAR
-                a,b,c : LREAL;
+                a,b,c,res : LREAL;
             END_VAR
             a := ABS(LREAL#-2.5);
             b := ABS(LREAL#-0);
             c := ABS(LREAL#2.6);
-            main := ABS(LREAL#0);
-            END_FUNCTION
+            res := ABS(LREAL#0);
+            END_PROGRAM
         ";
     let sources = add_std!(src, "num.st");
     let mut maintype = MainType::<f64>::default();
-    let res: f64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 0.0f64);
+    let _: f64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, 0.0f64);
     assert_eq!(maintype.a, 2.5f64);
     assert_eq!(maintype.b, 0.0f64);
     assert_eq!(maintype.c, 2.6f64);
