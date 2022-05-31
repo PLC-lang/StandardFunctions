@@ -70,14 +70,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("DWORD_TO_REAL", iec61131std::DWORD_TO_REAL as usize),
         ("LREAL_TO_LWORD", iec61131std::LREAL_TO_LWORD as usize),
         ("REAL_TO_DWORD", iec61131std::REAL_TO_DWORD as usize),
-        (
-            "WSTRING_TO_STRING",
-            iec61131std::WSTRING_TO_STRING as usize,
-        ),
-        (
-            "STRING_TO_WSTRING",
-            iec61131std::STRING_TO_WSTRING as usize,
-        ),
+        ("WSTRING_TO_STRING", iec61131std::WSTRING_TO_STRING as usize),
+        ("STRING_TO_WSTRING", iec61131std::STRING_TO_WSTRING as usize),
         ("WCHAR_TO_CHAR", iec61131std::WCHAR_TO_CHAR as usize),
         ("CHAR_TO_WCHAR", iec61131std::CHAR_TO_WCHAR as usize),
         ("SHL__BYTE", iec61131std::bit_shift::SHL__BYTE as usize),
@@ -96,13 +90,18 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ROR__WORD", iec61131std::bit_shift::ROR__WORD as usize),
         ("ROR__DWORD", iec61131std::bit_shift::ROR__DWORD as usize),
         ("ROR__LWORD", iec61131std::bit_shift::ROR__LWORD as usize),
+        (
+            "DATE_AND_TIME_TO_DATE",
+            iec61131std::DATE_AND_TIME_TO_DATE as usize,
+        ),
+        (
+            "DATE_AND_TIME_TO_TIME_OF_DAY",
+            iec61131std::DATE_AND_TIME_TO_TIME_OF_DAY as usize,
+        ),
     ];
 
     let variables = vec![
-        (
-            "PI_REAL",
-            std::ptr::addr_of!(iec61131std::PI_REAL) as usize,
-        ),
+        ("PI_REAL", std::ptr::addr_of!(iec61131std::PI_REAL) as usize),
         (
             "PI_LREAL",
             std::ptr::addr_of!(iec61131std::PI_LREAL) as usize,
@@ -124,10 +123,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             std::ptr::addr_of!(iec61131std::FRAC_PI_4_LREAL) as usize,
         ),
         ("E_REAL", std::ptr::addr_of!(iec61131std::E_REAL) as usize),
-        (
-            "E_LREAL",
-            std::ptr::addr_of!(iec61131std::E_LREAL) as usize,
-        ),
+        ("E_LREAL", std::ptr::addr_of!(iec61131std::E_LREAL) as usize),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
     let (_, code_gen) = compile_module(
