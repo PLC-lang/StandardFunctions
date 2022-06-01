@@ -90,6 +90,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ROR__WORD", iec61131std::bit_shift::ROR__WORD as usize),
         ("ROR__DWORD", iec61131std::bit_shift::ROR__DWORD as usize),
         ("ROR__LWORD", iec61131std::bit_shift::ROR__LWORD as usize),
+        (
+            "DATE_AND_TIME_TO_DATE",
+            iec61131std::DATE_AND_TIME_TO_DATE as usize,
+        ),
+        (
+            "DATE_AND_TIME_TO_TIME_OF_DAY",
+            iec61131std::DATE_AND_TIME_TO_TIME_OF_DAY as usize,
+        ),
     ];
 
     let variables = vec![

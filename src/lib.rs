@@ -1,5 +1,6 @@
 // Definitions of the core standard function modules for IEC61131-3
 
+use chrono::{TimeZone, Timelike};
 use std::ffi::CStr;
 
 pub mod bit_shift;
@@ -352,15 +353,34 @@ pub extern "C" fn CHAR_TO_WCHAR(input: u8) -> u16 {
     arr[0]
 }
 
-#[repr(C)]
-pub struct SingleParam<T> {
-    pub in1: T,
+/// .
+/// Converts DT/LDT to DATE
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DATE_AND_TIME_TO_DATE(input: i64) -> i64 {
+    let date_time = chrono::Utc.timestamp_millis(input);
+
+    let new_date_time = date_time.date().and_hms(0, 0, 0);
+    new_date_time.timestamp_millis()
 }
 
-#[repr(C)]
-pub struct DoubleParam<T> {
-    pub in1: T,
-    pub in2: T,
+/// .
+/// Converts DT/LDT to TOD/LTOD
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: i64) -> i64 {
+    let date_time = chrono::Utc.timestamp_millis(input);
+    let hour = date_time.hour();
+    let min = date_time.minute();
+    let sec = date_time.second();
+    let milli = date_time.timestamp_subsec_millis();
+
+    let new_date_time =
+        chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_milli(hour, min, sec, milli);
+
+    new_date_time.timestamp_millis()
 }
 
 #[repr(C)]
