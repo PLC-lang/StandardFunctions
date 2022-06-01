@@ -358,8 +358,8 @@ pub extern "C" fn CHAR_TO_WCHAR(input: u8) -> u16 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn DATE_AND_TIME_TO_DATE(input: &SingleParam<i64>) -> i64 {
-    let date_time = chrono::Utc.timestamp_millis(input.in1);
+pub extern "C" fn DATE_AND_TIME_TO_DATE(input: i64) -> i64 {
+    let date_time = chrono::Utc.timestamp_millis(input);
 
     let new_date_time = date_time.date().and_hms(0, 0, 0);
     new_date_time.timestamp_millis()
@@ -370,8 +370,8 @@ pub extern "C" fn DATE_AND_TIME_TO_DATE(input: &SingleParam<i64>) -> i64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: &SingleParam<i64>) -> i64 {
-    let date_time = chrono::Utc.timestamp_millis(input.in1);
+pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: i64) -> i64 {
+    let date_time = chrono::Utc.timestamp_millis(input);
     let hour = date_time.hour();
     let min = date_time.minute();
     let sec = date_time.second();
@@ -381,17 +381,6 @@ pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: &SingleParam<i64>) -> i64 
         chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_milli(hour, min, sec, milli);
 
     new_date_time.timestamp_millis()
-}
-
-#[repr(C)]
-pub struct SingleParam<T> {
-    pub in1: T,
-}
-
-#[repr(C)]
-pub struct DoubleParam<T> {
-    pub in1: T,
-    pub in2: T,
 }
 
 #[repr(C)]
