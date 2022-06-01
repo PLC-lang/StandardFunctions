@@ -315,7 +315,7 @@ fn asin_called_on_lreal() {
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
-    assert!(dbg!(maintype).a.abs() <= f64::EPSILON);
+    assert!(maintype.a.abs() <= f64::EPSILON);
 }
 
 #[test]
