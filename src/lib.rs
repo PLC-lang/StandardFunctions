@@ -26,8 +26,8 @@ pub static E_LREAL: f64 = std::f64::consts::E;
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ROUND__REAL(input: &SingleParam<f32>) -> f32 {
-    input.in1.round()
+pub extern "C" fn ROUND__REAL(input: f32) -> f32 {
+    input.round()
 }
 
 /// .
@@ -35,8 +35,8 @@ pub extern "C" fn ROUND__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ROUND__LREAL(input: &SingleParam<f64>) -> f64 {
-    input.in1.round()
+pub extern "C" fn ROUND__LREAL(input: f64) -> f64 {
+    input.round()
 }
 
 /// .
@@ -44,8 +44,8 @@ pub extern "C" fn ROUND__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn SQRT__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::sqrt(input.in1)
+pub extern "C" fn SQRT__REAL(input: f32) -> f32 {
+    f32::sqrt(input)
 }
 
 /// .
@@ -53,8 +53,8 @@ pub extern "C" fn SQRT__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn SQRT__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::sqrt(input.in1)
+pub extern "C" fn SQRT__LREAL(input: f64) -> f64 {
+    f64::sqrt(input)
 }
 
 /// .
@@ -62,8 +62,8 @@ pub extern "C" fn SQRT__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LN__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::ln(input.in1)
+pub extern "C" fn LN__REAL(input: f32) -> f32 {
+    f32::ln(input)
 }
 
 /// .
@@ -71,8 +71,8 @@ pub extern "C" fn LN__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LN__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::ln(input.in1)
+pub extern "C" fn LN__LREAL(input: f64) -> f64 {
+    f64::ln(input)
 }
 
 /// .
@@ -80,8 +80,8 @@ pub extern "C" fn LN__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LOG__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::log10(input.in1)
+pub extern "C" fn LOG__REAL(input: f32) -> f32 {
+    f32::log10(input)
 }
 
 /// .
@@ -89,8 +89,8 @@ pub extern "C" fn LOG__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LOG__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::log10(input.in1)
+pub extern "C" fn LOG__LREAL(input: f64) -> f64 {
+    f64::log10(input)
 }
 
 /// .
@@ -98,8 +98,8 @@ pub extern "C" fn LOG__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn EXP__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::exp(input.in1)
+pub extern "C" fn EXP__REAL(input: f32) -> f32 {
+    f32::exp(input)
 }
 
 /// .
@@ -107,8 +107,8 @@ pub extern "C" fn EXP__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn EXP__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::exp(input.in1)
+pub extern "C" fn EXP__LREAL(input: f64) -> f64 {
+    f64::exp(input)
 }
 
 ///
@@ -117,8 +117,8 @@ pub extern "C" fn EXP__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn SIN__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::sin(input.in1)
+pub extern "C" fn SIN__REAL(input: f32) -> f32 {
+    f32::sin(input)
 }
 
 /// .
@@ -126,8 +126,8 @@ pub extern "C" fn SIN__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn SIN__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::sin(input.in1)
+pub extern "C" fn SIN__LREAL(input: f64) -> f64 {
+    f64::sin(input)
 }
 
 /// .
@@ -135,8 +135,8 @@ pub extern "C" fn SIN__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn COS__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::cos(input.in1)
+pub extern "C" fn COS__REAL(input: f32) -> f32 {
+    f32::cos(input)
 }
 
 /// .
@@ -144,8 +144,8 @@ pub extern "C" fn COS__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn COS__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::cos(input.in1)
+pub extern "C" fn COS__LREAL(input: f64) -> f64 {
+    f64::cos(input)
 }
 
 /// .
@@ -153,8 +153,8 @@ pub extern "C" fn COS__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn TAN__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::tan(input.in1)
+pub extern "C" fn TAN__REAL(input: f32) -> f32 {
+    f32::tan(input)
 }
 
 /// .
@@ -162,8 +162,8 @@ pub extern "C" fn TAN__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn TAN__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::tan(input.in1)
+pub extern "C" fn TAN__LREAL(input: f64) -> f64 {
+    f64::tan(input)
 }
 
 /// .
@@ -171,8 +171,8 @@ pub extern "C" fn TAN__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ASIN__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::asin(input.in1)
+pub extern "C" fn ASIN__REAL(input: f32) -> f32 {
+    f32::asin(input)
 }
 
 /// .
@@ -180,8 +180,8 @@ pub extern "C" fn ASIN__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ASIN__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::asin(input.in1)
+pub extern "C" fn ASIN__LREAL(input: f64) -> f64 {
+    f64::asin(input)
 }
 
 /// .
@@ -189,8 +189,8 @@ pub extern "C" fn ASIN__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ACOS__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::acos(input.in1)
+pub extern "C" fn ACOS__REAL(input: f32) -> f32 {
+    f32::acos(input)
 }
 
 /// .
@@ -199,8 +199,8 @@ pub extern "C" fn ACOS__REAL(input: &SingleParam<f32>) -> f32 {
 /// # Examples
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ACOS__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::acos(input.in1)
+pub extern "C" fn ACOS__LREAL(input: f64) -> f64 {
+    f64::acos(input)
 }
 
 /// .
@@ -208,8 +208,8 @@ pub extern "C" fn ACOS__LREAL(input: &SingleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ATAN__REAL(input: &SingleParam<f32>) -> f32 {
-    f32::atan(input.in1)
+pub extern "C" fn ATAN__REAL(input: f32) -> f32 {
+    f32::atan(input)
 }
 
 /// .
@@ -217,8 +217,8 @@ pub extern "C" fn ATAN__REAL(input: &SingleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ATAN__LREAL(input: &SingleParam<f64>) -> f64 {
-    f64::atan(input.in1)
+pub extern "C" fn ATAN__LREAL(input: f64) -> f64 {
+    f64::atan(input)
 }
 
 /// .
@@ -227,8 +227,8 @@ pub extern "C" fn ATAN__LREAL(input: &SingleParam<f64>) -> f64 {
 /// # Examples
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ATAN2__REAL(inter: &DoubleParam<f32>) -> f32 {
-    inter.in1.atan2(inter.in2)
+pub extern "C" fn ATAN2__REAL(in1: f32, in2: f32) -> f32 {
+    in1.atan2(in2)
 }
 
 /// .
@@ -236,8 +236,8 @@ pub extern "C" fn ATAN2__REAL(inter: &DoubleParam<f32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn ATAN2__LREAL(inter: &DoubleParam<f64>) -> f64 {
-    inter.in1.atan2(inter.in2)
+pub extern "C" fn ATAN2__LREAL(in1: f64, in2: f64) -> f64 {
+    in1.atan2(in2)
 }
 
 /// .
@@ -245,8 +245,8 @@ pub extern "C" fn ATAN2__LREAL(inter: &DoubleParam<f64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LWORD_TO_LREAL(input: &SingleParam<u64>) -> f64 {
-    f64::from_bits(input.in1)
+pub extern "C" fn LWORD_TO_LREAL(input: u64) -> f64 {
+    f64::from_bits(input)
 }
 
 /// .
@@ -254,8 +254,8 @@ pub extern "C" fn LWORD_TO_LREAL(input: &SingleParam<u64>) -> f64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn DWORD_TO_REAL(input: &SingleParam<u32>) -> f32 {
-    f32::from_bits(input.in1)
+pub extern "C" fn DWORD_TO_REAL(input: u32) -> f32 {
+    f32::from_bits(input)
 }
 
 /// .
@@ -263,8 +263,8 @@ pub extern "C" fn DWORD_TO_REAL(input: &SingleParam<u32>) -> f32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LREAL_TO_LWORD(input: &SingleParam<f64>) -> u64 {
-    f64::to_bits(input.in1)
+pub extern "C" fn LREAL_TO_LWORD(input: f64) -> u64 {
+    f64::to_bits(input)
 }
 
 /// .
@@ -272,8 +272,8 @@ pub extern "C" fn LREAL_TO_LWORD(input: &SingleParam<f64>) -> u64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
-    f32::to_bits(input.in1)
+pub extern "C" fn REAL_TO_DWORD(input: f32) -> u32 {
+    f32::to_bits(input)
 }
 
 /// .
@@ -281,13 +281,13 @@ pub extern "C" fn REAL_TO_DWORD(input: &SingleParam<f32>) -> u32 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[u8; 81]> {
+pub extern "C" fn WSTRING_TO_STRING(input: Wrapper<[u16; 81]>) -> Wrapper<[u8; 81]> {
     let terminator = input
-        .in1
+        .inner
         .iter()
         .position(|c| *c == 0)
-        .unwrap_or(input.in1.len());
-    let string = String::from_utf16_lossy(&input.in1[..terminator]);
+        .unwrap_or(input.inner.len());
+    let string = String::from_utf16_lossy(&input.inner[..terminator]);
     let mut arr = [0; 81];
     for (idx, b) in string.bytes().enumerate() {
         if idx < arr.len() {
@@ -302,15 +302,15 @@ pub extern "C" fn WSTRING_TO_STRING(input: &SingleParam<[u16; 81]>) -> Wrapper<[
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> Wrapper<[u16; 81]> {
+pub extern "C" fn STRING_TO_WSTRING(input: Wrapper<[u8; 81]>) -> Wrapper<[u16; 81]> {
     //find the \0
     let terminator = input
-        .in1
+        .inner
         .iter()
         .position(|c| *c == 0)
         .map(|it| it + 1)
-        .unwrap_or(input.in1.len());
-    let string = CStr::from_bytes_with_nul(&input.in1[..terminator])
+        .unwrap_or(input.inner.len());
+    let string = CStr::from_bytes_with_nul(&input.inner[..terminator])
         .map_or(Ok(""), CStr::to_str)
         .unwrap_or("");
     let mut arr: [u16; 81] = [0; 81];
@@ -327,8 +327,8 @@ pub extern "C" fn STRING_TO_WSTRING(input: &SingleParam<[u8; 81]>) -> Wrapper<[u
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn WCHAR_TO_CHAR(input: &SingleParam<u16>) -> u8 {
-    let u16_arr = [input.in1];
+pub extern "C" fn WCHAR_TO_CHAR(input: u16) -> u8 {
+    let u16_arr = [input];
     let mut res_iter = char::decode_utf16(u16_arr.into_iter())
         .map(|r| r.unwrap_or(std::char::REPLACEMENT_CHARACTER));
     let mut res_arr = [u8::MAX; 80];
@@ -345,8 +345,8 @@ pub extern "C" fn WCHAR_TO_CHAR(input: &SingleParam<u16>) -> u8 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CHAR_TO_WCHAR(input: &SingleParam<u8>) -> u16 {
-    let res: char = input.in1.into();
+pub extern "C" fn CHAR_TO_WCHAR(input: u8) -> u16 {
+    let res: char = input.into();
     let mut arr = [u16::MAX; 2];
     res.encode_utf16(&mut arr);
     arr[0]
@@ -364,6 +364,7 @@ pub struct DoubleParam<T> {
 }
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct Wrapper<T> {
     pub inner: T,
 }

@@ -17,8 +17,8 @@ struct MainType {
 #[test]
 fn shift_left_test() {
     let src = "
-        FUNCTION main : INT
-        VAR_OUTPUT
+        PROGRAM main
+        VAR
            b : BYTE;
            w : WORD;
            d : DWORD;
@@ -28,7 +28,7 @@ fn shift_left_test() {
         w := SHL(WORD#2#0001_1001,11);
         d := SHL(DWORD#2#0001_1001,27);
         l := SHL(LWORD#2#0001_1001,59);
-        END_FUNCTION
+        END_PROGRAM
         ";
     let sources = add_std!(src, "bit_shift.st");
     let mut maintype = MainType::default();
@@ -45,8 +45,8 @@ fn shift_left_test() {
 #[test]
 fn shift_right_test() {
     let src = "
-        FUNCTION main : INT
-        VAR_OUTPUT
+        PROGRAM main
+        VAR
            b : BYTE;
            w : WORD;
            d : DWORD;
@@ -56,7 +56,7 @@ fn shift_right_test() {
         w := SHR(WORD#16#101,3);
         d := SHR(DWORD#16#1_0001,3);
         l := SHR(LWORD#16#1_0000_0000_0001,3);
-        END_FUNCTION
+        END_PROGRAM
         ";
     let sources = add_std!(src, "bit_shift.st");
     let mut maintype = MainType::default();
@@ -70,8 +70,8 @@ fn shift_right_test() {
 #[test]
 fn rotate_left_test() {
     let src = "
-        FUNCTION main : INT
-        VAR_OUTPUT
+        PROGRAM main
+        VAR
            b : BYTE;
            w : WORD;
            d : DWORD;
@@ -81,7 +81,7 @@ fn rotate_left_test() {
         w := ROL(WORD#16#8001,3);
         d := ROL(DWORD#16#8000_0001,3);
         l := ROL(LWORD#16#8000_0000_0000_0001,3);
-        END_FUNCTION
+        END_PROGRAM
         ";
     let sources = add_std!(src, "bit_shift.st");
     let mut maintype = MainType::default();
@@ -95,8 +95,8 @@ fn rotate_left_test() {
 #[test]
 fn rotate_right_test() {
     let src = "
-        FUNCTION main : INT
-        VAR_OUTPUT
+        PROGRAM main
+        VAR
            b : BYTE;
            w : WORD;
            d : DWORD;
@@ -106,7 +106,7 @@ fn rotate_right_test() {
         w := ROR(WORD#16#8001,3);
         d := ROR(DWORD#16#8000_0001,3);
         l := ROR(LWORD#16#8000_0000_0000_0001,3);
-        END_FUNCTION
+        END_PROGRAM
         ";
     let sources = add_std!(src, "bit_shift.st");
     let mut maintype = MainType::default();

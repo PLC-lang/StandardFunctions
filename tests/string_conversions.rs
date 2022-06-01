@@ -6,6 +6,7 @@ mod common;
 use common::add_std;
 
 #[test]
+#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
 fn wstring_to_string_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -28,6 +29,7 @@ fn wstring_to_string_conversion() {
 }
 
 #[test]
+#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
 fn wstring_to_string_extra_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -72,6 +74,7 @@ fn wstring_to_wchar_conversion() {
 }
 
 #[test]
+#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
 fn string_to_wstring_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -93,6 +96,7 @@ fn string_to_wstring_conversion() {
 }
 
 #[test]
+#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
 fn string_to_wstring_extra_conversion() {
     struct MainType {
         res: [u16; 8],
