@@ -154,3 +154,205 @@ VAR_INPUT
 END_VAR
 	CONCAT_LTOD__ULINT := CONCAT_TOD(hour, minute, second, millisecond);
 END_FUNCTION
+
+(********************
+*
+* Concatenates year, month, day, hour, minute, second, millisecond of type ANY_INT to DT
+*
+*********************)
+FUNCTION CONCAT_DT <T: ANY_INT> : DT
+VAR_INPUT
+	year : T;
+	month : T;
+	day : T;
+	hour : T;
+	minute : T;
+	second : T;
+	millisecond : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_DT for INT *)
+FUNCTION CONCAT_DT__INT : DT
+VAR_INPUT
+	year : INT;
+	month : INT;
+	day : INT;
+	hour : INT;
+	minute : INT;
+	second : INT;
+	millisecond : INT;
+END_VAR
+	CONCAT_DT__INT := CONCAT_DATE_TOD(CONCAT_DATE(year, month, day), CONCAT_TOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_DT for UINT *)
+FUNCTION CONCAT_DT__UINT : DT
+VAR_INPUT
+	year : UINT;
+	month : UINT;
+	day : UINT;
+	hour : UINT;
+	minute : UINT;
+	second : UINT;
+	millisecond : UINT;
+END_VAR
+	CONCAT_DT__UINT := CONCAT_DATE_TOD(CONCAT_DATE(year, month, day), CONCAT_TOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_DT for DINT *)
+FUNCTION CONCAT_DT__DINT : DT
+VAR_INPUT
+	year : DINT;
+	month : DINT;
+	day : DINT;
+	hour : DINT;
+	minute : DINT;
+	second : DINT;
+	millisecond : DINT;
+END_VAR
+	CONCAT_DT__DINT := CONCAT_DATE_TOD(CONCAT_DATE(year, month, day), CONCAT_TOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_DT for UDINT *)
+FUNCTION CONCAT_DT__UDINT : DT
+VAR_INPUT
+	year : UDINT;
+	month : UDINT;
+	day : UDINT;
+	hour : UDINT;
+	minute : UDINT;
+	second : UDINT;
+	millisecond : UDINT;
+END_VAR
+	CONCAT_DT__UDINT := CONCAT_DATE_TOD(CONCAT_DATE(year, month, day), CONCAT_TOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_DT for LINT *)
+FUNCTION CONCAT_DT__LINT : DT
+VAR_INPUT
+	year : LINT;
+	month : LINT;
+	day : LINT;
+	hour : LINT;
+	minute : LINT;
+	second : LINT;
+	millisecond : LINT;
+END_VAR
+	CONCAT_DT__LINT := CONCAT_DATE_TOD(CONCAT_DATE(year, month, day), CONCAT_TOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_DT for ULINT *)
+FUNCTION CONCAT_DT__ULINT : DT
+VAR_INPUT
+	year : ULINT;
+	month : ULINT;
+	day : ULINT;
+	hour : ULINT;
+	minute : ULINT;
+	second : ULINT;
+	millisecond : ULINT;
+END_VAR
+	CONCAT_DT__ULINT := CONCAT_DATE_TOD(CONCAT_DATE(year, month, day), CONCAT_TOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(********************
+*
+* Concatenates year, month, day, hour, minute, second, millisecond of type ANY_INT to LDT
+*
+*********************)
+FUNCTION CONCAT_LDT <T: ANY_INT> : LDT
+VAR_INPUT
+	year : T;
+	month : T;
+	day : T;
+	hour : T;
+	minute : T;
+	second : T;
+	millisecond : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_LDT for INT *)
+FUNCTION CONCAT_LDT__INT : LDT
+VAR_INPUT
+	year : INT;
+	month : INT;
+	day : INT;
+	hour : INT;
+	minute : INT;
+	second : INT;
+	millisecond : INT;
+END_VAR
+	CONCAT_LDT__INT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_LDT for UINT *)
+FUNCTION CONCAT_LDT__UINT : LDT
+VAR_INPUT
+	year : UINT;
+	month : UINT;
+	day : UINT;
+	hour : UINT;
+	minute : UINT;
+	second : UINT;
+	millisecond : UINT;
+END_VAR
+	CONCAT_LDT__UINT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_LDT for DINT *)
+FUNCTION CONCAT_LDT__DINT : LDT
+VAR_INPUT
+	year : DINT;
+	month : DINT;
+	day : DINT;
+	hour : DINT;
+	minute : DINT;
+	second : DINT;
+	millisecond : DINT;
+END_VAR
+	CONCAT_LDT__DINT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_LDT for UDINT *)
+FUNCTION CONCAT_LDT__UDINT : LDT
+VAR_INPUT
+	year : UDINT;
+	month : UDINT;
+	day : UDINT;
+	hour : UDINT;
+	minute : UDINT;
+	second : UDINT;
+	millisecond : UDINT;
+END_VAR
+	CONCAT_LDT__UDINT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_LDT for LINT *)
+FUNCTION CONCAT_LDT__LINT : LDT
+VAR_INPUT
+	year : LINT;
+	month : LINT;
+	day : LINT;
+	hour : LINT;
+	minute : LINT;
+	second : LINT;
+	millisecond : LINT;
+END_VAR
+	CONCAT_LDT__LINT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
+END_FUNCTION
+
+(* Specialized implementation of CONCAT_LDT for ULINT *)
+FUNCTION CONCAT_LDT__ULINT : LDT
+VAR_INPUT
+	year : ULINT;
+	month : ULINT;
+	day : ULINT;
+	hour : ULINT;
+	minute : ULINT;
+	second : ULINT;
+	millisecond : ULINT;
+END_VAR
+	CONCAT_LDT__ULINT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
+END_FUNCTION
