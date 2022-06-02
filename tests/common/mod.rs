@@ -94,6 +94,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CONCAT_DATE__INT", iec61131std::CONCAT_DATE__INT as usize),
         ("CONCAT_DATE__DINT", iec61131std::CONCAT_DATE__DINT as usize),
         ("CONCAT_DATE__LINT", iec61131std::CONCAT_DATE__LINT as usize),
+        (
+            "DATE_AND_TIME_TO_DATE",
+            iec61131std::DATE_AND_TIME_TO_DATE as usize,
+        ),
+        (
+            "DATE_AND_TIME_TO_TIME_OF_DAY",
+            iec61131std::DATE_AND_TIME_TO_TIME_OF_DAY as usize,
+        ),
     ];
 
     let variables = vec![
