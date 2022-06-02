@@ -374,8 +374,8 @@ pub extern "C" fn CONCAT_DATE_TOD(in1: i64, in2: i64) -> i64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CONCAT_DATE__INT(input: &DateParam<i16>) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(input.in1.into(), input.in2 as u32, input.in3 as u32);
+pub extern "C" fn CONCAT_DATE__INT(in1: i16, in2: i16, in3: i16) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(in1.into(), in2 as u32, in3 as u32);
     let dt = date.and_hms(0, 0, 0);
     dt.timestamp_millis()
 }
@@ -385,8 +385,8 @@ pub extern "C" fn CONCAT_DATE__INT(input: &DateParam<i16>) -> i64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CONCAT_DATE__DINT(input: &DateParam<i32>) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(input.in1, input.in2 as u32, input.in3 as u32);
+pub extern "C" fn CONCAT_DATE__DINT(in1: i32, in2: i32, in3: i32) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(in1, in2 as u32, in3 as u32);
     let dt = date.and_hms(0, 0, 0);
     dt.timestamp_millis()
 }
@@ -396,8 +396,8 @@ pub extern "C" fn CONCAT_DATE__DINT(input: &DateParam<i32>) -> i64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CONCAT_DATE__LINT(input: &DateParam<i64>) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(input.in1 as i32, input.in2 as u32, input.in3 as u32);
+pub extern "C" fn CONCAT_DATE__LINT(in1: i64, in2: i16, in3: i16) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(in1 as i32, in2 as u32, in3 as u32);
     let dt = date.and_hms(0, 0, 0);
     dt.timestamp_millis()
 }
@@ -429,13 +429,6 @@ pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: i64) -> i64 {
         chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_milli(hour, min, sec, milli);
 
     new_date_time.timestamp_millis()
-}
-
-#[repr(C)]
-pub struct DateParam<T> {
-    pub in1: T,
-    pub in2: T,
-    pub in3: T,
 }
 
 #[repr(C)]
