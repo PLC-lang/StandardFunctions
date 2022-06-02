@@ -1,5 +1,6 @@
 // Definitions of the core standard function modules for IEC61131-3
 
+use chrono::{self, TimeZone, Timelike};
 use std::ffi::CStr;
 
 pub mod bit_shift;
@@ -352,6 +353,55 @@ pub extern "C" fn CHAR_TO_WCHAR(input: &SingleParam<u8>) -> u16 {
     arr[0]
 }
 
+/// .
+/// Concatenates DATE and TOD to DT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CONCAT_DATE_TOD(input: &DoubleParam<i64>) -> i64 {
+    let date = chrono::Utc.timestamp_millis(input.in1).date();
+    let tod = chrono::Utc.timestamp_millis(input.in2);
+    let hour = tod.hour();
+    let min = tod.minute();
+    let sec = tod.second();
+    let milli = tod.timestamp_subsec_millis();
+
+    date.and_hms_milli(hour, min, sec, milli).timestamp_millis()
+}
+
+/// .
+/// Concatenates
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CONCAT_DATE__INT(input: &DateParam<i16>) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(input.in1.into(), input.in2 as u32, input.in3 as u32);
+    let dt = date.and_hms(0, 0, 0);
+    dt.timestamp_millis()
+}
+
+/// .
+/// Concatenates
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CONCAT_DATE__DINT(input: &DateParam<i32>) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(input.in1, input.in2 as u32, input.in3 as u32);
+    let dt = date.and_hms(0, 0, 0);
+    dt.timestamp_millis()
+}
+
+/// .
+/// Concatenates
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CONCAT_DATE__LINT(input: &DateParam<i64>) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(input.in1 as i32, input.in2 as u32, input.in3 as u32);
+    let dt = date.and_hms(0, 0, 0);
+    dt.timestamp_millis()
+}
+
 #[repr(C)]
 pub struct SingleParam<T> {
     pub in1: T,
@@ -361,6 +411,13 @@ pub struct SingleParam<T> {
 pub struct DoubleParam<T> {
     pub in1: T,
     pub in2: T,
+}
+
+#[repr(C)]
+pub struct DateParam<T> {
+    pub in1: T,
+    pub in2: T,
+    pub in3: T,
 }
 
 #[repr(C)]
