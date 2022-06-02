@@ -41,14 +41,148 @@ fn concat_date_ltod() {
     assert_eq!(res, 1268397015122);
 }
 
+#[derive(Default)]
+struct AnyIntType {
+    a: i64,
+    b: i64,
+    c: i64,
+    d: i64,
+}
+
 #[test]
-fn concat_date() {
+fn concat_date_signed_ints() {
     let src = "
-	FUNCTION main : DATE
-		main := CONCAT_DATE(INT#2000,SINT#01,SINT#01);
-	END_FUNCTION";
+	PROGRAM main
+	VAR
+		a : DATE;
+		b : DATE;
+		c : DATE;
+	END_VAR
+		a := CONCAT_DATE(INT#2000,SINT#01,SINT#01);
+		b := CONCAT_DATE(DINT#2000,DINT#01,DINT#01);
+		c := CONCAT_DATE(LINT#2000,LINT#01,LINT#01);
+	END_PROGRAM";
     let sources = add_std!(src, "time_extra_functions.st");
-    let mut maintype = MainType::default();
-    let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 946684800000);
+    let mut anytype = AnyIntType::default();
+    let _: i64 = compile_and_run(sources, &mut anytype);
+    assert_eq!(anytype.a, 946684800000);
+    assert_eq!(anytype.b, 946684800000);
+    assert_eq!(anytype.c, 946684800000);
+}
+
+#[test]
+fn concat_date_unsigned_ints() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : DATE;
+		b : DATE;
+		c : DATE;
+	END_VAR
+		a := CONCAT_DATE(UINT#2000,USINT#01,USINT#01);
+		b := CONCAT_DATE(UDINT#2000,UDINT#01,UDINT#01);
+		c := CONCAT_DATE(ULINT#2000,ULINT#01,ULINT#01);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut anytype = AnyIntType::default();
+    let _: i64 = compile_and_run(sources, &mut anytype);
+    assert_eq!(anytype.a, 946684800000);
+    assert_eq!(anytype.b, 946684800000);
+    assert_eq!(anytype.c, 946684800000);
+}
+
+#[test]
+fn concat_tod_signed_ints() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TOD;
+		b : TOD;
+		c : TOD;
+		d : TOD;
+	END_VAR
+		a := CONCAT_TOD(SINT#20,SINT#15,SINT#12,SINT#34);
+		b := CONCAT_TOD(INT#20,INT#15,INT#12,INT#341);
+		c := CONCAT_TOD(DINT#20,DINT#15,DINT#12,DINT#341);
+		d := CONCAT_TOD(LINT#20,LINT#15,LINT#12,LINT#341);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut anytype = AnyIntType::default();
+    let _: i64 = compile_and_run(sources, &mut anytype);
+    assert_eq!(anytype.a, 72912034);
+    assert_eq!(anytype.b, 72912341);
+    assert_eq!(anytype.c, 72912341);
+    assert_eq!(anytype.d, 72912341);
+}
+
+#[test]
+fn concat_tod_unsigned_ints() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TOD;
+		b : TOD;
+		c : TOD;
+		d : TOD;
+	END_VAR
+		a := CONCAT_TOD(USINT#20,USINT#15,USINT#12,USINT#34);
+		b := CONCAT_TOD(UINT#20,UINT#15,UINT#12,UINT#341);
+		c := CONCAT_TOD(UDINT#20,UDINT#15,UDINT#12,UDINT#341);
+		d := CONCAT_TOD(ULINT#20,ULINT#15,ULINT#12,ULINT#341);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut anytype = AnyIntType::default();
+    let _: i64 = compile_and_run(sources, &mut anytype);
+    assert_eq!(anytype.a, 72912034);
+    assert_eq!(anytype.b, 72912341);
+    assert_eq!(anytype.c, 72912341);
+    assert_eq!(anytype.d, 72912341);
+}
+
+#[test]
+fn concat_ltod_signed_ints() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TOD;
+		b : TOD;
+		c : TOD;
+		d : TOD;
+	END_VAR
+		a := CONCAT_LTOD(SINT#20,SINT#15,SINT#12,SINT#34);
+		b := CONCAT_LTOD(INT#20,INT#15,INT#12,INT#341);
+		c := CONCAT_LTOD(DINT#20,DINT#15,DINT#12,DINT#341);
+		d := CONCAT_LTOD(LINT#20,LINT#15,LINT#12,LINT#341);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut anytype = AnyIntType::default();
+    let _: i64 = compile_and_run(sources, &mut anytype);
+    assert_eq!(anytype.a, 72912034);
+    assert_eq!(anytype.b, 72912341);
+    assert_eq!(anytype.c, 72912341);
+    assert_eq!(anytype.d, 72912341);
+}
+
+#[test]
+fn concat_ltod_unsigned_ints() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TOD;
+		b : TOD;
+		c : TOD;
+		d : TOD;
+	END_VAR
+		a := CONCAT_LTOD(USINT#20,USINT#15,USINT#12,USINT#34);
+		b := CONCAT_LTOD(UINT#20,UINT#15,UINT#12,UINT#341);
+		c := CONCAT_LTOD(UDINT#20,UDINT#15,UDINT#12,UDINT#341);
+		d := CONCAT_LTOD(ULINT#20,ULINT#15,ULINT#12,ULINT#341);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut anytype = AnyIntType::default();
+    let _: i64 = compile_and_run(sources, &mut anytype);
+    assert_eq!(anytype.a, 72912034);
+    assert_eq!(anytype.b, 72912341);
+    assert_eq!(anytype.c, 72912341);
+    assert_eq!(anytype.d, 72912341);
 }
