@@ -383,6 +383,44 @@ pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: i64) -> i64 {
     new_date_time.timestamp_millis()
 }
 
+/// .
+/// This operator returns the value of adding up two TIME operands.
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ADD_TIME(in1: i64, in2: i64) -> i64 {
+    let res = chrono::Duration::milliseconds(in1) + chrono::Duration::milliseconds(in2);
+    res.num_milliseconds()
+}
+
+/// .
+/// This operator returns the value of adding up TOD and TIME.
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ADD_TOD_TIME(in1: i64, in2: i64) -> i64 {
+    add_datetime_time(in1, in2)
+}
+
+/// .
+/// This operator returns the value of adding up DT and TIME.
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn ADD_DT_TIME(in1: i64, in2: i64) -> i64 {
+    add_datetime_time(in1, in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn add_datetime_time(in1: i64, in2: i64) -> i64 {
+    let time = chrono::Utc.timestamp_millis(in1);
+    let duration = chrono::Duration::nanoseconds(in2);
+    time.checked_add_signed(duration)
+        .unwrap()
+        .timestamp_millis()
+}
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct Wrapper<T> {

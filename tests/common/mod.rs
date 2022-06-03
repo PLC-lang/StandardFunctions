@@ -98,6 +98,9 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "DATE_AND_TIME_TO_TIME_OF_DAY",
             iec61131std::DATE_AND_TIME_TO_TIME_OF_DAY as usize,
         ),
+        ("ADD_TIME", iec61131std::ADD_TIME as usize),
+        ("ADD_TOD_TIME", iec61131std::ADD_TOD_TIME as usize),
+        ("ADD_DT_TIME", iec61131std::ADD_DT_TIME as usize),
     ];
 
     let variables = vec![
