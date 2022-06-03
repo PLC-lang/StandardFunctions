@@ -101,6 +101,13 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ADD_TIME", iec61131std::ADD_TIME as usize),
         ("ADD_TOD_TIME", iec61131std::ADD_TOD_TIME as usize),
         ("ADD_DT_TIME", iec61131std::ADD_DT_TIME as usize),
+        ("SUB_TIME", iec61131std::SUB_TIME as usize),
+        ("SUB_TIME", iec61131std::SUB_TIME as usize),
+        ("SUB_DATE_DATE", iec61131std::SUB_DATE_DATE as usize),
+        ("SUB_TOD_TIME", iec61131std::SUB_TOD_TIME as usize),
+        ("SUB_TOD_TOD", iec61131std::SUB_TOD_TOD as usize),
+        ("SUB_DT_TIME", iec61131std::SUB_DT_TIME as usize),
+        ("SUB_DT_DT", iec61131std::SUB_DT_DT as usize),
     ];
 
     let variables = vec![

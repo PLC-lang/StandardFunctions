@@ -395,6 +395,7 @@ pub extern "C" fn ADD_TIME(in1: i64, in2: i64) -> i64 {
 
 /// .
 /// This operator returns the value of adding up TOD and TIME.
+/// If the result overflows 0 will be returned
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -404,6 +405,7 @@ pub extern "C" fn ADD_TOD_TIME(in1: i64, in2: i64) -> i64 {
 
 /// .
 /// This operator returns the value of adding up DT and TIME.
+/// If the result overflows 0 will be returned
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -416,9 +418,91 @@ pub extern "C" fn ADD_DT_TIME(in1: i64, in2: i64) -> i64 {
 pub extern "C" fn add_datetime_time(in1: i64, in2: i64) -> i64 {
     let time = chrono::Utc.timestamp_millis(in1);
     let duration = chrono::Duration::nanoseconds(in2);
-    time.checked_add_signed(duration)
-        .unwrap()
-        .timestamp_millis()
+    match time.checked_add_signed(duration) {
+        Some(res) => res.timestamp_millis(),
+        None => 0,
+    }
+}
+
+/// .
+/// This operator produces the subtraction of two TIME operands
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SUB_TIME(in1: i64, in2: i64) -> i64 {
+    let res = chrono::Duration::milliseconds(in1) - chrono::Duration::milliseconds(in2);
+    res.num_milliseconds()
+}
+
+/// .
+/// This operator produces the subtraction of two DATE operands
+/// If the result overflows 0 will be returned
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SUB_DATE_DATE(in1: i64, in2: i64) -> i64 {
+    sub_datetimes(in1, in2)
+}
+
+/// .
+/// This operator produces the subtraction of TOD and TIME
+/// If the result overflows 0 will be returned
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SUB_TOD_TIME(in1: i64, in2: i64) -> i64 {
+    sub_datetime_duration(in1, in2)
+}
+
+/// .
+/// This operator produces the subtraction of two TOD operands
+/// If the result overflows 0 will be returned
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SUB_TOD_TOD(in1: i64, in2: i64) -> i64 {
+    sub_datetimes(in1, in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn sub_datetimes(in1: i64, in2: i64) -> i64 {
+    let dt1 = chrono::Utc.timestamp_millis(in1);
+    let dt2 = chrono::Utc.timestamp_millis(in2);
+    let duration = dt1.signed_duration_since(dt2);
+    duration.num_nanoseconds().unwrap_or(0)
+}
+
+/// .
+/// This operator produces the subtraction of DT and TIME
+/// If the result overflows 0 will be returned
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SUB_DT_TIME(in1: i64, in2: i64) -> i64 {
+    sub_datetime_duration(in1, in2)
+}
+
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn sub_datetime_duration(in1: i64, in2: i64) -> i64 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    let duration = chrono::Duration::nanoseconds(in2);
+    match dt.checked_sub_signed(duration) {
+        Some(res) => res.timestamp_millis(),
+        None => 0,
+    }
+}
+
+/// .
+/// This operator produces the subtraction of two DT operands
+/// If the result overflows 0 will be returned
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SUB_DT_DT(in1: i64, in2: i64) -> i64 {
+    sub_datetimes(in1, in2)
 }
 
 #[repr(C)]
