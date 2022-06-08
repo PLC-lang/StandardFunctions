@@ -140,76 +140,96 @@ fn sub_date() {
 
 #[test]
 fn sub_tod_time() {
-    // SUB(TOD, TIME) -> fehlt (6a-Tabelle)
     let src = "
 	PROGRAM main
 	VAR
 		a : TOD;
-		b : LTOD;
+		b : TOD;
+		c : LTOD;
+		d : LTOD;
 	END_VAR
 		a := SUB_TOD_TIME(TOD#23:10:05.123, TIME#3h10m5s123ms);
-		b := SUB_LTOD_LTIME(LTOD#23:10:05.123, LTIME#3h10m5s123ms);
+		b := SUB(TOD#23:10:05.123, TIME#3h10m5s123ms);
+		c := SUB_LTOD_LTIME(LTOD#23:10:05.123, LTIME#3h10m5s123ms);
+		d := SUB(LTOD#23:10:05.123, LTIME#3h10m5s123ms);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 72000000);
     assert_eq!(maintype.b, 72000000);
+    assert_eq!(maintype.c, 72000000);
+    assert_eq!(maintype.d, 72000000);
 }
 
 #[test]
 fn sub_tod() {
-    // SUB(TOD, TOD) -> fehlt (7a-Tabelle)
     let src = "
 	PROGRAM main
 	VAR
 		a : TIME;
-		b : LTIME;
+		b : TIME;
+		c : LTIME;
+		d : LTIME;
 	END_VAR
-		a := SUB_TOD_TOD(TOD#23:10:05.123, TOD#3:10:05.123);
-		b := SUB_LTOD_LTOD(LTOD#23:10:05.123, LTOD#3:10:05.123);
+		a := SUB(TOD#23:10:05.123, TOD#3:10:05.123);
+		b := SUB_TOD_TOD(TOD#23:10:05.123, TOD#3:10:05.123);
+		c := SUB(LTOD#23:10:05.123, LTOD#3:10:05.123);
+		d := SUB_LTOD_LTOD(LTOD#23:10:05.123, LTOD#3:10:05.123);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 72000000000000);
+    assert_eq!(maintype.a, 72000000000000);
     assert_eq!(maintype.a, 72000000000000);
     assert_eq!(maintype.b, 72000000000000);
 }
 
 #[test]
 fn sub_dt_time() {
-    // SUB(DT, TIME) -> fehlt (8a-Tabelle)
     let src = "
 	PROGRAM main
 	VAR
 		a : DT;
-		b : LDT;
+		b : DT;
+		c : LDT;
+		d : LDT;
 	END_VAR
-		a := SUB_DT_TIME(DT#2000-01-02-21:15:12.345, TIME#1d1h15m12s345ms);
-		b := SUB_LDT_LTIME(LDT#2000-01-02-21:15:12.345, LTIME#1d1h15m12s345ms);
+		a := SUB(DT#2000-01-02-21:15:12.345, TIME#1d1h15m12s345ms);
+		b := SUB_DT_TIME(DT#2000-01-02-21:15:12.345, TIME#1d1h15m12s345ms);
+		c := SUB(LDT#2000-01-02-21:15:12.345, LTIME#1d1h15m12s345ms);
+		d := SUB_LDT_LTIME(LDT#2000-01-02-21:15:12.345, LTIME#1d1h15m12s345ms);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 946756800000);
     assert_eq!(maintype.b, 946756800000);
+    assert_eq!(maintype.c, 946756800000);
+    assert_eq!(maintype.d, 946756800000);
 }
 
 #[test]
 fn sub_dt() {
-    // SUB(DT, DT) -> fehlt (9a-Tabelle)
     let src = "
 	PROGRAM main
 	VAR
 		a : TIME;
-		b : LTIME;
+		b : TIME;
+		c : LTIME;
+		d : LTIME;
 	END_VAR
-		a := SUB_DT_DT(DT#2000-01-02-21:22:33.444, DT#2000-01-01-10:00:00.000);
-		b := SUB_LDT_LDT(LDT#2000-01-02-21:22:33.444, LDT#2000-01-01-10:00:00.000);
+		a := SUB(DT#2000-01-02-21:22:33.444, DT#2000-01-01-10:00:00.000);
+		b := SUB_DT_DT(DT#2000-01-02-21:22:33.444, DT#2000-01-01-10:00:00.000);
+		c := SUB(LDT#2000-01-02-21:22:33.444, LDT#2000-01-01-10:00:00.000);
+		d := SUB_LDT_LDT(LDT#2000-01-02-21:22:33.444, LDT#2000-01-01-10:00:00.000);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 127353444000000);
     assert_eq!(maintype.b, 127353444000000);
+    assert_eq!(maintype.c, 127353444000000);
+    assert_eq!(maintype.d, 127353444000000);
 }

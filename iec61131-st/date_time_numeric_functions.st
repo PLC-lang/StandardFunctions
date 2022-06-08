@@ -124,29 +124,20 @@ END_FUNCTION
 * This operator produces the subtraction of the operands.
 *
 *********************)
-FUNCTION SUB <T: ANY> : T
+FUNCTION SUB <T1: ANY, T2: ANY> : T1
 VAR_INPUT
-	IN1 : T;
-	IN2 : T;
+	IN1 : T1;
+	IN2 : T2;
 END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SUB for TIME *)
-FUNCTION SUB__TIME : TIME
+FUNCTION SUB__TIME__TIME : TIME
 VAR_INPUT
 	IN1 : TIME;
 	IN2 : TIME;
 END_VAR
-	SUB__TIME := SUB_TIME(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of SUB for LTIME *)
-FUNCTION SUB__LTIME : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : LTIME;
-END_VAR
-	SUB__LTIME := SUB_TIME(IN1, IN2);
+	SUB__TIME__TIME := SUB_TIME(IN1, IN2);
 END_FUNCTION
 
 (********************
@@ -176,21 +167,12 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SUB for DATE *)
-FUNCTION SUB__DATE : TIME
+FUNCTION SUB__DATE__DATE : TIME
 VAR_INPUT
 	IN1 : DATE;
 	IN2 : DATE;
 END_VAR
-	SUB__DATE := SUB_DATE_DATE(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of SUB for LDATE *)
-FUNCTION SUB__LDATE : LTIME
-VAR_INPUT
-	IN1 : LDATE;
-	IN2 : LDATE;
-END_VAR
-	SUB__LDATE := SUB_DATE_DATE(IN1, IN2);
+	SUB__DATE__DATE := SUB_DATE_DATE(IN1, IN2);
 END_FUNCTION
 
 (********************
@@ -221,6 +203,15 @@ END_VAR
 	SUB_LDATE_LDATE := SUB_DATE_DATE(IN1, IN2);
 END_FUNCTION
 
+(* Specialized implementation of SUB for TOD and TIME *)
+FUNCTION SUB__TIME_OF_DAY__TIME : TOD
+VAR_INPUT
+	IN1 : TOD;
+	IN2 : TIME;
+END_VAR
+	SUB__TIME_OF_DAY__TIME := SUB_TOD_TIME(IN1, IN2);
+END_FUNCTION
+
 (********************
 *
 * This operator produces the subtraction of TOD and TIME returning TOD
@@ -247,6 +238,15 @@ VAR_INPUT
 	IN2 : LTIME;
 END_VAR
 	SUB_LTOD_LTIME := SUB_TOD_TIME(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of SUB for TOD *)
+FUNCTION SUB__TIME_OF_DAY__TIME_OF_DAY : TIME
+VAR_INPUT
+	IN1 : TOD;
+	IN2 : TOD;
+END_VAR
+	SUB__TIME_OF_DAY__TIME_OF_DAY := SUB_TOD_TOD(IN1, IN2);
 END_FUNCTION
 
 (********************
@@ -277,6 +277,15 @@ END_VAR
 	SUB_LTOD_LTOD := SUB_TOD_TOD(IN1, IN2);
 END_FUNCTION
 
+(* Specialized implementation of SUB for DT and TIME *)
+FUNCTION SUB__DATE_AND_TIME__TIME : DT
+VAR_INPUT
+	IN1 : DT;
+	IN2 : TIME;
+END_VAR
+	SUB__DATE_AND_TIME__TIME := SUB_DT_TIME(IN1, IN2);
+END_FUNCTION
+
 (********************
 *
 * This operator produces the subtraction of DT and TIME returning DT
@@ -303,6 +312,15 @@ VAR_INPUT
 	IN2 : LTIME;
 END_VAR
 	SUB_LDT_LTIME := SUB_DT_TIME(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of SUB for DT *)
+FUNCTION SUB__DATE_AND_TIME__DATE_AND_TIME : TIME
+VAR_INPUT
+	IN1 : DT;
+	IN2 : DT;
+END_VAR
+	SUB__DATE_AND_TIME__DATE_AND_TIME := SUB_DT_DT(IN1, IN2);
 END_FUNCTION
 
 (********************
