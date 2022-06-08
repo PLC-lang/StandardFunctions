@@ -42,40 +42,50 @@ fn add_time() {
 
 #[test]
 fn add_tod_time() {
-    // ADD(TOD, TIME) -> fehlt (2a-Tabelle)
     let src = "
 	PROGRAM main
 	VAR
 		a : TOD;
-		b : LTOD;
+		b : TOD;
+		c : LTOD;
+		d : LTOD;
 	END_VAR
 		a := ADD_TOD_TIME(TOD#20:00:00, TIME#1s);
-		b := ADD_LTOD_LTIME(LTOD#12:00:00, LTIME#12m12s);
+		b := ADD(TOD#20:00:00, TIME#1s);
+		c := ADD_LTOD_LTIME(LTOD#12:00:00, LTIME#12m12s);
+		d := ADD(LTOD#12:00:00, LTIME#12m12s);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 72001000);
-    assert_eq!(maintype.b, 43932000);
+    assert_eq!(maintype.b, 72001000);
+    assert_eq!(maintype.c, 43932000);
+    assert_eq!(maintype.d, 43932000);
 }
 
 #[test]
 fn add_dt_time() {
-    // ADD(DT, TIME) -> fehlt (3a-Tabelle)
     let src = "
 	PROGRAM main
 	VAR
 		a : DT;
-		b : LDT;
+		b : DT;
+		c : LDT;
+		d : LDT;
 	END_VAR
 		a := ADD_DT_TIME(DT#2000-01-01-12:00:00, TIME#1d12m12s123ms);
-		b := ADD_LDT_LTIME(LDT#2000-01-01-12:00:00, LTIME#1d12m12s123ms);
+		b := ADD(DT#2000-01-01-12:00:00, TIME#1d12m12s123ms);
+		c := ADD_LDT_LTIME(LDT#2000-01-01-12:00:00, LTIME#1d12m12s123ms);
+		d := ADD(LDT#2000-01-01-12:00:00, LTIME#1d12m12s123ms);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 946815132123);
     assert_eq!(maintype.b, 946815132123);
+    assert_eq!(maintype.c, 946815132123);
+    assert_eq!(maintype.d, 946815132123);
 }
 
 #[test]

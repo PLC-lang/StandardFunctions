@@ -3,29 +3,20 @@
 * This operator returns the value of adding up the operands.
 *
 *********************)
-FUNCTION ADD <T: ANY> : T
+FUNCTION ADD <T1: ANY, T2: ANY> : T1
 VAR_INPUT
-	IN1 : T;
-	IN2 : T;
+	IN1 : T1;
+	IN2 : T2;
 END_VAR
 END_FUNCTION
 
 (* Specialized implementation of ADD for TIME *)
-FUNCTION ADD__TIME : TIME
+FUNCTION ADD__TIME__TIME : TIME
 VAR_INPUT
 	IN1 : TIME;
 	IN2 : TIME;
 END_VAR
-	ADD__TIME := ADD_TIME(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of ADD for LTIME *)
-FUNCTION ADD__LTIME : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : LTIME;
-END_VAR
-	ADD__LTIME := ADD_TIME(IN1, IN2);
+	ADD__TIME__TIME := ADD_TIME(IN1, IN2);
 END_FUNCTION
 
 (********************
@@ -54,6 +45,15 @@ END_VAR
 	ADD_LTIME := ADD_TIME(IN1, IN2);
 END_FUNCTION
 
+(* Specialized implementation of ADD for TOD *)
+FUNCTION ADD__TIME_OF_DAY__TIME : TOD
+VAR_INPUT
+	IN1 : TOD;
+	IN2 : TIME;
+END_VAR
+	ADD__TIME_OF_DAY__TIME := ADD_TOD_TIME(IN1, IN2);
+END_FUNCTION
+
 (********************
 *
 * This operator returns the value of adding up TOD and TIME.
@@ -80,6 +80,15 @@ VAR_INPUT
 	IN2 : LTIME;
 END_VAR
 	ADD_LTOD_LTIME := ADD_TOD_TIME(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of ADD for DT *)
+FUNCTION ADD__DATE_AND_TIME__TIME : DT
+VAR_INPUT
+	IN1 : DT;
+	IN2 : TIME;
+END_VAR
+	ADD__DATE_AND_TIME__TIME := ADD_DT_TIME(IN1, IN2);
 END_FUNCTION
 
 (********************
