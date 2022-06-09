@@ -464,17 +464,3 @@ VAR_INPUT
 	IN2 : ULINT;
 END_VAR
 END_FUNCTION
-
-(********************
-*
-* This operator produces the multiplication of TIME and REAL
-* If the result overflows 0 will be returned
-*
-*********************)
-@EXTERNAL
-FUNCTION CHECKED_MUL_F32 : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : REAL;
-END_VAR
-END_FUNCTION

@@ -241,13 +241,13 @@ fn mul_signed() {
 	VAR
 		a : TIME;
 		b : TIME;
-		c : TIME;
-		d : TIME;
+		c : LTIME;
+		d : LTIME;
 	END_VAR
 		a := MUL(TIME#1d, SINT#-120);
 		b := MUL(TIME#1s, INT#3600);
-		c := MUL(TIME#1000ms, DINT#86400);
-		d := MUL(TIME#1000ms, LINT#864000000);
+		c := MUL(LTIME#1000ms, DINT#86400);
+		d := MUL(LTIME#1000ms, LINT#864000000);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
@@ -285,13 +285,13 @@ fn mul_unsigned() {
 	VAR
 		a : TIME;
 		b : TIME;
-		c : TIME;
-		d : TIME;
+		c : LTIME;
+		d : LTIME;
 	END_VAR
 		a := MUL(TIME#-1d, USINT#120);
 		b := MUL(TIME#1s, UINT#3600);
-		c := MUL(TIME#1000ms, UDINT#86400);
-		d := MUL(TIME#1000ms, ULINT#864000000);
+		c := MUL(LTIME#1000ms, UDINT#86400);
+		d := MUL(LTIME#1000ms, ULINT#864000000);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
