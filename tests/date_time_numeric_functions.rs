@@ -321,3 +321,99 @@ fn mul_unsigned_overflow() {
     assert_eq!(maintype.a, 9223372036854775807);
     assert_eq!(maintype.b, 0);
 }
+
+#[test]
+fn mul_time_signed() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+		c : TIME;
+		d : TIME;
+	END_VAR
+		a := MUL_TIME(TIME#1d, SINT#-120);
+		b := MUL_TIME(TIME#1s, INT#3600);
+		c := MUL_TIME(TIME#1000ms, DINT#86400);
+		d := MUL_TIME(TIME#1000ms, LINT#864000000);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -10368000000000000);
+    assert_eq!(maintype.b, 3600000000000);
+    assert_eq!(maintype.c, 86400000000000);
+    assert_eq!(maintype.d, 864000000000000000);
+}
+
+#[test]
+fn mul_time_unsigned() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+		c : TIME;
+		d : TIME;
+	END_VAR
+		a := MUL_TIME(TIME#-1d, USINT#120);
+		b := MUL_TIME(TIME#1s, UINT#3600);
+		c := MUL_TIME(TIME#1000ms, UDINT#86400);
+		d := MUL_TIME(TIME#1000ms, ULINT#864000000);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -10368000000000000);
+    assert_eq!(maintype.b, 3600000000000);
+    assert_eq!(maintype.c, 86400000000000);
+    assert_eq!(maintype.d, 864000000000000000);
+}
+
+#[test]
+fn mul_ltime_signed() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LTIME;
+		b : LTIME;
+		c : LTIME;
+		d : LTIME;
+	END_VAR
+		a := MUL_LTIME(LTIME#1d, SINT#-120);
+		b := MUL_LTIME(LTIME#1s, INT#3600);
+		c := MUL_LTIME(LTIME#1000ms, DINT#86400);
+		d := MUL_LTIME(LTIME#1000ms, LINT#864000000);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -10368000000000000);
+    assert_eq!(maintype.b, 3600000000000);
+    assert_eq!(maintype.c, 86400000000000);
+    assert_eq!(maintype.d, 864000000000000000);
+}
+
+#[test]
+fn mul_ltime_unsigned() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LTIME;
+		b : LTIME;
+		c : LTIME;
+		d : LTIME;
+	END_VAR
+		a := MUL_LTIME(LTIME#-1d, USINT#120);
+		b := MUL_LTIME(LTIME#1s, UINT#3600);
+		c := MUL_LTIME(LTIME#1000ms, UDINT#86400);
+		d := MUL_LTIME(LTIME#1000ms, ULINT#864000000);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -10368000000000000);
+    assert_eq!(maintype.b, 3600000000000);
+    assert_eq!(maintype.c, 86400000000000);
+    assert_eq!(maintype.d, 864000000000000000);
+}
