@@ -1,7 +1,7 @@
 // Definitions of the core standard function modules for IEC61131-3
 
 use chrono::{TimeZone, Timelike};
-use std::ffi::CStr;
+use std::{ffi::CStr, os::raw::c_char};
 
 pub mod bit_shift;
 
@@ -324,7 +324,7 @@ pub unsafe extern "C" fn WSTRING_TO_STRING(input: *const i16) -> Wrapper<[u8; 81
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn STRING_TO_WSTRING(input: *const i8) -> Wrapper<[u16; 81]> {
+pub unsafe extern "C" fn STRING_TO_WSTRING(input: *const c_char) -> Wrapper<[u16; 81]> {
     //find the \0
     let string = CStr::from_ptr(input).to_string_lossy();
     let mut arr: [u16; 81] = [0; 81];
