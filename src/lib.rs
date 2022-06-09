@@ -334,11 +334,9 @@ pub unsafe extern "C" fn STRING_TO_WSTRING(input: *const i8) -> Wrapper<[u16; 81
             arr[i] = e;
         } else {
             //No need to go further if the string is bigger than the target string
-            dbg!(i);
             break;
         }
     }
-    dbg!(&arr);
     Wrapper { inner: arr }
 }
 
