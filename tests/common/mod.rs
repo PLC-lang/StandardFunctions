@@ -116,6 +116,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "CHECKED_MUL_UNSIGNED",
             iec61131std::CHECKED_MUL_UNSIGNED as usize,
         ),
+        (
+            "CHECKED_DIV_SIGNED",
+            iec61131std::CHECKED_DIV_SIGNED as usize,
+        ),
+        (
+            "CHECKED_DIV_UNSIGNED",
+            iec61131std::CHECKED_DIV_UNSIGNED as usize,
+        ),
     ];
 
     let variables = vec![

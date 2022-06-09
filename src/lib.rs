@@ -524,6 +524,25 @@ pub extern "C" fn CHECKED_MUL_UNSIGNED(in1: i64, in2: u64) -> i64 {
     in1.checked_mul(in2.try_into().unwrap_or(0)).unwrap_or(0)
 }
 
+/// .
+/// ...
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CHECKED_DIV_SIGNED(in1: i64, in2: i64) -> i64 {
+    in1.checked_div(in2).unwrap_or(0)
+}
+
+/// .
+/// ...
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CHECKED_DIV_UNSIGNED(in1: i64, in2: u64) -> i64 {
+    // try to convert u64 into i64, if value doesn't fit the result would overflow -> return 0
+    in1.checked_div(in2.try_into().unwrap_or(0)).unwrap_or(0)
+}
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct Wrapper<T> {

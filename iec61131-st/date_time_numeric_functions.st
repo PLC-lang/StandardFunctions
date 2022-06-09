@@ -632,3 +632,287 @@ VAR_INPUT
 END_VAR
 	MUL_LTIME__ULINT := CHECKED_MUL_UNSIGNED(IN1, IN2);
 END_FUNCTION
+
+(********************
+*
+* This operator produces the division of the operands.
+*
+*********************)
+FUNCTION DIV <T1: ANY, T2: ANY> : T1
+VAR_INPUT
+	IN1 : T1;
+	IN2 : T2;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and SINT *)
+FUNCTION DIV__TIME__SINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : SINT;
+END_VAR
+	DIV__TIME__SINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and INT *)
+FUNCTION DIV__TIME__INT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : INT;
+END_VAR
+	DIV__TIME__INT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and DINT *)
+FUNCTION DIV__TIME__DINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : DINT;
+END_VAR
+	DIV__TIME__DINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and LINT *)
+FUNCTION DIV__TIME__LINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : LINT;
+END_VAR
+	DIV__TIME__LINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+
+(********************
+*
+* This operator produces the division of TIME with ANY_SIGNED integer
+* If the result overflows 0 will be returned
+* Division by 0 will also return 0
+*
+*********************)
+@EXTERNAL
+FUNCTION CHECKED_DIV_SIGNED : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : LINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and USINT *)
+FUNCTION DIV__TIME__USINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : USINT;
+END_VAR
+	DIV__TIME__USINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and UINT *)
+FUNCTION DIV__TIME__UINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : UINT;
+END_VAR
+	DIV__TIME__UINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and UDINT *)
+FUNCTION DIV__TIME__UDINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : UDINT;
+END_VAR
+	DIV__TIME__UDINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV for TIME and ULINT *)
+FUNCTION DIV__TIME__ULINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : ULINT;
+END_VAR
+	DIV__TIME__ULINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+
+(********************
+*
+* This operator produces the division of TIME with ANY_UNSIGNED integer
+* If the result overflows 0 will be returned
+* Division by 0 will also return 0
+*
+*********************)
+@EXTERNAL
+FUNCTION CHECKED_DIV_UNSIGNED : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : ULINT;
+END_VAR
+END_FUNCTION
+
+(********************
+*
+* This operator produces the division of TIME and ANY_NUM.
+*
+*********************)
+FUNCTION DIV_TIME <T: ANY_NUM> : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for SINT *)
+FUNCTION DIV_TIME__SINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : SINT;
+END_VAR
+	DIV_TIME__SINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for INT *)
+FUNCTION DIV_TIME__INT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : INT;
+END_VAR
+	DIV_TIME__INT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for DINT *)
+FUNCTION DIV_TIME__DINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : DINT;
+END_VAR
+	DIV_TIME__DINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for LINT *)
+FUNCTION DIV_TIME__LINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : LINT;
+END_VAR
+	DIV_TIME__LINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for USINT *)
+FUNCTION DIV_TIME__USINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : USINT;
+END_VAR
+	DIV_TIME__USINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for UINT *)
+FUNCTION DIV_TIME__UINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : UINT;
+END_VAR
+	DIV_TIME__UINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for UDINT *)
+FUNCTION DIV_TIME__UDINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : UDINT;
+END_VAR
+	DIV_TIME__UDINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_TIME for ULINT *)
+FUNCTION DIV_TIME__ULINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : ULINT;
+END_VAR
+	DIV_TIME__ULINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(********************
+*
+* This operator produces the division of LTIME and ANY_NUM.
+*
+*********************)
+FUNCTION DIV_LTIME <T: ANY_NUM> : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for SINT *)
+FUNCTION DIV_LTIME__SINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : SINT;
+END_VAR
+	DIV_LTIME__SINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for INT *)
+FUNCTION DIV_LTIME__INT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : INT;
+END_VAR
+	DIV_LTIME__INT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for DINT *)
+FUNCTION DIV_LTIME__DINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : DINT;
+END_VAR
+	DIV_LTIME__DINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for LINT *)
+FUNCTION DIV_LTIME__LINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : LINT;
+END_VAR
+	DIV_LTIME__LINT := CHECKED_DIV_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for USINT *)
+FUNCTION DIV_LTIME__USINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : USINT;
+END_VAR
+	DIV_LTIME__USINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for UINT *)
+FUNCTION DIV_LTIME__UINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : UINT;
+END_VAR
+	DIV_LTIME__UINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for UDINT *)
+FUNCTION DIV_LTIME__UDINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : UDINT;
+END_VAR
+	DIV_LTIME__UDINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of DIV_LTIME for ULINT *)
+FUNCTION DIV_LTIME__ULINT : LTIME
+VAR_INPUT
+	IN1 : LTIME;
+	IN2 : ULINT;
+END_VAR
+	DIV_LTIME__ULINT := CHECKED_DIV_UNSIGNED(IN1, IN2);
+END_FUNCTION
