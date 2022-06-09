@@ -108,6 +108,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("SUB_TOD_TOD", iec61131std::SUB_TOD_TOD as usize),
         ("SUB_DT_TIME", iec61131std::SUB_DT_TIME as usize),
         ("SUB_DT_DT", iec61131std::SUB_DT_DT as usize),
+        (
+            "CHECKED_MUL_SIGNED",
+            iec61131std::CHECKED_MUL_SIGNED as usize,
+        ),
+        (
+            "CHECKED_MUL_UNSIGNED",
+            iec61131std::CHECKED_MUL_UNSIGNED as usize,
+        ),
     ];
 
     let variables = vec![

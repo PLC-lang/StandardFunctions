@@ -350,3 +350,131 @@ VAR_INPUT
 END_VAR
 	SUB_LDT_LDT := SUB_DT_DT(IN1, IN2);
 END_FUNCTION
+
+(********************
+*
+* This operator produces the multiplication of the operands.
+*
+*********************)
+FUNCTION MUL <T1: ANY, T2: ANY> : T1
+VAR_INPUT
+	IN1 : T1;
+	IN2 : T2;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and SINT *)
+FUNCTION MUL__TIME__SINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : SINT;
+END_VAR
+	MUL__TIME__SINT := CHECKED_MUL_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and INT *)
+FUNCTION MUL__TIME__INT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : INT;
+END_VAR
+	MUL__TIME__INT := CHECKED_MUL_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and DINT *)
+FUNCTION MUL__TIME__DINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : DINT;
+END_VAR
+	MUL__TIME__DINT := CHECKED_MUL_SIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and LINT *)
+FUNCTION MUL__TIME__LINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : LINT;
+END_VAR
+	MUL__TIME__LINT := CHECKED_MUL_SIGNED(IN1, IN2);
+END_FUNCTION
+
+
+(********************
+*
+* This operator produces the multiplication of TIME with ANY_SIGNED integer
+* If the result overflows 0 will be returned
+*
+*********************)
+@EXTERNAL
+FUNCTION CHECKED_MUL_SIGNED : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : LINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and USINT *)
+FUNCTION MUL__TIME__USINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : USINT;
+END_VAR
+	MUL__TIME__USINT := CHECKED_MUL_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and UINT *)
+FUNCTION MUL__TIME__UINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : UINT;
+END_VAR
+	MUL__TIME__UINT := CHECKED_MUL_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and UDINT *)
+FUNCTION MUL__TIME__UDINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : UDINT;
+END_VAR
+	MUL__TIME__UDINT := CHECKED_MUL_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+(* Specialized implementation of MUL for TIME and ULINT *)
+FUNCTION MUL__TIME__ULINT : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : ULINT;
+END_VAR
+	MUL__TIME__ULINT := CHECKED_MUL_UNSIGNED(IN1, IN2);
+END_FUNCTION
+
+
+(********************
+*
+* This operator produces the multiplication of TIME with ANY_UNSIGNED integer
+* If the result overflows 0 will be returned
+*
+*********************)
+@EXTERNAL
+FUNCTION CHECKED_MUL_UNSIGNED : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : ULINT;
+END_VAR
+END_FUNCTION
+
+(********************
+*
+* This operator produces the multiplication of TIME and REAL
+* If the result overflows 0 will be returned
+*
+*********************)
+@EXTERNAL
+FUNCTION CHECKED_MUL_F32 : TIME
+VAR_INPUT
+	IN1 : TIME;
+	IN2 : REAL;
+END_VAR
+END_FUNCTION

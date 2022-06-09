@@ -233,3 +233,91 @@ fn sub_dt() {
     assert_eq!(maintype.c, 127353444000000);
     assert_eq!(maintype.d, 127353444000000);
 }
+
+#[test]
+fn mul_signed() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+		c : TIME;
+		d : TIME;
+	END_VAR
+		a := MUL(TIME#1d, SINT#-120);
+		b := MUL(TIME#1s, INT#3600);
+		c := MUL(TIME#1000ms, DINT#86400);
+		d := MUL(TIME#1000ms, LINT#864000000);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -10368000000000000);
+    assert_eq!(maintype.b, 3600000000000);
+    assert_eq!(maintype.c, 86400000000000);
+    assert_eq!(maintype.d, 864000000000000000);
+}
+
+#[test]
+fn mul_signed_overflow() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+	END_VAR
+		// no overflow -> MAX value
+		a := MUL(TIME#1ns, LINT#9223372036854775807);
+		// overflow -> 0 will be returned
+		b := MUL(TIME#10ns, LINT#9223372036854775807);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 9223372036854775807);
+    assert_eq!(maintype.b, 0);
+}
+
+#[test]
+fn mul_unsigned() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+		c : TIME;
+		d : TIME;
+	END_VAR
+		a := MUL(TIME#-1d, USINT#120);
+		b := MUL(TIME#1s, UINT#3600);
+		c := MUL(TIME#1000ms, UDINT#86400);
+		d := MUL(TIME#1000ms, ULINT#864000000);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -10368000000000000);
+    assert_eq!(maintype.b, 3600000000000);
+    assert_eq!(maintype.c, 86400000000000);
+    assert_eq!(maintype.d, 864000000000000000);
+}
+
+#[test]
+fn mul_unsigned_overflow() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+	END_VAR
+		// no overflow -> MAX value
+		a := MUL(TIME#1ns, ULINT#9223372036854775807);
+		// overflow -> 0 will be returned
+		b := MUL(TIME#1ns, ULINT#9223372036854775808);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 9223372036854775807);
+    assert_eq!(maintype.b, 0);
+}
