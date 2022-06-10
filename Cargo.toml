@@ -5,12 +5,12 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [build-dependencies]
-rusty = {git = "https://github.com/PLC-lang/rusty", branch="strings_in_functions" } 
+rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" } 
 glob = "0.3"
 
 [dev-dependencies]
 inkwell = {git = "https://github.com/TheDan64/inkwell", branch="master", features=["llvm13-0"] }
-rusty = {git = "https://github.com/PLC-lang/rusty", branch="strings_in_functions" } 
+rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" } 
 
 [dependencies]
 chrono = "0.4"
