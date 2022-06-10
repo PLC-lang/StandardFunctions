@@ -26,17 +26,17 @@ fn add_time() {
 		d : LTIME;
 	END_VAR
 		a := ADD(TIME#5h,TIME#30s);
-		b := ADD_TIME(TIME#10s,TIME#10s);
+		b := ADD_TIME(TIME#10s,TIME#-5s);
 
-		c := ADD(LTIME#10s,LTIME#10s);
+		c := ADD(LTIME#-10s,LTIME#-10s);
 		d := ADD_LTIME(LTIME#10s,LTIME#10s);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 18030000000000);
-    assert_eq!(maintype.b, 20000000000);
-    assert_eq!(maintype.c, 20000000000);
+    assert_eq!(maintype.b, 5000000000);
+    assert_eq!(maintype.c, -20000000000);
     assert_eq!(maintype.d, 20000000000);
 }
 
@@ -51,7 +51,7 @@ fn add_tod_time() {
 		d : LTOD;
 	END_VAR
 		a := ADD_TOD_TIME(TOD#20:00:00, TIME#1s);
-		b := ADD(TOD#20:00:00, TIME#1s);
+		b := ADD(TOD#20:00:02, TIME#-1s);
 		c := ADD_LTOD_LTIME(LTOD#12:00:00, LTIME#12m12s);
 		d := ADD(LTOD#12:00:00, LTIME#12m12s);
 	END_PROGRAM";
@@ -89,6 +89,21 @@ fn add_dt_time() {
 }
 
 #[test]
+#[should_panic]
+fn add_overflow() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+	END_VAR
+		a := ADD(TIME#9223372036854775807ms, TIME#1ms);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+}
+
+#[test]
 fn sub_time() {
     let src = "
 	PROGRAM main
@@ -98,7 +113,7 @@ fn sub_time() {
 		c : LTIME;
 		d : LTIME;
 	END_VAR
-		a := SUB(TIME#10h50m, TIME#6h20m);
+		a := SUB(TIME#10h50m, TIME#-10m);
 		b := SUB_TIME(TIME#5h35m20s, TIME#1h5m20s);
 
 		c := SUB(LTIME#10h50m, LTIME#6h20m);
@@ -107,7 +122,7 @@ fn sub_time() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, 16200000000000);
+    assert_eq!(maintype.a, 39600000000000);
     assert_eq!(maintype.b, 16200000000000);
     assert_eq!(maintype.c, 16200000000000);
     assert_eq!(maintype.d, 16200000000000);
@@ -235,6 +250,21 @@ fn sub_dt() {
 }
 
 #[test]
+#[should_panic]
+fn sub_overflow() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+	END_VAR
+		a := SUB(TIME#-9223372036854775807ms, TIME#1ms);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+}
+
+#[test]
 fn mul_signed() {
     let src = "
 	PROGRAM main
@@ -259,23 +289,19 @@ fn mul_signed() {
 }
 
 #[test]
+#[should_panic]
 fn mul_signed_overflow() {
     let src = "
 	PROGRAM main
 	VAR
 		a : TIME;
-		b : TIME;
 	END_VAR
-		// no overflow -> MAX value
-		a := MUL(TIME#1ns, LINT#9223372036854775807);
 		// overflow -> 0 will be returned
-		b := MUL(TIME#10ns, LINT#9223372036854775807);
+		a := MUL(TIME#10ns, LINT#9223372036854775807);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, 9223372036854775807);
-    assert_eq!(maintype.b, 0);
 }
 
 #[test]
@@ -303,23 +329,19 @@ fn mul_unsigned() {
 }
 
 #[test]
+#[should_panic]
 fn mul_unsigned_overflow() {
     let src = "
 	PROGRAM main
 	VAR
 		a : TIME;
-		b : TIME;
 	END_VAR
-		// no overflow -> MAX value
-		a := MUL(TIME#1ns, ULINT#9223372036854775807);
 		// overflow -> 0 will be returned
-		b := MUL(TIME#1ns, ULINT#9223372036854775808);
+		a := MUL(TIME#1ns, ULINT#9223372036854775808);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, 9223372036854775807);
-    assert_eq!(maintype.b, 0);
 }
 
 #[test]
@@ -467,6 +489,7 @@ fn div_unsigned() {
 }
 
 #[test]
+#[should_panic]
 fn div_by_zero() {
     let src = "
 	PROGRAM main
@@ -478,7 +501,6 @@ fn div_by_zero() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, 0);
 }
 
 #[test]
@@ -584,15 +606,33 @@ fn mul_real() {
 	VAR
 		a : TIME;
 		b : LTIME;
+		c : TIME;
 	END_VAR
 		a := MUL(TIME#-2s700ms, REAL#3.14);
 		b := MUL(LTIME#2s700ms, REAL#3.14e5);
+		c := MUL(TIME#2s700ms, REAL#-3.14);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, -8478000640);
     assert_eq!(maintype.b, 847800000000000);
+    assert_eq!(maintype.c, -8478000640);
+}
+
+#[test]
+#[should_panic]
+fn mul_real_overflow() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+	END_VAR
+		a := MUL(TIME#-2s700ms, REAL#3.40282347e38);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
 }
 
 #[test]
@@ -602,17 +642,36 @@ fn mul_lreal() {
 	VAR
 		a : TIME;
 		b : LTIME;
+		c : TIME;
 	END_VAR
 		a := MUL(TIME#-2s700ms, LREAL#3.14);
 		b := MUL(LTIME#2s700ms, LREAL#3.14e5);
+		c := MUL(TIME#-2s700ms, LREAL#-3.14);
 	END_PROGRAM";
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    // assert_eq!(maintype.a, 8478000640);
+    // -8478000640
     assert_eq!(maintype.a, -8477999645);
-    // assert_eq!(maintype.b, 847800000000000);
+    // 847800000000000
     assert_eq!(maintype.b, 847800191422900);
+    // 8478000640
+    assert_eq!(maintype.c, 8478002220);
+}
+
+#[test]
+#[should_panic]
+fn mul_lreal_overflow() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+	END_VAR
+		a := MUL(TIME#-2s700ms, LREAL#3.40282347e38);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
 }
 
 #[test]
@@ -630,7 +689,7 @@ fn mul_time() {
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 8478000640);
-    // assert_eq!(maintype.b, 847800000000000);
+    // 847800000000000
     assert_eq!(maintype.b, 847800191422900);
 }
 
@@ -649,7 +708,7 @@ fn mul_ltime() {
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 8478000640);
-    // assert_eq!(maintype.b, 847800000000000);
+    // 847800000000000
     assert_eq!(maintype.b, 847800191422900);
 }
 
@@ -672,6 +731,21 @@ fn div_real() {
 }
 
 #[test]
+#[should_panic]
+fn div_real_by_zero() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+	END_VAR
+		a := DIV(TIME#-2s700ms, REAL#0.0);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+}
+
+#[test]
 fn div_lreal() {
     let src = "
 	PROGRAM main
@@ -685,9 +759,24 @@ fn div_lreal() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    // assert_eq!(maintype.a, -859872579);
+    // -859872579
     assert_eq!(maintype.a, -859872647);
     assert_eq!(maintype.b, 8598);
+}
+
+#[test]
+#[should_panic]
+fn div_lreal_by_zero() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+	END_VAR
+		a := DIV(TIME#-2s700ms, LREAL#0.0);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
 }
 
 #[test]

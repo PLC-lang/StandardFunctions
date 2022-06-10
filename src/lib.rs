@@ -385,17 +385,20 @@ pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: i64) -> i64 {
 
 /// .
 /// This operator returns the value of adding up two TIME operands.
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn ADD_TIME(in1: i64, in2: i64) -> i64 {
-    let res = chrono::Duration::milliseconds(in1) + chrono::Duration::milliseconds(in2);
-    res.num_milliseconds()
+    chrono::Duration::milliseconds(in1)
+        .checked_add(&chrono::Duration::milliseconds(in2))
+        .unwrap()
+        .num_milliseconds()
 }
 
 /// .
 /// This operator returns the value of adding up TOD and TIME.
-/// If the result overflows 0 will be returned
+/// Panic on onverflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -405,7 +408,7 @@ pub extern "C" fn ADD_TOD_TIME(in1: i64, in2: i64) -> i64 {
 
 /// .
 /// This operator returns the value of adding up DT and TIME.
-/// If the result overflows 0 will be returned
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -416,27 +419,29 @@ pub extern "C" fn ADD_DT_TIME(in1: i64, in2: i64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn add_datetime_time(in1: i64, in2: i64) -> i64 {
-    let time = chrono::Utc.timestamp_millis(in1);
-    let duration = chrono::Duration::nanoseconds(in2);
-    match time.checked_add_signed(duration) {
-        Some(res) => res.timestamp_millis(),
-        None => 0,
-    }
+    chrono::Utc
+        .timestamp_millis(in1)
+        .checked_add_signed(chrono::Duration::nanoseconds(in2))
+        .unwrap()
+        .timestamp_millis()
 }
 
 /// .
 /// This operator produces the subtraction of two TIME operands
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn SUB_TIME(in1: i64, in2: i64) -> i64 {
-    let res = chrono::Duration::milliseconds(in1) - chrono::Duration::milliseconds(in2);
-    res.num_milliseconds()
+    chrono::Duration::milliseconds(in1)
+        .checked_sub(&chrono::Duration::milliseconds(in2))
+        .unwrap()
+        .num_milliseconds()
 }
 
 /// .
 /// This operator produces the subtraction of two DATE operands
-/// If the result overflows 0 will be returned
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -446,7 +451,7 @@ pub extern "C" fn SUB_DATE_DATE(in1: i64, in2: i64) -> i64 {
 
 /// .
 /// This operator produces the subtraction of TOD and TIME
-/// If the result overflows 0 will be returned
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -456,7 +461,7 @@ pub extern "C" fn SUB_TOD_TIME(in1: i64, in2: i64) -> i64 {
 
 /// .
 /// This operator produces the subtraction of two TOD operands
-/// If the result overflows 0 will be returned
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -467,15 +472,16 @@ pub extern "C" fn SUB_TOD_TOD(in1: i64, in2: i64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn sub_datetimes(in1: i64, in2: i64) -> i64 {
-    let dt1 = chrono::Utc.timestamp_millis(in1);
-    let dt2 = chrono::Utc.timestamp_millis(in2);
-    let duration = dt1.signed_duration_since(dt2);
-    duration.num_nanoseconds().unwrap_or(0)
+    chrono::Utc
+        .timestamp_millis(in1)
+        .signed_duration_since(chrono::Utc.timestamp_millis(in2))
+        .num_nanoseconds()
+        .unwrap()
 }
 
 /// .
 /// This operator produces the subtraction of DT and TIME
-/// If the result overflows 0 will be returned
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -483,21 +489,19 @@ pub extern "C" fn SUB_DT_TIME(in1: i64, in2: i64) -> i64 {
     sub_datetime_duration(in1, in2)
 }
 
-///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn sub_datetime_duration(in1: i64, in2: i64) -> i64 {
-    let dt = chrono::Utc.timestamp_millis(in1);
-    let duration = chrono::Duration::nanoseconds(in2);
-    match dt.checked_sub_signed(duration) {
-        Some(res) => res.timestamp_millis(),
-        None => 0,
-    }
+    chrono::Utc
+        .timestamp_millis(in1)
+        .checked_sub_signed(chrono::Duration::nanoseconds(in2))
+        .unwrap()
+        .timestamp_millis()
 }
 
 /// .
 /// This operator produces the subtraction of two DT operands
-/// If the result overflows 0 will be returned
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -506,128 +510,177 @@ pub extern "C" fn SUB_DT_DT(in1: i64, in2: i64) -> i64 {
 }
 
 /// .
-/// ...
+/// Multiply TIME/LTIME with ANY_SIGNED_INT
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_MUL_SIGNED(in1: i64, in2: i64) -> i64 {
-    in1.checked_mul(in2).unwrap_or(0)
+    in1.checked_mul(in2).unwrap()
 }
 
 /// .
-/// ...
+/// Multiply TIME/LTIME with ANY_UNSIGNED_INT
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_MUL_UNSIGNED(in1: i64, in2: u64) -> i64 {
-    // try to convert u64 into i64, if value doesn't fit the result would overflow -> return 0
-    in1.checked_mul(in2.try_into().unwrap_or(0)).unwrap_or(0)
+    // convert in2 [u64] to [i64]
+    // if in2 is to large for [i64] the multiplication will allways overflow -> panic on try_into()
+    in1.checked_mul(in2.try_into().unwrap()).unwrap()
 }
 
 /// .
-/// ...
+/// Divide TIME/LTIME with ANY_SIGNED_INT
+/// Panic on overflow or division by zero
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_DIV_SIGNED(in1: i64, in2: i64) -> i64 {
-    in1.checked_div(in2).unwrap_or(0)
+    in1.checked_div(in2).unwrap()
 }
 
 /// .
-/// ...
+/// Divide TIME/LTIME with ANY_UNSIGNED_INT
+/// Panic on overflow or division by zero
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_DIV_UNSIGNED(in1: i64, in2: u64) -> i64 {
-    // try to convert u64 into i64, if value doesn't fit the result would overflow -> return 0
-    in1.checked_div(in2.try_into().unwrap_or(0)).unwrap_or(0)
+    // convert in2 [u64] to [i64]
+    // if in2 is to large for [i64] the division will allways fail -> panic on try_into()
+    in1.checked_div(in2.try_into().unwrap()).unwrap()
+}
+
+fn should_result_be_negative(in1_is_negative: bool, in2_is_negative: bool) -> bool {
+    if !in1_is_negative & !in2_is_negative {
+        // if both params are negative, result will be positive
+        false
+    } else {
+        // if any of the params is nagative and the other positive
+        // result will be negative
+        !in1_is_negative | !in2_is_negative
+    }
 }
 
 /// .
-/// ...
+/// Multiply TIME/LTIME with REAL
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_MUL_F32(in1: i64, in2: f32) -> i64 {
-    let is_negative = in1.is_negative();
-    // std::time::Duration can only handle positive duration
-    let std_d = match is_negative {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = match is_in1_negative {
         true => std::time::Duration::from_nanos(-in1 as u64),
         false => std::time::Duration::from_nanos(in1 as u64),
     };
 
-    // if overflows i64 return 0
-    let std_res: i64 = std_d.mul_f32(in2).as_nanos().try_into().unwrap_or(0);
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = match is_in2_negative {
+        true => duration.mul_f32(-in2).as_nanos().try_into().unwrap(),
+        false => duration.mul_f32(in2).as_nanos().try_into().unwrap(),
+    };
 
-    match is_negative {
-        true => -std_res,
-        false => std_res,
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
     }
 }
 
 /// .
-/// ...
+/// Multiply TIME/LTIME with LREAL
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_MUL_F64(in1: i64, in2: f64) -> i64 {
-    let is_negative = in1.is_negative();
-    // std::time::Duration can only handle positive duration
-    let std_d = match is_negative {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = match is_in1_negative {
         true => std::time::Duration::from_nanos(-in1 as u64),
         false => std::time::Duration::from_nanos(in1 as u64),
     };
 
-    // if overflows i64 return 0
-    let std_res: i64 = std_d.mul_f64(in2).as_nanos().try_into().unwrap_or(0);
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = match is_in2_negative {
+        true => duration.mul_f64(-in2).as_nanos().try_into().unwrap(),
+        false => duration.mul_f64(in2).as_nanos().try_into().unwrap(),
+    };
 
-    match is_negative {
-        true => -std_res,
-        false => std_res,
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
     }
 }
 
 /// .
-/// ...
+/// Divide TIME/LTIME with ANY_UNSIGNED_INT
+/// Panic on overflow or division by zero
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_DIV_F32(in1: i64, in2: f32) -> i64 {
-    let is_negative = in1.is_negative();
-    // std::time::Duration can only handle positive duration
-    let std_d = match is_negative {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = match is_in1_negative {
         true => std::time::Duration::from_nanos(-in1 as u64),
         false => std::time::Duration::from_nanos(in1 as u64),
     };
 
-    // if overflows i64 return 0
-    let std_res: i64 = std_d.div_f32(in2).as_nanos().try_into().unwrap_or(0);
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = match is_in2_negative {
+        true => duration.div_f32(-in2).as_nanos().try_into().unwrap(),
+        false => duration.div_f32(in2).as_nanos().try_into().unwrap(),
+    };
 
-    match is_negative {
-        true => -std_res,
-        false => std_res,
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
     }
 }
 
 /// .
-/// ...
+/// Divide TIME/LTIME with ANY_UNSIGNED_INT
+/// Panic on overflow or division by zero
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CHECKED_DIV_F64(in1: i64, in2: f64) -> i64 {
-    let is_negative = in1.is_negative();
-    // std::time::Duration can only handle positive duration
-    let std_d = match is_negative {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = match is_in1_negative {
         true => std::time::Duration::from_nanos(-in1 as u64),
         false => std::time::Duration::from_nanos(in1 as u64),
     };
 
-    // if overflows i64 return 0
-    let std_res: i64 = std_d.div_f64(in2).as_nanos().try_into().unwrap_or(0);
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = match is_in2_negative {
+        true => duration.div_f64(-in2).as_nanos().try_into().unwrap(),
+        false => duration.div_f64(in2).as_nanos().try_into().unwrap(),
+    };
 
-    match is_negative {
-        true => -std_res,
-        false => std_res,
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
     }
 }
 

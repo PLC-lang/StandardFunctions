@@ -57,7 +57,7 @@ END_FUNCTION
 (********************
 *
 * This operator returns the value of adding up TOD and TIME.
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -71,7 +71,7 @@ END_FUNCTION
 (********************
 *
 * This operator returns the value of adding up LTOD and LTIME.
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION ADD_LTOD_LTIME : LTOD
@@ -94,7 +94,7 @@ END_FUNCTION
 (********************
 *
 * This operator returns the value of adding up DT and TIME.
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -108,7 +108,7 @@ END_FUNCTION
 (********************
 *
 * This operator returns the value of adding up LDT and LTIME.
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION ADD_LDT_LTIME : LDT
@@ -178,7 +178,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of two DATE operands returning TIME
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -192,7 +192,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of two LDATE operands returning LTIME
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION SUB_LDATE_LDATE : LTIME
@@ -215,7 +215,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of TOD and TIME returning TOD
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -229,7 +229,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of LTOD and LTIME returning LTOD
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION SUB_LTOD_LTIME : LTOD
@@ -252,7 +252,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of two TOD operands returning TIME
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -266,7 +266,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of two LTOD operands returning LTIME
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION SUB_LTOD_LTOD : LTIME
@@ -289,7 +289,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of DT and TIME returning DT
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -303,7 +303,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of LDT and LTIME returning LDT
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION SUB_LDT_LTIME : LDT
@@ -326,7 +326,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of two DT operands returning TIME
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -340,7 +340,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the subtraction of two LDT operands returning LTIME
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 FUNCTION SUB_LDT_LDT : LTIME
@@ -403,7 +403,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the multiplication of TIME with ANY_SIGNED integer
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -454,7 +454,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the multiplication of TIME with ANY_UNSIGNED integer
-* If the result overflows 0 will be returned
+* Panic on overflow
 *
 *********************)
 @EXTERNAL
@@ -685,8 +685,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the division of TIME with ANY_SIGNED integer
-* If the result overflows 0 will be returned
-* Division by 0 will also return 0
+* Panic on overflow or division by zero
 *
 *********************)
 @EXTERNAL
@@ -737,8 +736,7 @@ END_FUNCTION
 (********************
 *
 * This operator produces the division of TIME with ANY_UNSIGNED integer
-* If the result overflows 0 will be returned
-* Division by 0 will also return 0
+* Panic on overflow or division by zero
 *
 *********************)
 @EXTERNAL
