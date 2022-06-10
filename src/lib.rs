@@ -543,6 +543,50 @@ pub extern "C" fn CHECKED_DIV_UNSIGNED(in1: i64, in2: u64) -> i64 {
     in1.checked_div(in2.try_into().unwrap_or(0)).unwrap_or(0)
 }
 
+/// .
+/// ...
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CHECKED_MUL_F32(in1: i64, in2: f32) -> i64 {
+    let is_negative = in1.is_negative();
+    // std::time::Duration can only handle positive duration
+    let std_d = match is_negative {
+        true => std::time::Duration::from_nanos(-in1 as u64),
+        false => std::time::Duration::from_nanos(in1 as u64),
+    };
+
+    // if overflows i64 return 0
+    let std_res: i64 = std_d.mul_f32(in2).as_nanos().try_into().unwrap_or(0);
+
+    match is_negative {
+        true => -std_res,
+        false => std_res,
+    }
+}
+
+/// .
+/// ...
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn CHECKED_MUL_F64(in1: i64, in2: f64) -> i64 {
+    let is_negative = in1.is_negative();
+    // std::time::Duration can only handle positive duration
+    let std_d = match is_negative {
+        true => std::time::Duration::from_nanos(-in1 as u64),
+        false => std::time::Duration::from_nanos(in1 as u64),
+    };
+
+    // if overflows i64 return 0
+    let std_res: i64 = std_d.mul_f64(in2).as_nanos().try_into().unwrap_or(0);
+
+    match is_negative {
+        true => -std_res,
+        false => std_res,
+    }
+}
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct Wrapper<T> {

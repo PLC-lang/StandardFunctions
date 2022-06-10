@@ -576,3 +576,79 @@ fn div_ltime_unsigned() {
     assert_eq!(maintype.c, 1000000000);
     assert_eq!(maintype.d, 1000000000);
 }
+
+#[test]
+fn mul_real() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : LTIME;
+	END_VAR
+		a := MUL(TIME#-2s700ms, REAL#3.14);
+		b := MUL(LTIME#2s700ms, REAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -8478000640);
+    assert_eq!(maintype.b, 847800000000000);
+}
+
+#[test]
+fn mul_lreal() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : LTIME;
+	END_VAR
+		a := MUL(TIME#-2s700ms, LREAL#3.14);
+		b := MUL(LTIME#2s700ms, LREAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    // assert_eq!(maintype.a, 8478000640);
+    assert_eq!(maintype.a, -8477999645);
+    // assert_eq!(maintype.b, 847800000000000);
+    assert_eq!(maintype.b, 847800191422900);
+}
+
+#[test]
+fn mul_time() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+	END_VAR
+		a := MUL_TIME(TIME#2s700ms, REAL#3.14);
+		b := MUL_TIME(TIME#2s700ms, LREAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 8478000640);
+    // assert_eq!(maintype.b, 847800000000000);
+    assert_eq!(maintype.b, 847800191422900);
+}
+
+#[test]
+fn mul_ltime() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LTIME;
+		b : LTIME;
+	END_VAR
+		a := MUL_LTIME(LTIME#2s700ms, REAL#3.14);
+		b := MUL_LTIME(LTIME#2s700ms, LREAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 8478000640);
+    // assert_eq!(maintype.b, 847800000000000);
+    assert_eq!(maintype.b, 847800191422900);
+}
