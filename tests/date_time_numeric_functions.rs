@@ -652,3 +652,76 @@ fn mul_ltime() {
     // assert_eq!(maintype.b, 847800000000000);
     assert_eq!(maintype.b, 847800191422900);
 }
+
+#[test]
+fn div_real() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : LTIME;
+	END_VAR
+		a := DIV(TIME#-2s700ms, REAL#3.14);
+		b := DIV(LTIME#2s700ms, REAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, -859872579);
+    assert_eq!(maintype.b, 8598);
+}
+
+#[test]
+fn div_lreal() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : LTIME;
+	END_VAR
+		a := DIV(TIME#-2s700ms, LREAL#3.14);
+		b := DIV(LTIME#2s700ms, LREAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    // assert_eq!(maintype.a, -859872579);
+    assert_eq!(maintype.a, -859872647);
+    assert_eq!(maintype.b, 8598);
+}
+
+#[test]
+fn div_time() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : TIME;
+		b : TIME;
+	END_VAR
+		a := DIV_TIME(TIME#2s700ms, REAL#3.14);
+		b := DIV_TIME(TIME#2s700ms, LREAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 859872579);
+    assert_eq!(maintype.b, 8598);
+}
+
+#[test]
+fn div_ltime() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LTIME;
+		b : LTIME;
+	END_VAR
+		a := DIV_LTIME(LTIME#2s700ms, REAL#3.14);
+		b := DIV_LTIME(LTIME#2s700ms, LREAL#3.14e5);
+	END_PROGRAM";
+    let sources = add_std!(src, "date_time_numeric_functions.st");
+    let mut maintype = MainType::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 859872579);
+    assert_eq!(maintype.b, 8598);
+}

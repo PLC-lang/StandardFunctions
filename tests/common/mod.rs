@@ -126,6 +126,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ),
         ("CHECKED_MUL_F32", iec61131std::CHECKED_MUL_F32 as usize),
         ("CHECKED_MUL_F64", iec61131std::CHECKED_MUL_F64 as usize),
+        ("CHECKED_DIV_F32", iec61131std::CHECKED_DIV_F32 as usize),
+        ("CHECKED_DIV_F64", iec61131std::CHECKED_DIV_F64 as usize),
     ];
 
     let variables = vec![
