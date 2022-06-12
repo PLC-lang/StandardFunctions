@@ -1,7 +1,7 @@
 // Definitions of the core standard function modules for IEC61131-3
 
 use chrono::{TimeZone, Timelike};
-use std::ffi::CStr;
+use std::{ffi::CStr, os::raw::c_char};
 
 pub mod bit_shift;
 
@@ -279,20 +279,36 @@ pub extern "C" fn REAL_TO_DWORD(input: f32) -> u32 {
 
 /// .
 /// Converts WSTRING to STRING
+/// Limited by a return type of 80 charachters
+///
+/// # Safety
+///
+/// Works on string pointer conversion, inherently unsafe
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn WSTRING_TO_STRING(input: Wrapper<[u16; 81]>) -> Wrapper<[u8; 81]> {
-    let terminator = input
-        .inner
-        .iter()
-        .position(|c| *c == 0)
-        .unwrap_or(input.inner.len());
-    let string = String::from_utf16_lossy(&input.inner[..terminator]);
+pub unsafe extern "C" fn WSTRING_TO_STRING(input: *const i16) -> Wrapper<[u8; 81]> {
+    let mut widestring = input;
+    let mut count = 0;
+    let len = loop {
+        if widestring.is_null() || *widestring == 0 {
+            break count;
+        }
+        widestring = widestring.add(1);
+        count += 1;
+    };
+
+    let input = std::slice::from_raw_parts(input as *const u16, len);
+
+    let string = String::from_utf16_lossy(input);
     let mut arr = [0; 81];
     for (idx, b) in string.bytes().enumerate() {
-        if idx < arr.len() {
+        //Don't fill the null terminator
+        if idx < arr.len() - 1 {
             arr[idx] = b;
+        } else {
+            //no need to loop further, the target size of 80 is done
+            break;
         }
     }
     Wrapper { inner: arr }
@@ -300,24 +316,25 @@ pub extern "C" fn WSTRING_TO_STRING(input: Wrapper<[u16; 81]>) -> Wrapper<[u8; 8
 
 /// .
 /// Converts STRING to WSTRING
+/// Limited by a return type of 80 charachters
+///
+/// # Safety
+///
+/// Works on string pointer conversion, inherently unsafe
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn STRING_TO_WSTRING(input: Wrapper<[u8; 81]>) -> Wrapper<[u16; 81]> {
+pub unsafe extern "C" fn STRING_TO_WSTRING(input: *const c_char) -> Wrapper<[u16; 81]> {
     //find the \0
-    let terminator = input
-        .inner
-        .iter()
-        .position(|c| *c == 0)
-        .map(|it| it + 1)
-        .unwrap_or(input.inner.len());
-    let string = CStr::from_bytes_with_nul(&input.inner[..terminator])
-        .map_or(Ok(""), CStr::to_str)
-        .unwrap_or("");
+    let string = CStr::from_ptr(input).to_string_lossy();
     let mut arr: [u16; 81] = [0; 81];
     for (i, e) in string.encode_utf16().enumerate() {
-        if i < arr.len() {
+        //Don't fill the null terminator
+        if i < arr.len() - 1 {
             arr[i] = e;
+        } else {
+            //No need to go further if the string is bigger than the target string
+            break;
         }
     }
     Wrapper { inner: arr }

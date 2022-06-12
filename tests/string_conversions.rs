@@ -6,7 +6,6 @@ mod common;
 use common::add_std;
 
 #[test]
-#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
 fn wstring_to_string_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -29,7 +28,28 @@ fn wstring_to_string_conversion() {
 }
 
 #[test]
-#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
+fn empty_wstring_to_string_conversion() {
+    #[repr(C)]
+    struct MainType {
+        res: [u8; 81],
+    }
+
+    let src = r#"
+	PROGRAM main
+	VAR
+		res : STRING;
+		ptr : REF_TO STRING;
+	END_VAR
+		res := WSTRING_TO_STRING("");
+    END_PROGRAM
+        "#;
+    let sources = add_std!(src, "string_conversion.st");
+    let mut maintype = MainType { res: [0; 81] };
+    let _res: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, [0; 81]);
+}
+
+#[test]
 fn wstring_to_string_extra_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -50,6 +70,36 @@ fn wstring_to_string_extra_conversion() {
     let _res: i32 = compile_and_run(sources, &mut maintype);
     assert_eq!(&String::from_utf8_lossy(&maintype.res), "hèßlo👽️\0");
     assert_eq!(&maintype.res, "hèßlo👽️\0".as_bytes());
+}
+
+#[test]
+fn wstring_to_string_conversion_long() {
+    #[repr(C)]
+    struct MainType {
+        res: [u8; 81],
+    }
+
+    let src = r#"
+	PROGRAM main
+	VAR
+		res : STRING;
+		ptr : REF_TO STRING;
+	END_VAR
+		res := WSTRING_TO_STRING("111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999");
+    END_PROGRAM
+        "#;
+    let sources = add_std!(src, "string_conversion.st");
+    let mut maintype = MainType { res: [0; 81] };
+    let _res: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(
+        &String::from_utf8_lossy(&maintype.res),
+        "11111111112222222222333333333344444444445555555555666666666677777777778888888888\0"
+    );
+    assert_eq!(
+        &maintype.res,
+        "11111111112222222222333333333344444444445555555555666666666677777777778888888888\0"
+            .as_bytes()
+    );
 }
 
 #[test]
@@ -74,7 +124,6 @@ fn wstring_to_wchar_conversion() {
 }
 
 #[test]
-#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
 fn string_to_wstring_conversion() {
     #[derive(Default)]
     struct MainType {
@@ -96,7 +145,27 @@ fn string_to_wstring_conversion() {
 }
 
 #[test]
-#[ignore = "https://github.com/PLC-lang/rusty/issues/495"]
+fn empty_string_to_wstring_conversion() {
+    #[repr(C)]
+    struct MainType {
+        res: [u16; 81],
+    }
+
+    let src = r#"
+	PROGRAM main
+	VAR
+		res : WSTRING;
+	END_VAR
+		res := STRING_TO_WSTRING('');
+    END_PROGRAM
+        "#;
+    let sources = add_std!(src, "string_conversion.st");
+    let mut maintype = MainType { res: [0; 81] };
+    let _res: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.res, [0; 81]);
+}
+
+#[test]
 fn string_to_wstring_extra_conversion() {
     struct MainType {
         res: [u16; 8],
@@ -118,6 +187,38 @@ fn string_to_wstring_extra_conversion() {
     let mut maintype = MainType { res: [0; 8] };
     let _res: i32 = compile_and_run(sources, &mut maintype);
     assert_eq!(&String::from_utf16_lossy(&maintype.res), "Hèßlo😀\0");
+    assert_eq!(&maintype.res, &exp);
+}
+
+#[test]
+fn string_to_wstring_long_conversion() {
+    struct MainType {
+        res: [u16; 81],
+    }
+    let src = r#"
+	PROGRAM main
+	VAR
+		res : WSTRING;
+	END_VAR
+		res := STRING_TO_WSTRING('111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999');
+    END_PROGRAM
+        "#;
+
+    let mut exp = [0; 81];
+    for (i, c) in "11111111112222222222333333333344444444445555555555666666666677777777778888888888"
+        .encode_utf16()
+        .into_iter()
+        .enumerate()
+    {
+        exp[i] = c;
+    }
+    let sources = add_std!(src, "string_conversion.st");
+    let mut maintype = MainType { res: [0; 81] };
+    let _res: i32 = compile_and_run(sources, &mut maintype);
+    assert_eq!(
+        &String::from_utf16_lossy(&maintype.res),
+        "11111111112222222222333333333344444444445555555555666666666677777777778888888888\0"
+    );
     assert_eq!(&maintype.res, &exp);
 }
 
