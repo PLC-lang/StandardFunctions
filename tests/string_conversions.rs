@@ -191,7 +191,6 @@ fn string_to_wstring_extra_conversion() {
 }
 
 #[test]
-#[ignore = "It seems when writing a wstring, we are writing only half the value"]
 fn string_to_wstring_long_conversion() {
     struct MainType {
         res: [u16; 81],
