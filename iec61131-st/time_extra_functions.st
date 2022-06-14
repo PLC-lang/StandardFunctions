@@ -652,3 +652,125 @@ VAR_OUTPUT
 END_VAR
 	SPLIT_LTOD__ULINT := SPLIT_TOD__ULINT(in, hour, minute, second, millisecond);
 END_FUNCTION
+
+(********************
+*
+* Splits DT into year, month, day, hour, minute, second, millisecond of type ANY_INT
+*
+*********************)
+FUNCTION SPLIT_DT <T: ANY_INT> : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : T;
+	month : T;
+	day : T;
+	hour : T;
+	minute : T;
+	second : T;
+	millisecond : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DT for INT *)
+@EXTERNAL
+FUNCTION SPLIT_DT__INT : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : INT;
+	month : INT;
+	day : INT;
+	hour : INT;
+	minute : INT;
+	second : INT;
+	millisecond : INT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DT for UINT *)
+@EXTERNAL
+FUNCTION SPLIT_DT__UINT : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : UINT;
+	month : UINT;
+	day : UINT;
+	hour : UINT;
+	minute : UINT;
+	second : UINT;
+	millisecond : UINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DT for DINT *)
+@EXTERNAL
+FUNCTION SPLIT_DT__DINT : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : DINT;
+	month : DINT;
+	day : DINT;
+	hour : DINT;
+	minute : DINT;
+	second : DINT;
+	millisecond : DINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DT for UDINT *)
+@EXTERNAL
+FUNCTION SPLIT_DT__UDINT : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : UDINT;
+	month : UDINT;
+	day : UDINT;
+	hour : UDINT;
+	minute : UDINT;
+	second : UDINT;
+	millisecond : UDINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DT for LINT *)
+@EXTERNAL
+FUNCTION SPLIT_DT__LINT : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : LINT;
+	month : LINT;
+	day : LINT;
+	hour : LINT;
+	minute : LINT;
+	second : LINT;
+	millisecond : LINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DT for ULINT *)
+@EXTERNAL
+FUNCTION SPLIT_DT__ULINT : INT
+VAR_INPUT
+	in : DT;
+END_VAR
+VAR_OUTPUT
+	year : ULINT;
+	month : ULINT;
+	day : ULINT;
+	hour : ULINT;
+	minute : ULINT;
+	second : ULINT;
+	millisecond : ULINT;
+END_VAR
+END_FUNCTION

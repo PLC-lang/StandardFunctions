@@ -436,3 +436,165 @@ pub extern "C" fn SPLIT_TOD__ULINT(
 
     0
 }
+
+/// .
+/// Splits DT into year, month, day, hour, minute, second, millisecond of type INT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DT__INT(
+    in1: i64,
+    out1: &mut i16,
+    out2: &mut i16,
+    out3: &mut i16,
+    out4: &mut i16,
+    out5: &mut i16,
+    out6: &mut i16,
+    out7: &mut i16,
+) -> i16 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    *out1 = dt.year() as i16;
+    *out2 = dt.month() as i16;
+    *out3 = dt.day() as i16;
+    *out4 = dt.hour() as i16;
+    *out5 = dt.minute() as i16;
+    *out6 = dt.second() as i16;
+    *out7 = dt.timestamp_subsec_millis() as i16;
+
+    0
+}
+
+/// .
+/// Splits DT into year, month, day, hour, minute, second, millisecond of type UINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DT__UINT(
+    in1: i64,
+    out1: &mut u16,
+    out2: &mut u16,
+    out3: &mut u16,
+    out4: &mut u16,
+    out5: &mut u16,
+    out6: &mut u16,
+    out7: &mut u16,
+) -> i16 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    *out1 = dt.year() as u16;
+    *out2 = dt.month() as u16;
+    *out3 = dt.day() as u16;
+    *out4 = dt.hour() as u16;
+    *out5 = dt.minute() as u16;
+    *out6 = dt.second() as u16;
+    *out7 = dt.timestamp_subsec_millis() as u16;
+
+    0
+}
+
+/// .
+/// Splits DT into year, month, day, hour, minute, second, millisecond of type DINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DT__DINT(
+    in1: i64,
+    out1: &mut i32,
+    out2: &mut i32,
+    out3: &mut i32,
+    out4: &mut i32,
+    out5: &mut i32,
+    out6: &mut i32,
+    out7: &mut i32,
+) -> i16 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    *out1 = dt.year() as i32;
+    *out2 = dt.month() as i32;
+    *out3 = dt.day() as i32;
+    *out4 = dt.hour() as i32;
+    *out5 = dt.minute() as i32;
+    *out6 = dt.second() as i32;
+    *out7 = dt.timestamp_subsec_millis() as i32;
+
+    0
+}
+
+/// .
+/// Splits DT into year, month, day, hour, minute, second, millisecond of type UDINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DT__UDINT(
+    in1: i64,
+    out1: &mut u32,
+    out2: &mut u32,
+    out3: &mut u32,
+    out4: &mut u32,
+    out5: &mut u32,
+    out6: &mut u32,
+    out7: &mut u32,
+) -> i16 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    *out1 = dt.year() as u32;
+    *out2 = dt.month() as u32;
+    *out3 = dt.day() as u32;
+    *out4 = dt.hour() as u32;
+    *out5 = dt.minute() as u32;
+    *out6 = dt.second() as u32;
+    *out7 = dt.timestamp_subsec_millis() as u32;
+
+    0
+}
+
+/// .
+/// Splits DT into year, month, day, hour, minute, second, millisecond of type LINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DT__LINT(
+    in1: i64,
+    out1: &mut i64,
+    out2: &mut i64,
+    out3: &mut i64,
+    out4: &mut i64,
+    out5: &mut i64,
+    out6: &mut i64,
+    out7: &mut i64,
+) -> i16 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    *out1 = dt.year() as i64;
+    *out2 = dt.month() as i64;
+    *out3 = dt.day() as i64;
+    *out4 = dt.hour() as i64;
+    *out5 = dt.minute() as i64;
+    *out6 = dt.second() as i64;
+    *out7 = dt.timestamp_subsec_millis() as i64;
+
+    0
+}
+
+/// .
+/// Splits DT into year, month, day, hour, minute, second, millisecond of type ULINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DT__ULINT(
+    in1: i64,
+    out1: &mut u64,
+    out2: &mut u64,
+    out3: &mut u64,
+    out4: &mut u64,
+    out5: &mut u64,
+    out6: &mut u64,
+    out7: &mut u64,
+) -> i16 {
+    let dt = chrono::Utc.timestamp_millis(in1);
+    *out1 = dt.year() as u64;
+    *out2 = dt.month() as u64;
+    *out3 = dt.day() as u64;
+    *out4 = dt.hour() as u64;
+    *out5 = dt.minute() as u64;
+    *out6 = dt.second() as u64;
+    *out7 = dt.timestamp_subsec_millis() as u64;
+
+    0
+}

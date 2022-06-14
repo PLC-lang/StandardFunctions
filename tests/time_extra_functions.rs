@@ -47,6 +47,9 @@ struct MainType<T> {
     b: T,
     c: T,
     d: T,
+    e: T,
+    f: T,
+    g: T,
 }
 
 #[test]
@@ -635,4 +638,166 @@ fn split_ltod_ulint() {
     assert_eq!(maintype.b, 12); // minute
     assert_eq!(maintype.c, 3); // second
     assert_eq!(maintype.d, 123); // millisecond
+}
+
+#[test]
+fn split_dt_int() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : INT; // year
+		b : INT; // month
+		c : INT; // day
+		d : INT; // hour
+		e : INT; // minute
+		f : INT; // second
+		g : INT; // millisecond
+	END_VAR
+		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i16>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2000); // year
+    assert_eq!(maintype.b, 1); // month
+    assert_eq!(maintype.c, 2); // day
+    assert_eq!(maintype.d, 14); // hour
+    assert_eq!(maintype.e, 12); // minute
+    assert_eq!(maintype.f, 3); // second
+    assert_eq!(maintype.g, 123); // millisecond
+}
+
+#[test]
+fn split_dt_uint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : UINT; // year
+		b : UINT; // month
+		c : UINT; // day
+		d : UINT; // hour
+		e : UINT; // minute
+		f : UINT; // second
+		g : UINT; // millisecond
+	END_VAR
+		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u16>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2000); // year
+    assert_eq!(maintype.b, 1); // month
+    assert_eq!(maintype.c, 2); // day
+    assert_eq!(maintype.d, 14); // hour
+    assert_eq!(maintype.e, 12); // minute
+    assert_eq!(maintype.f, 3); // second
+    assert_eq!(maintype.g, 123); // millisecond
+}
+
+#[test]
+fn split_dt_dint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : DINT; // year
+		b : DINT; // month
+		c : DINT; // day
+		d : DINT; // hour
+		e : DINT; // minute
+		f : DINT; // second
+		g : DINT; // millisecond
+	END_VAR
+		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i32>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2000); // year
+    assert_eq!(maintype.b, 1); // month
+    assert_eq!(maintype.c, 2); // day
+    assert_eq!(maintype.d, 14); // hour
+    assert_eq!(maintype.e, 12); // minute
+    assert_eq!(maintype.f, 3); // second
+    assert_eq!(maintype.g, 123); // millisecond
+}
+
+#[test]
+fn split_dt_udint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : UDINT; // year
+		b : UDINT; // month
+		c : UDINT; // day
+		d : UDINT; // hour
+		e : UDINT; // minute
+		f : UDINT; // second
+		g : UDINT; // millisecond
+	END_VAR
+		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u32>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2000); // year
+    assert_eq!(maintype.b, 1); // month
+    assert_eq!(maintype.c, 2); // day
+    assert_eq!(maintype.d, 14); // hour
+    assert_eq!(maintype.e, 12); // minute
+    assert_eq!(maintype.f, 3); // second
+    assert_eq!(maintype.g, 123); // millisecond
+}
+
+#[test]
+fn split_dt_lint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LINT; // year
+		b : LINT; // month
+		c : LINT; // day
+		d : LINT; // hour
+		e : LINT; // minute
+		f : LINT; // second
+		g : LINT; // millisecond
+	END_VAR
+		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i64>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2000); // year
+    assert_eq!(maintype.b, 1); // month
+    assert_eq!(maintype.c, 2); // day
+    assert_eq!(maintype.d, 14); // hour
+    assert_eq!(maintype.e, 12); // minute
+    assert_eq!(maintype.f, 3); // second
+    assert_eq!(maintype.g, 123); // millisecond
+}
+
+#[test]
+fn split_dt_ulint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : ULINT; // year
+		b : ULINT; // month
+		c : ULINT; // day
+		d : ULINT; // hour
+		e : ULINT; // minute
+		f : ULINT; // second
+		g : ULINT; // millisecond
+	END_VAR
+		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u64>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2000); // year
+    assert_eq!(maintype.b, 1); // month
+    assert_eq!(maintype.c, 2); // day
+    assert_eq!(maintype.d, 14); // hour
+    assert_eq!(maintype.e, 12); // minute
+    assert_eq!(maintype.f, 3); // second
+    assert_eq!(maintype.g, 123); // millisecond
 }
