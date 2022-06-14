@@ -774,3 +774,131 @@ VAR_OUTPUT
 	millisecond : ULINT;
 END_VAR
 END_FUNCTION
+
+(********************
+*
+* Splits LDT into year, month, day, hour, minute, second, millisecond of type ANY_INT
+*
+*********************)
+FUNCTION SPLIT_LDT <T: ANY_INT> : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : T;
+	month : T;
+	day : T;
+	hour : T;
+	minute : T;
+	second : T;
+	millisecond : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LDT for INT *)
+@EXTERNAL
+FUNCTION SPLIT_LDT__INT : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : INT;
+	month : INT;
+	day : INT;
+	hour : INT;
+	minute : INT;
+	second : INT;
+	millisecond : INT;
+END_VAR
+	SPLIT_LDT__INT := SPLIT_DT__INT(in, year, month, day, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LDT for UINT *)
+@EXTERNAL
+FUNCTION SPLIT_LDT__UINT : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : UINT;
+	month : UINT;
+	day : UINT;
+	hour : UINT;
+	minute : UINT;
+	second : UINT;
+	millisecond : UINT;
+END_VAR
+	SPLIT_LDT__UINT := SPLIT_DT__UINT(in, year, month, day, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LDT for DINT *)
+@EXTERNAL
+FUNCTION SPLIT_LDT__DINT : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : DINT;
+	month : DINT;
+	day : DINT;
+	hour : DINT;
+	minute : DINT;
+	second : DINT;
+	millisecond : DINT;
+END_VAR
+	SPLIT_LDT__DINT := SPLIT_DT__DINT(in, year, month, day, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LDT for UDINT *)
+@EXTERNAL
+FUNCTION SPLIT_LDT__UDINT : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : UDINT;
+	month : UDINT;
+	day : UDINT;
+	hour : UDINT;
+	minute : UDINT;
+	second : UDINT;
+	millisecond : UDINT;
+END_VAR
+	SPLIT_LDT__UDINT := SPLIT_DT__UDINT(in, year, month, day, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LDT for LINT *)
+@EXTERNAL
+FUNCTION SPLIT_LDT__LINT : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : LINT;
+	month : LINT;
+	day : LINT;
+	hour : LINT;
+	minute : LINT;
+	second : LINT;
+	millisecond : LINT;
+END_VAR
+	SPLIT_LDT__LINT := SPLIT_DT__LINT(in, year, month, day, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LDT for ULINT *)
+@EXTERNAL
+FUNCTION SPLIT_LDT__ULINT : INT
+VAR_INPUT
+	in : LDT;
+END_VAR
+VAR_OUTPUT
+	year : ULINT;
+	month : ULINT;
+	day : ULINT;
+	hour : ULINT;
+	minute : ULINT;
+	second : ULINT;
+	millisecond : ULINT;
+END_VAR
+	SPLIT_LDT__ULINT := SPLIT_DT__ULINT(in, year, month, day, hour, minute, second, millisecond);
+END_FUNCTION
