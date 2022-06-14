@@ -450,3 +450,104 @@ VAR_OUTPUT
 	day : ULINT;
 END_VAR
 END_FUNCTION
+
+(********************
+*
+* Splits TOD into hour, minute, second, millisecond of type ANY_INT
+*
+*********************)
+FUNCTION SPLIT_TOD <T: ANY_INT> : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : T;
+	minute : T;
+	second : T;
+	millisecond : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_TOD for INT *)
+@EXTERNAL
+FUNCTION SPLIT_TOD__INT : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : INT;
+	minute : INT;
+	second : INT;
+	millisecond : INT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_TOD for UINT *)
+@EXTERNAL
+FUNCTION SPLIT_TOD__UINT : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : UINT;
+	minute : UINT;
+	second : UINT;
+	millisecond : UINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_TOD for DINT *)
+@EXTERNAL
+FUNCTION SPLIT_TOD__DINT : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : DINT;
+	minute : DINT;
+	second : DINT;
+	millisecond : DINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_TOD for UDINT *)
+@EXTERNAL
+FUNCTION SPLIT_TOD__UDINT : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : UDINT;
+	minute : UDINT;
+	second : UDINT;
+	millisecond : UDINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_TOD for LINT *)
+@EXTERNAL
+FUNCTION SPLIT_TOD__LINT : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : LINT;
+	minute : LINT;
+	second : LINT;
+	millisecond : LINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_TOD for ULINT *)
+@EXTERNAL
+FUNCTION SPLIT_TOD__ULINT : INT
+VAR_INPUT
+	in : TOD;
+END_VAR
+VAR_OUTPUT
+	hour : ULINT;
+	minute : ULINT;
+	second : ULINT;
+	millisecond : ULINT;
+END_VAR
+END_FUNCTION

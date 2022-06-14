@@ -310,3 +310,129 @@ pub extern "C" fn SPLIT_DATE__ULINT(
 
     0
 }
+
+/// .
+/// Splits TOD into hour, minute, second, millisecond of type INT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_TOD__INT(
+    in1: i64,
+    out1: &mut i16,
+    out2: &mut i16,
+    out3: &mut i16,
+    out4: &mut i16,
+) -> i16 {
+    let tod = chrono::Utc.timestamp_millis(in1);
+    *out1 = tod.hour() as i16;
+    *out2 = tod.minute() as i16;
+    *out3 = tod.second() as i16;
+    *out4 = tod.timestamp_subsec_millis() as i16;
+
+    0
+}
+
+/// .
+/// Splits TOD into hour, minute, second, millisecond of type UINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_TOD__UINT(
+    in1: i64,
+    out1: &mut u16,
+    out2: &mut u16,
+    out3: &mut u16,
+    out4: &mut u16,
+) -> i16 {
+    let tod = chrono::Utc.timestamp_millis(in1);
+    *out1 = tod.hour() as u16;
+    *out2 = tod.minute() as u16;
+    *out3 = tod.second() as u16;
+    *out4 = tod.timestamp_subsec_millis() as u16;
+
+    0
+}
+
+/// .
+/// Splits TOD into hour, minute, second, millisecond of type DINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_TOD__DINT(
+    in1: i64,
+    out1: &mut i32,
+    out2: &mut i32,
+    out3: &mut i32,
+    out4: &mut i32,
+) -> i16 {
+    let tod = chrono::Utc.timestamp_millis(in1);
+    *out1 = tod.hour() as i32;
+    *out2 = tod.minute() as i32;
+    *out3 = tod.second() as i32;
+    *out4 = tod.timestamp_subsec_millis() as i32;
+
+    0
+}
+
+/// .
+/// Splits TOD into hour, minute, second, millisecond of type UDINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_TOD__UDINT(
+    in1: i64,
+    out1: &mut u32,
+    out2: &mut u32,
+    out3: &mut u32,
+    out4: &mut u32,
+) -> i16 {
+    let tod = chrono::Utc.timestamp_millis(in1);
+    *out1 = tod.hour() as u32;
+    *out2 = tod.minute() as u32;
+    *out3 = tod.second() as u32;
+    *out4 = tod.timestamp_subsec_millis() as u32;
+
+    0
+}
+
+/// .
+/// Splits TOD into hour, minute, second, millisecond of type LINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_TOD__LINT(
+    in1: i64,
+    out1: &mut i64,
+    out2: &mut i64,
+    out3: &mut i64,
+    out4: &mut i64,
+) -> i16 {
+    let tod = chrono::Utc.timestamp_millis(in1);
+    *out1 = tod.hour() as i64;
+    *out2 = tod.minute() as i64;
+    *out3 = tod.second() as i64;
+    *out4 = tod.timestamp_subsec_millis() as i64;
+
+    0
+}
+
+/// .
+/// Splits TOD into hour, minute, second, millisecond of type ULINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_TOD__ULINT(
+    in1: i64,
+    out1: &mut u64,
+    out2: &mut u64,
+    out3: &mut u64,
+    out4: &mut u64,
+) -> i16 {
+    let tod = chrono::Utc.timestamp_millis(in1);
+    *out1 = tod.hour() as u64;
+    *out2 = tod.minute() as u64;
+    *out3 = tod.second() as u64;
+    *out4 = tod.timestamp_subsec_millis() as u64;
+
+    0
+}
