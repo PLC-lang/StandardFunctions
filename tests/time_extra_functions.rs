@@ -963,3 +963,105 @@ fn split_ldt_ulint() {
     assert_eq!(maintype.f, 3); // second
     assert_eq!(maintype.g, 123); // millisecond
 }
+
+#[test]
+fn day_of_week_int() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : INT;
+		b : INT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-14, a); // tuesday = 2 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i16>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2);
+    assert_eq!(maintype.b, 2);
+}
+
+#[test]
+fn day_of_week_uint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : UINT;
+		b : UINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-14, a); // tuesday = 2 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u16>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2);
+    assert_eq!(maintype.b, 2);
+}
+
+#[test]
+fn day_of_week_dint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : DINT;
+		b : DINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-13, a); // monday = 1 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i32>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 1);
+    assert_eq!(maintype.b, 1);
+}
+
+#[test]
+fn day_of_week_udint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : UDINT;
+		b : UDINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-18, a); // saturday = 6 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u32>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 6);
+    assert_eq!(maintype.b, 6);
+}
+
+#[test]
+fn day_of_week_lint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LINT;
+		b : LINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-14, a); // tuesday = 2 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i64>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2);
+    assert_eq!(maintype.b, 2);
+}
+
+#[test]
+fn day_of_week_ulint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : ULINT;
+		b : ULINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-14, a); // tuesday = 2 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u64>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2);
+    assert_eq!(maintype.b, 2);
+}

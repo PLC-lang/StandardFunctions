@@ -598,3 +598,75 @@ pub extern "C" fn SPLIT_DT__ULINT(
 
     0
 }
+
+/// .
+/// Returns day of week for given DATE of type INT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__INT(in1: i64, out1: &mut i16) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as i16;
+    *out1 = day;
+    day
+}
+
+/// .
+/// Returns day of week for given DATE of type UINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__UINT(in1: i64, out1: &mut u16) -> u16 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as u16;
+    *out1 = day;
+    day
+}
+
+/// .
+/// Returns day of week for given DATE of type DINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__DINT(in1: i64, out1: &mut i32) -> i32 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as i32;
+    *out1 = day;
+    day
+}
+
+/// .
+/// Returns day of week for given DATE of type UDINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__UDINT(in1: i64, out1: &mut u32) -> u32 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as u32;
+    *out1 = day;
+    day
+}
+
+/// .
+/// Returns day of week for given DATE of type LINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__LINT(in1: i64, out1: &mut i64) -> i64 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as i64;
+    *out1 = day;
+    day
+}
+
+/// .
+/// Returns day of week for given DATE of type ULINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__ULINT(in1: i64, out1: &mut u64) -> u64 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as u64;
+    *out1 = day;
+    day
+}
