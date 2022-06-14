@@ -551,3 +551,104 @@ VAR_OUTPUT
 	millisecond : ULINT;
 END_VAR
 END_FUNCTION
+
+(********************
+*
+* Splits LTOD into hour, minute, second, millisecond of type ANY_INT
+*
+*********************)
+FUNCTION SPLIT_LTOD <T: ANY_INT> : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : T;
+	minute : T;
+	second : T;
+	millisecond : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LTOD for INT *)
+FUNCTION SPLIT_LTOD__INT : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : INT;
+	minute : INT;
+	second : INT;
+	millisecond : INT;
+END_VAR
+	SPLIT_LTOD__INT := SPLIT_TOD__INT(in, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LTOD for UINT *)
+FUNCTION SPLIT_LTOD__UINT : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : UINT;
+	minute : UINT;
+	second : UINT;
+	millisecond : UINT;
+END_VAR
+	SPLIT_LTOD__UINT := SPLIT_TOD__UINT(in, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LTOD for DINT *)
+FUNCTION SPLIT_LTOD__DINT : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : DINT;
+	minute : DINT;
+	second : DINT;
+	millisecond : DINT;
+END_VAR
+	SPLIT_LTOD__DINT := SPLIT_TOD__DINT(in, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LTOD for UDINT *)
+FUNCTION SPLIT_LTOD__UDINT : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : UDINT;
+	minute : UDINT;
+	second : UDINT;
+	millisecond : UDINT;
+END_VAR
+	SPLIT_LTOD__UDINT := SPLIT_TOD__UDINT(in, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LTOD for LINT *)
+FUNCTION SPLIT_LTOD__LINT : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : LINT;
+	minute : LINT;
+	second : LINT;
+	millisecond : LINT;
+END_VAR
+	SPLIT_LTOD__LINT := SPLIT_TOD__LINT(in, hour, minute, second, millisecond);
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_LTOD for ULINT *)
+FUNCTION SPLIT_LTOD__ULINT : INT
+VAR_INPUT
+	in : LTOD;
+END_VAR
+VAR_OUTPUT
+	hour : ULINT;
+	minute : ULINT;
+	second : ULINT;
+	millisecond : ULINT;
+END_VAR
+	SPLIT_LTOD__ULINT := SPLIT_TOD__ULINT(in, hour, minute, second, millisecond);
+END_FUNCTION

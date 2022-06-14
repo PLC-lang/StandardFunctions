@@ -510,3 +510,129 @@ fn split_tod_ulint() {
     assert_eq!(maintype.c, 3); // second
     assert_eq!(maintype.d, 123); // millisecond
 }
+
+#[test]
+fn split_ltod_int() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : INT; // hour
+		b : INT; // minute
+		c : INT; // second
+		d : INT; // millisecond
+	END_VAR
+		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i16>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 14); // hour
+    assert_eq!(maintype.b, 12); // minute
+    assert_eq!(maintype.c, 3); // second
+    assert_eq!(maintype.d, 123); // millisecond
+}
+
+#[test]
+fn split_ltod_uint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : UINT; // hour
+		b : UINT; // minute
+		c : UINT; // second
+		d : UINT; // millisecond
+	END_VAR
+		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u16>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 14); // hour
+    assert_eq!(maintype.b, 12); // minute
+    assert_eq!(maintype.c, 3); // second
+    assert_eq!(maintype.d, 123); // millisecond
+}
+
+#[test]
+fn split_ltod_dint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : DINT; // hour
+		b : DINT; // minute
+		c : DINT; // second
+		d : DINT; // millisecond
+	END_VAR
+		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i32>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 14); // hour
+    assert_eq!(maintype.b, 12); // minute
+    assert_eq!(maintype.c, 3); // second
+    assert_eq!(maintype.d, 123); // millisecond
+}
+
+#[test]
+fn split_ltod_udint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : UDINT; // hour
+		b : UDINT; // minute
+		c : UDINT; // second
+		d : UDINT; // millisecond
+	END_VAR
+		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u32>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 14); // hour
+    assert_eq!(maintype.b, 12); // minute
+    assert_eq!(maintype.c, 3); // second
+    assert_eq!(maintype.d, 123); // millisecond
+}
+
+#[test]
+fn split_ltod_lint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : LINT; // hour
+		b : LINT; // minute
+		c : LINT; // second
+		d : LINT; // millisecond
+	END_VAR
+		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i64>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 14); // hour
+    assert_eq!(maintype.b, 12); // minute
+    assert_eq!(maintype.c, 3); // second
+    assert_eq!(maintype.d, 123); // millisecond
+}
+
+#[test]
+fn split_ltod_ulint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : ULINT; // hour
+		b : ULINT; // minute
+		c : ULINT; // second
+		d : ULINT; // millisecond
+	END_VAR
+		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u64>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 14); // hour
+    assert_eq!(maintype.b, 12); // minute
+    assert_eq!(maintype.c, 3); // second
+    assert_eq!(maintype.d, 123); // millisecond
+}
