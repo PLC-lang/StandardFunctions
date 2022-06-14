@@ -1,4 +1,4 @@
-use chrono::{TimeZone, Timelike};
+use chrono::{Datelike, TimeZone, Timelike};
 
 /// .
 /// Converts DT/LDT to DATE
@@ -198,4 +198,115 @@ pub extern "C" fn CONCAT_TOD__ULINT(in1: u64, in2: u64, in3: u64, in4: u64) -> i
     let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
     let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
     dt.timestamp_millis()
+}
+
+/// .
+/// Splits DATE into year, month, day of type INT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DATE__INT(in1: i64, out1: &mut i16, out2: &mut i16, out3: &mut i16) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1).date();
+    *out1 = date.year() as i16;
+    *out2 = date.month() as i16;
+    *out3 = date.day() as i16;
+
+    0
+}
+
+/// .
+/// Splits DATE into year, month, day of type UINT
+/// Panics on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DATE__UINT(
+    in1: i64,
+    out1: &mut u16,
+    out2: &mut u16,
+    out3: &mut u16,
+) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1).date();
+    *out1 = date.year() as u16;
+    *out2 = date.month() as u16;
+    *out3 = date.day() as u16;
+
+    0
+}
+
+/// .
+/// Splits DATE into year, month, day of type DINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DATE__DINT(
+    in1: i64,
+    out1: &mut i32,
+    out2: &mut i32,
+    out3: &mut i32,
+) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1).date();
+    *out1 = date.year() as i32;
+    *out2 = date.month() as i32;
+    *out3 = date.day() as i32;
+
+    0
+}
+
+/// .
+/// Splits DATE into year, month, day of type UDINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DATE__UDINT(
+    in1: i64,
+    out1: &mut u32,
+    out2: &mut u32,
+    out3: &mut u32,
+) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1).date();
+    *out1 = date.year() as u32;
+    *out2 = date.month() as u32;
+    *out3 = date.day() as u32;
+
+    0
+}
+
+/// .
+/// Splits DATE into year, month, day of type LINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DATE__LINT(
+    in1: i64,
+    out1: &mut i64,
+    out2: &mut i64,
+    out3: &mut i64,
+) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1).date();
+    *out1 = date.year() as i64;
+    *out2 = date.month() as i64;
+    *out3 = date.day() as i64;
+
+    0
+}
+
+/// .
+/// Splits DATE into year, month, day of type ULINT
+/// Panics on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn SPLIT_DATE__ULINT(
+    in1: i64,
+    out1: &mut u64,
+    out2: &mut u64,
+    out3: &mut u64,
+) -> i16 {
+    let date = chrono::Utc.timestamp_millis(in1).date();
+    *out1 = date.year() as u64;
+    *out2 = date.month() as u64;
+    *out3 = date.day() as u64;
+
+    0
 }

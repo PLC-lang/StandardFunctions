@@ -1,6 +1,5 @@
 // Definitions of the core standard function modules for IEC61131-3
 
-use chrono::{TimeZone, Timelike};
 use std::{ffi::CStr, os::raw::c_char};
 
 pub mod bit_shift;

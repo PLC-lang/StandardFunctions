@@ -356,3 +356,97 @@ VAR_INPUT
 END_VAR
 	CONCAT_LDT__ULINT := CONCAT_DATE_LTOD(CONCAT_DATE(year, month, day), CONCAT_LTOD(hour, minute, second, millisecond));
 END_FUNCTION
+
+(********************
+*
+* Splits DATE into year, month, day of type ANY_INT
+*
+*********************)
+FUNCTION SPLIT_DATE <T: ANY_INT> : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : T;
+	month : T;
+	day : T;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DATE for INT *)
+@EXTERNAL
+FUNCTION SPLIT_DATE__INT : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : INT;
+	month : INT;
+	day : INT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DATE for UINT *)
+@EXTERNAL
+FUNCTION SPLIT_DATE__UINT : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : UINT;
+	month : UINT;
+	day : UINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DATE for DINT *)
+@EXTERNAL
+FUNCTION SPLIT_DATE__DINT : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : DINT;
+	month : DINT;
+	day : DINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DATE for UDINT *)
+@EXTERNAL
+FUNCTION SPLIT_DATE__UDINT : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : UDINT;
+	month : UDINT;
+	day : UDINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DATE for LINT *)
+@EXTERNAL
+FUNCTION SPLIT_DATE__LINT : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : LINT;
+	month : LINT;
+	day : LINT;
+END_VAR
+END_FUNCTION
+
+(* Specialized implementation of SPLIT_DATE for ULINT *)
+@EXTERNAL
+FUNCTION SPLIT_DATE__ULINT : INT
+VAR_INPUT
+	in : DATE;
+END_VAR
+VAR_OUTPUT
+	year : ULINT;
+	month : ULINT;
+	day : ULINT;
+END_VAR
+END_FUNCTION

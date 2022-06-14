@@ -158,6 +158,30 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "CONCAT_DATE__ULINT",
             iec61131std::time::CONCAT_DATE__ULINT as usize,
         ),
+        (
+            "SPLIT_DATE__INT",
+            iec61131std::time::SPLIT_DATE__INT as usize,
+        ),
+        (
+            "SPLIT_DATE__UINT",
+            iec61131std::time::SPLIT_DATE__UINT as usize,
+        ),
+        (
+            "SPLIT_DATE__DINT",
+            iec61131std::time::SPLIT_DATE__DINT as usize,
+        ),
+        (
+            "SPLIT_DATE__UDINT",
+            iec61131std::time::SPLIT_DATE__UDINT as usize,
+        ),
+        (
+            "SPLIT_DATE__LINT",
+            iec61131std::time::SPLIT_DATE__LINT as usize,
+        ),
+        (
+            "SPLIT_DATE__ULINT",
+            iec61131std::time::SPLIT_DATE__ULINT as usize,
+        ),
     ];
 
     let variables = vec![
