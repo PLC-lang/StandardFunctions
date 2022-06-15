@@ -52,9 +52,7 @@ pub extern "C" fn CONCAT_DATE_TOD(in1: i64, in2: i64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_DATE__INT(in1: i16, in2: i16, in3: i16) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(in1.into(), in2 as u32, in3 as u32);
-    let dt = date.and_hms(0, 0, 0);
-    dt.timestamp_millis()
+    concat_date(in1.into(), in2 as u32, in3 as u32)
 }
 
 /// .
@@ -63,9 +61,7 @@ pub extern "C" fn CONCAT_DATE__INT(in1: i16, in2: i16, in3: i16) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_DATE__UINT(in1: u16, in2: u16, in3: u16) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(in1.into(), in2.into(), in3.into());
-    let dt = date.and_hms(0, 0, 0);
-    dt.timestamp_millis()
+    concat_date(in1.into(), in2.into(), in3.into())
 }
 
 /// .
@@ -74,9 +70,7 @@ pub extern "C" fn CONCAT_DATE__UINT(in1: u16, in2: u16, in3: u16) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_DATE__DINT(in1: i32, in2: i32, in3: i32) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(in1, in2 as u32, in3 as u32);
-    let dt = date.and_hms(0, 0, 0);
-    dt.timestamp_millis()
+    concat_date(in1, in2 as u32, in3 as u32)
 }
 
 /// .
@@ -85,9 +79,7 @@ pub extern "C" fn CONCAT_DATE__DINT(in1: i32, in2: i32, in3: i32) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_DATE__UDINT(in1: u32, in2: u32, in3: u32) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(in1 as i32, in2, in3);
-    let dt = date.and_hms(0, 0, 0);
-    dt.timestamp_millis()
+    concat_date(in1 as i32, in2, in3)
 }
 
 /// .
@@ -96,9 +88,7 @@ pub extern "C" fn CONCAT_DATE__UDINT(in1: u32, in2: u32, in3: u32) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_DATE__LINT(in1: i64, in2: i64, in3: i64) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(in1 as i32, in2 as u32, in3 as u32);
-    let dt = date.and_hms(0, 0, 0);
-    dt.timestamp_millis()
+    concat_date(in1 as i32, in2 as u32, in3 as u32)
 }
 
 /// .
@@ -107,7 +97,16 @@ pub extern "C" fn CONCAT_DATE__LINT(in1: i64, in2: i64, in3: i64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_DATE__ULINT(in1: u64, in2: u64, in3: u64) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(in1 as i32, in2 as u32, in3 as u32);
+    concat_date(in1 as i32, in2 as u32, in3 as u32)
+}
+
+/// .
+/// Concatenates year, month and day to DATE
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn concat_date(in1: i32, in2: u32, in3: u32) -> i64 {
+    let date = chrono::NaiveDate::from_ymd(in1, in2, in3);
     let dt = date.and_hms(0, 0, 0);
     dt.timestamp_millis()
 }
@@ -118,9 +117,7 @@ pub extern "C" fn CONCAT_DATE__ULINT(in1: u64, in2: u64, in3: u64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__SINT(in1: i8, in2: i8, in3: i8, in4: i8) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
-    dt.timestamp_millis()
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
 }
 
 /// .
@@ -129,9 +126,7 @@ pub extern "C" fn CONCAT_TOD__SINT(in1: i8, in2: i8, in3: i8, in4: i8) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__USINT(in1: u8, in2: u8, in3: u8, in4: u8) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
-    dt.timestamp_millis()
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
 }
 
 /// .
@@ -140,9 +135,7 @@ pub extern "C" fn CONCAT_TOD__USINT(in1: u8, in2: u8, in3: u8, in4: u8) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__INT(in1: i16, in2: i16, in3: i16, in4: i16) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
-    dt.timestamp_millis()
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
 }
 
 /// .
@@ -151,9 +144,7 @@ pub extern "C" fn CONCAT_TOD__INT(in1: i16, in2: i16, in3: i16, in4: i16) -> i64
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__UINT(in1: u16, in2: u16, in3: u16, in4: u16) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
-    dt.timestamp_millis()
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
 }
 
 /// .
@@ -162,9 +153,7 @@ pub extern "C" fn CONCAT_TOD__UINT(in1: u16, in2: u16, in3: u16, in4: u16) -> i6
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__DINT(in1: i32, in2: i32, in3: i32, in4: i32) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
-    dt.timestamp_millis()
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
 }
 
 /// .
@@ -173,9 +162,7 @@ pub extern "C" fn CONCAT_TOD__DINT(in1: i32, in2: i32, in3: i32, in4: i32) -> i6
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__UDINT(in1: u32, in2: u32, in3: u32, in4: u32) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1, in2 as u32, in3, in4);
-    dt.timestamp_millis()
+    concat_tod(in1, in2 as u32, in3, in4)
 }
 
 /// .
@@ -184,9 +171,7 @@ pub extern "C" fn CONCAT_TOD__UDINT(in1: u32, in2: u32, in3: u32, in4: u32) -> i
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__LINT(in1: i64, in2: i64, in3: i64, in4: i64) -> i64 {
-    let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
-    dt.timestamp_millis()
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
 }
 
 /// .
@@ -195,8 +180,17 @@ pub extern "C" fn CONCAT_TOD__LINT(in1: i64, in2: i64, in3: i64, in4: i64) -> i6
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__ULINT(in1: u64, in2: u64, in3: u64, in4: u64) -> i64 {
+    concat_tod(in1 as u32, in2 as u32, in3 as u32, in4 as u32)
+}
+
+/// .
+/// Concatenates hour, minute, second, millisecond to TOD
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn concat_tod(in1: u32, in2: u32, in3: u32, in4: u32) -> i64 {
     let date = chrono::NaiveDate::from_ymd(1970, 1, 1);
-    let dt = date.and_hms_milli(in1 as u32, in2 as u32, in3 as u32, in4 as u32);
+    let dt = date.and_hms_milli(in1, in2, in3, in4);
     dt.timestamp_millis()
 }
 
