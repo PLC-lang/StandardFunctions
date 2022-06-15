@@ -521,12 +521,130 @@ pub extern "C" fn SUB_DT_DT(in1: i64, in2: i64) -> i64 {
 }
 
 /// .
-/// Multiply TIME/LTIME with ANY_SIGNED_INT
+/// Multiply TIME with SINT
 /// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CHECKED_MUL_SIGNED(in1: i64, in2: i64) -> i64 {
+pub extern "C" fn MUL__TIME__SINT(in1: i64, in2: i8) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with INT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__INT(in1: i64, in2: i16) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with DINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__DINT(in1: i64, in2: i32) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with LINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__LINT(in1: i64, in2: i64) -> i64 {
+    checked_mul_signed(in1, in2)
+}
+
+/// .
+/// Multiply TIME with SINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__SINT(in1: i64, in2: i8) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with INT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__INT(in1: i64, in2: i16) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with DINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__DINT(in1: i64, in2: i32) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with LINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__LINT(in1: i64, in2: i64) -> i64 {
+    checked_mul_signed(in1, in2)
+}
+
+/// .
+/// Multiply LTIME with SINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__SINT(in1: i64, in2: i8) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply LTIME with INT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__INT(in1: i64, in2: i16) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply LTIME with DINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__DINT(in1: i64, in2: i32) -> i64 {
+    checked_mul_signed(in1, in2.into())
+}
+
+/// .
+/// Multiply LTIME with LINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__LINT(in1: i64, in2: i64) -> i64 {
+    checked_mul_signed(in1, in2)
+}
+
+/// .
+/// Multiply TIME/LTIME with ANY_SIGNED_INT
+/// Panic on overflow
+///
+fn checked_mul_signed(in1: i64, in2: i64) -> i64 {
     in1.checked_mul(in2).unwrap()
 }
 

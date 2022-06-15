@@ -363,57 +363,6 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-(* Specialized implementation of MUL for TIME and SINT *)
-FUNCTION MUL__TIME__SINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : SINT;
-END_VAR
-	MUL__TIME__SINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL for TIME and INT *)
-FUNCTION MUL__TIME__INT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : INT;
-END_VAR
-	MUL__TIME__INT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL for TIME and DINT *)
-FUNCTION MUL__TIME__DINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : DINT;
-END_VAR
-	MUL__TIME__DINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL for TIME and LINT *)
-FUNCTION MUL__TIME__LINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : LINT;
-END_VAR
-	MUL__TIME__LINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-
-(********************
-*
-* This operator produces the multiplication of TIME with ANY_SIGNED integer
-* Panic on overflow
-*
-*********************)
-@EXTERNAL
-FUNCTION CHECKED_MUL_SIGNED : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : LINT;
-END_VAR
-END_FUNCTION
-
 (********************
 *
 * This operator produces the multiplication of TIME and ANY_NUM.
@@ -426,42 +375,6 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-(* Specialized implementation of MUL_TIME for SINT *)
-FUNCTION MUL_TIME__SINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : SINT;
-END_VAR
-	MUL_TIME__SINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL_TIME for INT *)
-FUNCTION MUL_TIME__INT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : INT;
-END_VAR
-	MUL_TIME__INT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL_TIME for DINT *)
-FUNCTION MUL_TIME__DINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : DINT;
-END_VAR
-	MUL_TIME__DINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL_TIME for LINT *)
-FUNCTION MUL_TIME__LINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : LINT;
-END_VAR
-	MUL_TIME__LINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
 (********************
 *
 * This operator produces the multiplication of LTIME and ANY_NUM.
@@ -472,42 +385,6 @@ VAR_INPUT
 	IN1 : LTIME;
 	IN2 : T;
 END_VAR
-END_FUNCTION
-
-(* Specialized implementation of MUL_LTIME for SINT *)
-FUNCTION MUL_LTIME__SINT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : SINT;
-END_VAR
-	MUL_LTIME__SINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL_LTIME for INT *)
-FUNCTION MUL_LTIME__INT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : INT;
-END_VAR
-	MUL_LTIME__INT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL_LTIME for DINT *)
-FUNCTION MUL_LTIME__DINT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : DINT;
-END_VAR
-	MUL_LTIME__DINT := CHECKED_MUL_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of MUL_LTIME for LINT *)
-FUNCTION MUL_LTIME__LINT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : LINT;
-END_VAR
-	MUL_LTIME__LINT := CHECKED_MUL_SIGNED(IN1, IN2);
 END_FUNCTION
 
 (********************
