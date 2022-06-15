@@ -201,7 +201,8 @@ pub extern "C" fn concat_tod(in1: u32, in2: u32, in3: u32, in4: u32) -> i64 {
 #[no_mangle]
 pub extern "C" fn SPLIT_DATE__INT(in1: i64, out1: &mut i16, out2: &mut i16, out3: &mut i16) -> i16 {
     let date = chrono::Utc.timestamp_millis(in1).date();
-    *out1 = date.year() as i16;
+    // if year does not fit in target data type -> panic
+    *out1 = date.year().try_into().unwrap();
     *out2 = date.month() as i16;
     *out3 = date.day() as i16;
 
@@ -221,7 +222,8 @@ pub extern "C" fn SPLIT_DATE__UINT(
     out3: &mut u16,
 ) -> i16 {
     let date = chrono::Utc.timestamp_millis(in1).date();
-    *out1 = date.year() as u16;
+    // if year does not fit in target data type -> panic
+    *out1 = date.year().try_into().unwrap();
     *out2 = date.month() as u16;
     *out3 = date.day() as u16;
 
@@ -240,7 +242,7 @@ pub extern "C" fn SPLIT_DATE__DINT(
     out3: &mut i32,
 ) -> i16 {
     let date = chrono::Utc.timestamp_millis(in1).date();
-    *out1 = date.year() as i32;
+    *out1 = date.year();
     *out2 = date.month() as i32;
     *out3 = date.day() as i32;
 
@@ -259,7 +261,8 @@ pub extern "C" fn SPLIT_DATE__UDINT(
     out3: &mut u32,
 ) -> i16 {
     let date = chrono::Utc.timestamp_millis(in1).date();
-    *out1 = date.year() as u32;
+    // if year does not fit in target data type -> panic
+    *out1 = date.year().try_into().unwrap();
     *out2 = date.month() as u32;
     *out3 = date.day() as u32;
 
@@ -278,7 +281,8 @@ pub extern "C" fn SPLIT_DATE__LINT(
     out3: &mut i64,
 ) -> i16 {
     let date = chrono::Utc.timestamp_millis(in1).date();
-    *out1 = date.year() as i64;
+    // if year does not fit in target data type -> panic
+    *out1 = date.year().try_into().unwrap();
     *out2 = date.month() as i64;
     *out3 = date.day() as i64;
 
@@ -298,7 +302,8 @@ pub extern "C" fn SPLIT_DATE__ULINT(
     out3: &mut u64,
 ) -> i16 {
     let date = chrono::Utc.timestamp_millis(in1).date();
-    *out1 = date.year() as u64;
+    // if year does not fit in target data type -> panic
+    *out1 = date.year().try_into().unwrap();
     *out2 = date.month() as u64;
     *out3 = date.day() as u64;
 
@@ -447,7 +452,8 @@ pub extern "C" fn SPLIT_DT__INT(
     out7: &mut i16,
 ) -> i16 {
     let dt = chrono::Utc.timestamp_millis(in1);
-    *out1 = dt.year() as i16;
+    // if year does not fit in target data type -> panic
+    *out1 = dt.year().try_into().unwrap();
     *out2 = dt.month() as i16;
     *out3 = dt.day() as i16;
     *out4 = dt.hour() as i16;
@@ -474,7 +480,8 @@ pub extern "C" fn SPLIT_DT__UINT(
     out7: &mut u16,
 ) -> i16 {
     let dt = chrono::Utc.timestamp_millis(in1);
-    *out1 = dt.year() as u16;
+    // if year does not fit in target data type -> panic
+    *out1 = dt.year().try_into().unwrap();
     *out2 = dt.month() as u16;
     *out3 = dt.day() as u16;
     *out4 = dt.hour() as u16;
@@ -501,7 +508,7 @@ pub extern "C" fn SPLIT_DT__DINT(
     out7: &mut i32,
 ) -> i16 {
     let dt = chrono::Utc.timestamp_millis(in1);
-    *out1 = dt.year() as i32;
+    *out1 = dt.year();
     *out2 = dt.month() as i32;
     *out3 = dt.day() as i32;
     *out4 = dt.hour() as i32;
@@ -528,7 +535,8 @@ pub extern "C" fn SPLIT_DT__UDINT(
     out7: &mut u32,
 ) -> i16 {
     let dt = chrono::Utc.timestamp_millis(in1);
-    *out1 = dt.year() as u32;
+    // if year does not fit in target data type -> panic
+    *out1 = dt.year().try_into().unwrap();
     *out2 = dt.month() as u32;
     *out3 = dt.day() as u32;
     *out4 = dt.hour() as u32;
@@ -555,7 +563,8 @@ pub extern "C" fn SPLIT_DT__LINT(
     out7: &mut i64,
 ) -> i16 {
     let dt = chrono::Utc.timestamp_millis(in1);
-    *out1 = dt.year() as i64;
+    // if year does not fit in target data type -> panic
+    *out1 = dt.year().try_into().unwrap();
     *out2 = dt.month() as i64;
     *out3 = dt.day() as i64;
     *out4 = dt.hour() as i64;
@@ -582,7 +591,8 @@ pub extern "C" fn SPLIT_DT__ULINT(
     out7: &mut u64,
 ) -> i16 {
     let dt = chrono::Utc.timestamp_millis(in1);
-    *out1 = dt.year() as u64;
+    // if year does not fit in target data type -> panic
+    *out1 = dt.year().try_into().unwrap();
     *out2 = dt.month() as u64;
     *out3 = dt.day() as u64;
     *out4 = dt.hour() as u64;
@@ -594,15 +604,33 @@ pub extern "C" fn SPLIT_DT__ULINT(
 }
 
 /// .
+/// Returns day of week for given DATE of type SINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__SINT(in1: i64, out1: &mut i8) -> i8 {
+    let date = chrono::Utc.timestamp_millis(in1);
+    let day = date.weekday().num_days_from_sunday() as i8;
+    *out1 = day;
+    day
+}
+
+/// .
+/// Returns day of week for given DATE of type USINT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DAY_OF_WEEK__USINT(in1: i64, out1: &mut u8) -> u8 {
+    day_of_week(in1, out1)
+}
+
+/// .
 /// Returns day of week for given DATE of type INT
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn DAY_OF_WEEK__INT(in1: i64, out1: &mut i16) -> i16 {
-    let date = chrono::Utc.timestamp_millis(in1);
-    let day = date.weekday().num_days_from_sunday() as i16;
-    *out1 = day;
-    day
+    day_of_week(in1, out1)
 }
 
 /// .
@@ -611,10 +639,7 @@ pub extern "C" fn DAY_OF_WEEK__INT(in1: i64, out1: &mut i16) -> i16 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn DAY_OF_WEEK__UINT(in1: i64, out1: &mut u16) -> u16 {
-    let date = chrono::Utc.timestamp_millis(in1);
-    let day = date.weekday().num_days_from_sunday() as u16;
-    *out1 = day;
-    day
+    day_of_week(in1, out1)
 }
 
 /// .
@@ -623,10 +648,7 @@ pub extern "C" fn DAY_OF_WEEK__UINT(in1: i64, out1: &mut u16) -> u16 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn DAY_OF_WEEK__DINT(in1: i64, out1: &mut i32) -> i32 {
-    let date = chrono::Utc.timestamp_millis(in1);
-    let day = date.weekday().num_days_from_sunday() as i32;
-    *out1 = day;
-    day
+    day_of_week(in1, out1)
 }
 
 /// .
@@ -635,10 +657,7 @@ pub extern "C" fn DAY_OF_WEEK__DINT(in1: i64, out1: &mut i32) -> i32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn DAY_OF_WEEK__UDINT(in1: i64, out1: &mut u32) -> u32 {
-    let date = chrono::Utc.timestamp_millis(in1);
-    let day = date.weekday().num_days_from_sunday() as u32;
-    *out1 = day;
-    day
+    day_of_week(in1, out1)
 }
 
 /// .
@@ -647,10 +666,7 @@ pub extern "C" fn DAY_OF_WEEK__UDINT(in1: i64, out1: &mut u32) -> u32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn DAY_OF_WEEK__LINT(in1: i64, out1: &mut i64) -> i64 {
-    let date = chrono::Utc.timestamp_millis(in1);
-    let day = date.weekday().num_days_from_sunday() as i64;
-    *out1 = day;
-    day
+    day_of_week(in1, out1)
 }
 
 /// .
@@ -659,8 +675,13 @@ pub extern "C" fn DAY_OF_WEEK__LINT(in1: i64, out1: &mut i64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn DAY_OF_WEEK__ULINT(in1: i64, out1: &mut u64) -> u64 {
+    day_of_week(in1, out1)
+}
+
+fn day_of_week<T: From<u8> + Copy>(in1: i64, out1: &mut T) -> T {
     let date = chrono::Utc.timestamp_millis(in1);
-    let day = date.weekday().num_days_from_sunday() as u64;
+    // num_days_from_sunday() will always be able to convert to u8, range 0-6
+    let day = T::from(date.weekday().num_days_from_sunday() as u8);
     *out1 = day;
     day
 }

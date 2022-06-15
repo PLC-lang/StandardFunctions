@@ -965,6 +965,40 @@ fn split_ldt_ulint() {
 }
 
 #[test]
+fn day_of_week_sint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : SINT;
+		b : SINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-14, a); // tuesday = 2 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<i8>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2);
+    assert_eq!(maintype.b, 2);
+}
+
+#[test]
+fn day_of_week_usint() {
+    let src = "
+	PROGRAM main
+	VAR
+		a : USINT;
+		b : USINT;
+	END_VAR
+		b := DAY_OF_WEEK(DATE#2022-06-14, a); // tuesday = 2 
+	END_PROGRAM";
+    let sources = add_std!(src, "time_extra_functions.st");
+    let mut maintype = MainType::<u8>::default();
+    let _: i64 = compile_and_run(sources, &mut maintype);
+    assert_eq!(maintype.a, 2);
+    assert_eq!(maintype.b, 2);
+}
+
+#[test]
 fn day_of_week_int() {
     let src = "
 	PROGRAM main

@@ -216,6 +216,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::time::SPLIT_DT__ULINT as usize,
         ),
         (
+            "DAY_OF_WEEK__SINT",
+            iec61131std::time::DAY_OF_WEEK__SINT as usize,
+        ),
+        (
+            "DAY_OF_WEEK__USINT",
+            iec61131std::time::DAY_OF_WEEK__USINT as usize,
+        ),
+        (
             "DAY_OF_WEEK__INT",
             iec61131std::time::DAY_OF_WEEK__INT as usize,
         ),
