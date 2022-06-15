@@ -553,12 +553,130 @@ pub extern "C" fn CHECKED_DIV_SIGNED(in1: i64, in2: i64) -> i64 {
 }
 
 /// .
-/// Divide TIME/LTIME with ANY_UNSIGNED_INT
+/// Divide _TIME by USINT
 /// Panic on overflow or division by zero
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CHECKED_DIV_UNSIGNED(in1: i64, in2: u64) -> i64 {
+pub extern "C" fn DIV__TIME__USINT(in1: i64, in2: u8) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide _TIME by UINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__UINT(in1: i64, in2: u16) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide _TIME by UDINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__UDINT(in1: i64, in2: u32) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide _TIME by ULINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__ULINT(in1: i64, in2: u64) -> i64 {
+    checked_div_unsigned(in1, in2)
+}
+
+/// .
+/// Divide TIME by USINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__USINT(in1: i64, in2: u8) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide TIME by UINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__UINT(in1: i64, in2: u16) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide TIME by UDINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__UDINT(in1: i64, in2: u32) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide TIME by ULINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__ULINT(in1: i64, in2: u64) -> i64 {
+    checked_div_unsigned(in1, in2)
+}
+
+/// .
+/// Divide LTIME by USINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__USINT(in1: i64, in2: u8) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide LTIME by UINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__UINT(in1: i64, in2: u16) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide LTIME by UDINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__UDINT(in1: i64, in2: u32) -> i64 {
+    checked_div_unsigned(in1, in2.into())
+}
+
+/// .
+/// Divide LTIME by ULINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__ULINT(in1: i64, in2: u64) -> i64 {
+    checked_div_unsigned(in1, in2)
+}
+
+/// .
+/// Divide TIME/LTIME with ANY_UNSIGNED_INT
+/// Panic on overflow or division by zero
+///
+fn checked_div_unsigned(in1: i64, in2: u64) -> i64 {
     // convert in2 [u64] to [i64]
     // if in2 is to large for [i64] the division will allways fail -> panic on try_into()
     in1.checked_div(in2.try_into().unwrap()).unwrap()
