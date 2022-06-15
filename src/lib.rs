@@ -531,12 +531,130 @@ pub extern "C" fn CHECKED_MUL_SIGNED(in1: i64, in2: i64) -> i64 {
 }
 
 /// .
-/// Multiply TIME/LTIME with ANY_UNSIGNED_INT
+/// Multiply TIME with USINT
 /// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CHECKED_MUL_UNSIGNED(in1: i64, in2: u64) -> i64 {
+pub extern "C" fn MUL__TIME__USINT(in1: i64, in2: u8) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with UINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__UINT(in1: i64, in2: u16) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with UDINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__UDINT(in1: i64, in2: u32) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with ULINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__ULINT(in1: i64, in2: u64) -> i64 {
+    checked_mul_unsigned(in1, in2)
+}
+
+/// .
+/// Multiply TIME with USINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__USINT(in1: i64, in2: u8) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with UINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__UINT(in1: i64, in2: u16) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with UDINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__UDINT(in1: i64, in2: u32) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply TIME with ULINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__ULINT(in1: i64, in2: u64) -> i64 {
+    checked_mul_unsigned(in1, in2)
+}
+
+/// .
+/// Multiply LTIME with USINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__USINT(in1: i64, in2: u8) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply LTIME with UINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__UINT(in1: i64, in2: u16) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply LTIME with UDINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__UDINT(in1: i64, in2: u32) -> i64 {
+    checked_mul_unsigned(in1, in2.into())
+}
+
+/// .
+/// Multiply LTIME with ULINT
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__ULINT(in1: i64, in2: u64) -> i64 {
+    checked_mul_unsigned(in1, in2)
+}
+
+/// .
+/// Multiply TIME/LTIME with ANY_UNSIGNED_INT
+/// Panic on overflow
+///
+fn checked_mul_unsigned(in1: i64, in2: u64) -> i64 {
     // convert in2 [u64] to [i64]
     // if in2 is to large for [i64] the multiplication will allways overflow -> panic on try_into()
     in1.checked_mul(in2.try_into().unwrap()).unwrap()
