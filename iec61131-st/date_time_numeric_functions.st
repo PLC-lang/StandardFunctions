@@ -645,57 +645,6 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-(* Specialized implementation of DIV for TIME and SINT *)
-FUNCTION DIV__TIME__SINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : SINT;
-END_VAR
-	DIV__TIME__SINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV for TIME and INT *)
-FUNCTION DIV__TIME__INT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : INT;
-END_VAR
-	DIV__TIME__INT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV for TIME and DINT *)
-FUNCTION DIV__TIME__DINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : DINT;
-END_VAR
-	DIV__TIME__DINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV for TIME and LINT *)
-FUNCTION DIV__TIME__LINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : LINT;
-END_VAR
-	DIV__TIME__LINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-
-(********************
-*
-* This operator produces the division of TIME with ANY_SIGNED integer
-* Panic on overflow or division by zero
-*
-*********************)
-@EXTERNAL
-FUNCTION CHECKED_DIV_SIGNED : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : LINT;
-END_VAR
-END_FUNCTION
-
 (********************
 *
 * This operator produces the division of TIME and ANY_NUM.
@@ -708,42 +657,6 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-(* Specialized implementation of DIV_TIME for SINT *)
-FUNCTION DIV_TIME__SINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : SINT;
-END_VAR
-	DIV_TIME__SINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV_TIME for INT *)
-FUNCTION DIV_TIME__INT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : INT;
-END_VAR
-	DIV_TIME__INT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV_TIME for DINT *)
-FUNCTION DIV_TIME__DINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : DINT;
-END_VAR
-	DIV_TIME__DINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV_TIME for LINT *)
-FUNCTION DIV_TIME__LINT : TIME
-VAR_INPUT
-	IN1 : TIME;
-	IN2 : LINT;
-END_VAR
-	DIV_TIME__LINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
 (********************
 *
 * This operator produces the division of LTIME and ANY_NUM.
@@ -754,40 +667,4 @@ VAR_INPUT
 	IN1 : LTIME;
 	IN2 : T;
 END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DIV_LTIME for SINT *)
-FUNCTION DIV_LTIME__SINT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : SINT;
-END_VAR
-	DIV_LTIME__SINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV_LTIME for INT *)
-FUNCTION DIV_LTIME__INT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : INT;
-END_VAR
-	DIV_LTIME__INT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV_LTIME for DINT *)
-FUNCTION DIV_LTIME__DINT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : DINT;
-END_VAR
-	DIV_LTIME__DINT := CHECKED_DIV_SIGNED(IN1, IN2);
-END_FUNCTION
-
-(* Specialized implementation of DIV_LTIME for LINT *)
-FUNCTION DIV_LTIME__LINT : LTIME
-VAR_INPUT
-	IN1 : LTIME;
-	IN2 : LINT;
-END_VAR
-	DIV_LTIME__LINT := CHECKED_DIV_SIGNED(IN1, IN2);
 END_FUNCTION

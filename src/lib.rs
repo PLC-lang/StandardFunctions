@@ -543,12 +543,130 @@ pub extern "C" fn CHECKED_MUL_UNSIGNED(in1: i64, in2: u64) -> i64 {
 }
 
 /// .
-/// Divide TIME/LTIME with ANY_SIGNED_INT
+/// Divide _TIME by SINT
 /// Panic on overflow or division by zero
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn CHECKED_DIV_SIGNED(in1: i64, in2: i64) -> i64 {
+pub extern "C" fn DIV__TIME__SINT(in1: i64, in2: i8) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide _TIME by INT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__INT(in1: i64, in2: i16) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide _TIME by DINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__DINT(in1: i64, in2: i32) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide _TIME by LINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__LINT(in1: i64, in2: i64) -> i64 {
+    checked_div_signed(in1, in2)
+}
+
+/// .
+/// Divide TIME by SINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__SINT(in1: i64, in2: i8) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide TIME by INT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__INT(in1: i64, in2: i16) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide TIME by DINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__DINT(in1: i64, in2: i32) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide TIME by LINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__LINT(in1: i64, in2: i64) -> i64 {
+    checked_div_signed(in1, in2)
+}
+
+/// .
+/// Divide LTIME by SINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__SINT(in1: i64, in2: i8) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide LTIME by INT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__INT(in1: i64, in2: i16) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide LTIME by DINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__DINT(in1: i64, in2: i32) -> i64 {
+    checked_div_signed(in1, in2.into())
+}
+
+/// .
+/// Divide LTIME by LINT
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__LINT(in1: i64, in2: i64) -> i64 {
+    checked_div_signed(in1, in2)
+}
+
+/// .
+/// Divide TIME/LTIME with ANY_SIGNED_INT
+/// Panic on overflow or division by zero
+///
+fn checked_div_signed(in1: i64, in2: i64) -> i64 {
     in1.checked_div(in2).unwrap()
 }
 
