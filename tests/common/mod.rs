@@ -124,10 +124,18 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "CHECKED_DIV_UNSIGNED",
             iec61131std::CHECKED_DIV_UNSIGNED as usize,
         ),
-        ("CHECKED_MUL_F32", iec61131std::CHECKED_MUL_F32 as usize),
-        ("CHECKED_MUL_F64", iec61131std::CHECKED_MUL_F64 as usize),
-        ("CHECKED_DIV_F32", iec61131std::CHECKED_DIV_F32 as usize),
-        ("CHECKED_DIV_F64", iec61131std::CHECKED_DIV_F64 as usize),
+        ("MUL__TIME__REAL", iec61131std::MUL__TIME__REAL as usize),
+        ("MUL_TIME__REAL", iec61131std::MUL_TIME__REAL as usize),
+        ("MUL_LTIME__REAL", iec61131std::MUL_LTIME__REAL as usize),
+        ("MUL__TIME__LREAL", iec61131std::MUL__TIME__LREAL as usize),
+        ("MUL_TIME__LREAL", iec61131std::MUL_TIME__LREAL as usize),
+        ("MUL_LTIME__LREAL", iec61131std::MUL_LTIME__LREAL as usize),
+        ("DIV__TIME__REAL", iec61131std::DIV__TIME__REAL as usize),
+        ("DIV_TIME__REAL", iec61131std::DIV_TIME__REAL as usize),
+        ("DIV_LTIME__REAL", iec61131std::DIV_LTIME__REAL as usize),
+        ("DIV__TIME__LREAL", iec61131std::DIV__TIME__LREAL as usize),
+        ("DIV_TIME__LREAL", iec61131std::DIV_TIME__LREAL as usize),
+        ("DIV_LTIME__LREAL", iec61131std::DIV_LTIME__LREAL as usize),
     ];
 
     let variables = vec![

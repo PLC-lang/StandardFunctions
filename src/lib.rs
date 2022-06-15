@@ -415,7 +415,7 @@ pub extern "C" fn ADD_TIME(in1: i64, in2: i64) -> i64 {
 
 /// .
 /// This operator returns the value of adding up TOD and TIME.
-/// Panic on onverflow
+/// Panic on overflow
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -433,9 +433,7 @@ pub extern "C" fn ADD_DT_TIME(in1: i64, in2: i64) -> i64 {
     add_datetime_time(in1, in2)
 }
 
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn add_datetime_time(in1: i64, in2: i64) -> i64 {
+fn add_datetime_time(in1: i64, in2: i64) -> i64 {
     chrono::Utc
         .timestamp_millis(in1)
         .checked_add_signed(chrono::Duration::nanoseconds(in2))
@@ -486,9 +484,7 @@ pub extern "C" fn SUB_TOD_TOD(in1: i64, in2: i64) -> i64 {
     sub_datetimes(in1, in2)
 }
 
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn sub_datetimes(in1: i64, in2: i64) -> i64 {
+fn sub_datetimes(in1: i64, in2: i64) -> i64 {
     chrono::Utc
         .timestamp_millis(in1)
         .signed_duration_since(chrono::Utc.timestamp_millis(in2))
@@ -506,9 +502,7 @@ pub extern "C" fn SUB_DT_TIME(in1: i64, in2: i64) -> i64 {
     sub_datetime_duration(in1, in2)
 }
 
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn sub_datetime_duration(in1: i64, in2: i64) -> i64 {
+fn sub_datetime_duration(in1: i64, in2: i64) -> i64 {
     chrono::Utc
         .timestamp_millis(in1)
         .checked_sub_signed(chrono::Duration::nanoseconds(in2))
@@ -570,6 +564,198 @@ pub extern "C" fn CHECKED_DIV_UNSIGNED(in1: i64, in2: u64) -> i64 {
     in1.checked_div(in2.try_into().unwrap()).unwrap()
 }
 
+/// .
+/// Multiply TIME with REAL
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__REAL(in1: i64, in2: f32) -> i64 {
+    checked_mul_f32(in1, in2)
+}
+
+/// .
+/// Multiply TIME with REAL
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__REAL(in1: i64, in2: f32) -> i64 {
+    checked_mul_f32(in1, in2)
+}
+
+/// .
+/// Multiply LTIME with REAL
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__REAL(in1: i64, in2: f32) -> i64 {
+    checked_mul_f32(in1, in2)
+}
+
+fn checked_mul_f32(in1: i64, in2: f32) -> i64 {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = duration.mul_f32(in2.abs()).as_nanos().try_into().unwrap();
+
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
+    }
+}
+
+/// .
+/// Multiply TIME with LREAL
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL__TIME__LREAL(in1: i64, in2: f64) -> i64 {
+    checked_mul_f64(in1, in2)
+}
+
+/// .
+/// Multiply TIME with LREAL
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_TIME__LREAL(in1: i64, in2: f64) -> i64 {
+    checked_mul_f64(in1, in2)
+}
+
+/// .
+/// Multiply LTIME with LREAL
+/// Panic on overflow
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn MUL_LTIME__LREAL(in1: i64, in2: f64) -> i64 {
+    checked_mul_f64(in1, in2)
+}
+
+fn checked_mul_f64(in1: i64, in2: f64) -> i64 {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = duration.mul_f64(in2.abs()).as_nanos().try_into().unwrap();
+
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
+    }
+}
+
+/// .
+/// Divide TIME by REAL
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__REAL(in1: i64, in2: f32) -> i64 {
+    checked_div_f32(in1, in2)
+}
+
+/// .
+/// Divide TIME by REAL
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__REAL(in1: i64, in2: f32) -> i64 {
+    checked_div_f32(in1, in2)
+}
+
+/// .
+/// Divide LTIME by REAL
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__REAL(in1: i64, in2: f32) -> i64 {
+    checked_div_f32(in1, in2)
+}
+
+fn checked_div_f32(in1: i64, in2: f32) -> i64 {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = duration.div_f32(in2.abs()).as_nanos().try_into().unwrap();
+
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
+    }
+}
+
+/// .
+/// Divide TIME by LREAL
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV__TIME__LREAL(in1: i64, in2: f64) -> i64 {
+    checked_div_f64(in1, in2)
+}
+
+/// .
+/// Divide TIME by LREAL
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_TIME__LREAL(in1: i64, in2: f64) -> i64 {
+    checked_div_f64(in1, in2)
+}
+
+/// .
+/// Divide LTIME by LREAL
+/// Panic on overflow or division by zero
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn DIV_LTIME__LREAL(in1: i64, in2: f64) -> i64 {
+    checked_div_f64(in1, in2)
+}
+
+fn checked_div_f64(in1: i64, in2: f64) -> i64 {
+    // std::time::Duration can't handle negatives
+    // we need to check for negative numbers and convert them to positives if necessary
+    let is_in1_negative = in1.is_negative();
+    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+
+    // if overflows i64 return panic
+    let is_in2_negative = in2.is_sign_negative();
+    let res: i64 = duration.div_f64(in2.abs()).as_nanos().try_into().unwrap();
+
+    // convert to negative if necessary
+    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    match should_res_be_negative {
+        true => -res,
+        false => res,
+    }
+}
+
 fn should_result_be_negative(in1_is_negative: bool, in2_is_negative: bool) -> bool {
     if !in1_is_negative & !in2_is_negative {
         // if both params are negative, result will be positive
@@ -578,126 +764,6 @@ fn should_result_be_negative(in1_is_negative: bool, in2_is_negative: bool) -> bo
         // if any of the params is nagative and the other positive
         // result will be negative
         !in1_is_negative | !in2_is_negative
-    }
-}
-
-/// .
-/// Multiply TIME/LTIME with REAL
-/// Panic on overflow
-///
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn CHECKED_MUL_F32(in1: i64, in2: f32) -> i64 {
-    // std::time::Duration can't handle negatives
-    // we need to check for negative numbers and convert them to positives if necessary
-    let is_in1_negative = in1.is_negative();
-    let duration = match is_in1_negative {
-        true => std::time::Duration::from_nanos(-in1 as u64),
-        false => std::time::Duration::from_nanos(in1 as u64),
-    };
-
-    // if overflows i64 return panic
-    let is_in2_negative = in2.is_sign_negative();
-    let res: i64 = match is_in2_negative {
-        true => duration.mul_f32(-in2).as_nanos().try_into().unwrap(),
-        false => duration.mul_f32(in2).as_nanos().try_into().unwrap(),
-    };
-
-    // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
-    match should_res_be_negative {
-        true => -res,
-        false => res,
-    }
-}
-
-/// .
-/// Multiply TIME/LTIME with LREAL
-/// Panic on overflow
-///
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn CHECKED_MUL_F64(in1: i64, in2: f64) -> i64 {
-    // std::time::Duration can't handle negatives
-    // we need to check for negative numbers and convert them to positives if necessary
-    let is_in1_negative = in1.is_negative();
-    let duration = match is_in1_negative {
-        true => std::time::Duration::from_nanos(-in1 as u64),
-        false => std::time::Duration::from_nanos(in1 as u64),
-    };
-
-    // if overflows i64 return panic
-    let is_in2_negative = in2.is_sign_negative();
-    let res: i64 = match is_in2_negative {
-        true => duration.mul_f64(-in2).as_nanos().try_into().unwrap(),
-        false => duration.mul_f64(in2).as_nanos().try_into().unwrap(),
-    };
-
-    // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
-    match should_res_be_negative {
-        true => -res,
-        false => res,
-    }
-}
-
-/// .
-/// Divide TIME/LTIME with ANY_UNSIGNED_INT
-/// Panic on overflow or division by zero
-///
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn CHECKED_DIV_F32(in1: i64, in2: f32) -> i64 {
-    // std::time::Duration can't handle negatives
-    // we need to check for negative numbers and convert them to positives if necessary
-    let is_in1_negative = in1.is_negative();
-    let duration = match is_in1_negative {
-        true => std::time::Duration::from_nanos(-in1 as u64),
-        false => std::time::Duration::from_nanos(in1 as u64),
-    };
-
-    // if overflows i64 return panic
-    let is_in2_negative = in2.is_sign_negative();
-    let res: i64 = match is_in2_negative {
-        true => duration.div_f32(-in2).as_nanos().try_into().unwrap(),
-        false => duration.div_f32(in2).as_nanos().try_into().unwrap(),
-    };
-
-    // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
-    match should_res_be_negative {
-        true => -res,
-        false => res,
-    }
-}
-
-/// .
-/// Divide TIME/LTIME with ANY_UNSIGNED_INT
-/// Panic on overflow or division by zero
-///
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn CHECKED_DIV_F64(in1: i64, in2: f64) -> i64 {
-    // std::time::Duration can't handle negatives
-    // we need to check for negative numbers and convert them to positives if necessary
-    let is_in1_negative = in1.is_negative();
-    let duration = match is_in1_negative {
-        true => std::time::Duration::from_nanos(-in1 as u64),
-        false => std::time::Duration::from_nanos(in1 as u64),
-    };
-
-    // if overflows i64 return panic
-    let is_in2_negative = in2.is_sign_negative();
-    let res: i64 = match is_in2_negative {
-        true => duration.div_f64(-in2).as_nanos().try_into().unwrap(),
-        false => duration.div_f64(in2).as_nanos().try_into().unwrap(),
-    };
-
-    // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
-    match should_res_be_negative {
-        true => -res,
-        false => res,
     }
 }
 
