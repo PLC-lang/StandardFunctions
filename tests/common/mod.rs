@@ -168,6 +168,12 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("DIV__TIME__LREAL", iec61131std::DIV__TIME__LREAL as usize),
         ("DIV_TIME__LREAL", iec61131std::DIV_TIME__LREAL as usize),
         ("DIV_LTIME__LREAL", iec61131std::DIV_LTIME__LREAL as usize),
+        ("TP", iec61131std::timers::TP as usize),
+        ("TP_TIME", iec61131std::timers::TP_TIME as usize),
+        ("TP_LTIME", iec61131std::timers::TP_LTIME as usize),
+        ("TON", iec61131std::timers::TON as usize),
+        ("TON_TIME", iec61131std::timers::TON_TIME as usize),
+        ("TON_LTIME", iec61131std::timers::TON_LTIME as usize),
     ];
 
     let variables = vec![
@@ -204,7 +210,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         Diagnostician::default(),
     )
     .unwrap();
-    println!("{}", code_gen.module.print_to_string());
+    #[cfg(feature = "debug")]
+    code_gen.module.print_to_stderr();
     let exec_engine = code_gen
         .module
         .create_jit_execution_engine(inkwell::OptimizationLevel::None)
@@ -214,14 +221,16 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         if let Some(fn_value) = code_gen.module.get_function(fn_name) {
             exec_engine.add_global_mapping(&fn_value, fn_addr);
         } else {
-            println!("No definition for {} in test", fn_name)
+            #[cfg(feature = "debug")]
+            eprintln!("No definition for {} in test", fn_name)
         }
     }
     for (var_name, var_address) in variables {
         if let Some(var_value) = code_gen.module.get_global(var_name) {
             exec_engine.add_global_mapping(&var_value, var_address);
         } else {
-            println!("No definition for {} in test", var_name)
+            #[cfg(feature = "debug")]
+            eprintln!("No definition for {} in test", var_name)
         }
     }
 
@@ -231,6 +240,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
 ///
 /// A Convenience method to compile and then run the given source
 ///
+#[allow(dead_code)] //Not all test modules call the compile and run
 pub fn compile_and_run<T, U, S: Compilable>(source: S, params: &mut T) -> U {
     let context: Context = Context::create();
     let exec_engine = compile_with_native(&context, source);

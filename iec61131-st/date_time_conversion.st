@@ -3,7 +3,7 @@
 * Converts DT/LDT to DATE
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION DATE_AND_TIME_TO_DATE : DATE
 VAR_INPUT
 	in : DT;
@@ -15,7 +15,7 @@ END_FUNCTION
 * Converts DT/LDT to TOD/LTOD
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION DATE_AND_TIME_TO_TIME_OF_DAY : TOD
 VAR_INPUT
 	in : DT;
