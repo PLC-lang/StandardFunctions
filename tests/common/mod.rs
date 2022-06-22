@@ -174,6 +174,9 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("TON", iec61131std::timers::TON as usize),
         ("TON_TIME", iec61131std::timers::TON_TIME as usize),
         ("TON_LTIME", iec61131std::timers::TON_LTIME as usize),
+        ("TOF", iec61131std::timers::TOF as usize),
+        ("TOF_TIME", iec61131std::timers::TOF_TIME as usize),
+        ("TOF_LTIME", iec61131std::timers::TOF_LTIME as usize),
     ];
 
     let variables = vec![

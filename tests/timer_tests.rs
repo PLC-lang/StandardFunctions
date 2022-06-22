@@ -9,7 +9,42 @@ use rusty::runner::run;
 mod common;
 
 use common::add_std;
-
+/*
+ * ┌───────────────────────────────────────────────────────┐   ┌────────────────────────────────────────────────────────────┐     ┌────────────────────────────────────────────────────────────┐
+ * │ TP                                                    │   │ TON                                                        │     │ TOF                                                        │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                ┌───────────────┐     ┌┐  ┌┐           │   │                ┌──────────┐    ┌───┐   ┌──────────┐        │     │                ┌──────────┐      ┌───┐     ┌──────┐        │
+ * │                │               │     ││  ││           │   │                │          │    │   │   │          │        │     │                │          │      │   │     │      │        │
+ * │       IN       │               │     ││  ││           │   │       IN       │          │    │   │   │          │        │     │       IN       │          │      │   │     │      │        │
+ * │          ──────┘               └─────┴┴──┴┴───        │   │          ──────┘          └────┘   └───┘          └────    │     │          ──────┘          └──────┘   └─────┘      └────    │
+ * │               t0               t1    t2  t3           │   │               t0          t1   t2  t3  t4         t5       │     │               t0          t1     t2  t3    t4     t5       │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                ┌─────┐               ┌─────┐          │   │                      ┌────┐                  ┌────┐        │     │                ┌─────────────┐   ┌───────────────────┐     │
+ * │                │     │               │     │          │   │                      │    │                  │    │        │     │                │             │   │                   │     │
+ * │       Q        │     │               │     │          │   │       Q              │    │                  │    │        │     │       Q        │             │   │                   │     │
+ * │          ──────┘     └───────────────┘     └─────     │   │          ────────────┘    └──────────────────┘    └─────   │     │          ──────┘             └───┘                   └──   │
+ * │               t0     t0+TP          t2     t2+TP      │   │                   t0+TP   t1               t4+TP  t5       │     │                t0         t1+TP   t2              t5+TP    │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │       PT                                              │   │       PT                                                   │     │                                                            │
+ * │       │              ──────────┐                      │   │       │              /───┐                                 │     │                                                            │
+ * │       │             /          │                      │   │       │             /    │                   /────┐        │     │       PT                                                   │
+ * │       │            /           │          /│          │   │       │            /     │        /│        /     │        │     │         │                    /───┐     /             /─────┤
+ * │ ET    │           /            │         / │          │   │ ET    │           /      │       / │       /      │        │     │ ET      │                   /    │    /│            /      │
+ * │       │          /             │        /  │          │   │       │          /       │      /  │      /       │        │     │         │                  /     │   / │           /       │
+ * │       │         /              │       /   │          │   │       │         /        │     /   │     /        │        │     │         └─────────────────       └──/  └──────────/        │
+ * │       └────────/               └──────/    └──────────┤   │       └────────/         └────/    └────/         └──      │     │                                                            │
+ * │       0       t0     t0+TP           t2    t2+TP      │   │       0       t0        t1   t2    t3             t5       │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * │                                                       │   │                                                            │     │                                                            │
+ * └───────────────────────────────────────────────────────┘   └────────────────────────────────────────────────────────────┘     └────────────────────────────────────────────────────────────┘
+ */
 #[repr(C)]
 #[derive(Default, Debug)]
 struct MainType {
@@ -19,44 +54,6 @@ struct MainType {
     tp_et: iec61131std::timers::Time,
 }
 
-///TP Time Diagram
-/*
-    ┌───────────────────────────────────────────────────────┐
-    │ TP                                                    │
-    │                                                       │
-    │                                                       │
-    │                                                       │
-    │                ┌───────────────┐     ┌┐  ┌┐           │
-    │                │               │     ││  ││           │
-    │       IN       │               │     ││  ││           │
-    │          ──────┘               └─────┴┴──┴┴───        │
-    │               t0               t1    t2  t3           │
-    │                                                       │
-    │                                                       │
-    │                ┌─────┐               ┌─────┐          │
-    │                │     │               │     │          │
-    │       Q        │     │               │     │          │
-    │          ──────┘     └───────────────┘     └─────     │
-    │               t0     t0+TP          t2     t2+TP      │
-    │                                                       │
-    │                                                       │
-    │                                                       │
-    │                                                       │
-    │                                                       │
-    │       PT                                              │
-    │       │        ──────┐               ──────┐          │
-    │       │             /│                     │          │
-    │       │            / │                    /│          │
-    │ ET    │           /  │                   / │          │
-    │       │          /   │                  /  │          │
-    │       │         /    │                 /   │          │
-    │       └────────/     └────────────────/    └──────────┤
-    │       0       t0     t0+TP           t2    t2+TP      │
-    │                                                       │
-    │                                                       │
-    └───────────────────────────────────────────────────────┘
-
-*/
 #[test]
 fn tp_true_for_time() {
     let prog = r#"
@@ -93,15 +90,21 @@ fn tp_true_for_time() {
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(main_inst.tp_out);
     assert_eq!(main_inst.tp_et, 10_000_000);
-    //After 15ms, out is false, et is 0/
+    //After 15ms, out is false, et is 10/
     iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 10_000_000);
+    //After 20ms, input is off, out remains off, et set to 0
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
+    main_inst.value = false;
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(!main_inst.tp_out);
     assert_eq!(main_inst.tp_et, 0);
 }
 
 #[test]
-fn tp_does_not_retrigger_on_constant_input() {
+fn tp_does_not_retrigger_on_consecutive_input() {
     let prog = r#"
         PROGRAM main
             VAR_INPUT
@@ -132,16 +135,16 @@ fn tp_does_not_retrigger_on_constant_input() {
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(main_inst.tp_out);
     assert_eq!(main_inst.tp_et, 10_000_000);
-    //After 15ms, out is false, et is 0/
+    //After 15ms, out is false, et is 10/
     iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(!main_inst.tp_out);
-    assert_eq!(main_inst.tp_et, 0);
-    //After 20ms, out is false, et is 0/
+    assert_eq!(main_inst.tp_et, 10_000_000);
+    //After 20ms, out is false, et is 10/
     iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(!main_inst.tp_out);
-    assert_eq!(main_inst.tp_et, 0);
+    assert_eq!(main_inst.tp_et, 10_000_000);
 }
 
 #[test]
@@ -189,48 +192,6 @@ fn tp_not_interrupted_by_signal_change() {
     assert_eq!(main_inst.tp_et, 2_000_000);
 }
 
-/* TON Timing Diagram
-
-
-    ┌────────────────────────────────────────────────────────────┐
-    │ TON                                                        │
-    │                                                            │
-    │                                                            │
-    │                                                            │
-    │                ┌──────────┐    ┌───┐   ┌──────────┐        │
-    │                │          │    │   │   │          │        │
-    │       IN       │          │    │   │   │          │        │
-    │          ──────┘          └────┘   └───┘          └────    │
-    │               t0          t1   t2  t3  t4         t5       │
-    │                                                            │
-    │                                                            │
-    │                      ┌────┐                  ┌────┐        │
-    │                      │    │                  │    │        │
-    │       Q              │    │                  │    │        │
-    │          ────────────┘    └──────────────────┘    └─────   │
-    │                   t0+TP   t1               t4+TP  t5       │
-    │                                                            │
-    │                                                            │
-    │                                                            │
-    │                                                            │
-    │                                                            │
-    │       PT                                                   │
-    │       │              /───┐                                 │
-    │       │             /    │                   /────┐        │
-    │       │            /     │        /│        /     │        │
-    │ ET    │           /      │       / │       /      │        │
-    │       │          /       │      /  │      /       │        │
-    │       │         /        │     /   │     /        │        │
-    │       └────────/         └────/    └────/         └──      │
-    │       0       t0        t1   t2    t3             t5       │
-    │                                                            │
-    │                                                            │
-    └────────────────────────────────────────────────────────────┘
-
-
-
-*/
-
 #[test]
 fn ton_returns_true_after_time_preset() {
     let prog = r#"
@@ -273,7 +234,7 @@ fn ton_returns_true_after_time_preset() {
     main_inst.value = true;
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(main_inst.tp_out);
-    assert_eq!(main_inst.tp_et, 0);
+    assert_eq!(main_inst.tp_et, 10_000_000);
     // Value false after 20ms -> false
     iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
     main_inst.value = false;
@@ -357,8 +318,8 @@ fn ton_waits_again_after_turining_off() {
     main_inst.value = true;
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(main_inst.tp_out);
-    assert_eq!(main_inst.tp_et, 0); //Elapsed time set to 0 since timer is finished
-                                    // Value false After 15ms -> false
+    assert_eq!(main_inst.tp_et, 9_000_000);
+    // Value false After 15ms -> false
     iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
     main_inst.value = false;
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
@@ -375,8 +336,144 @@ fn ton_waits_again_after_turining_off() {
     main_inst.value = true;
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 9_000_000);
+}
+
+#[test]
+fn toff_starts_timer_after_input_is_off() {
+    let prog = r#"
+    PROGRAM main
+        VAR_INPUT
+            value : BOOL;
+        END_VAR
+        VAR
+            tp_inst : TOF;
+            tp_out  : BOOL;
+            tp_et   : TIME;
+        END_VAR
+        tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
+    END_PROGRAM
+"#;
+
+    let source = add_std!(prog, "timers.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = MainType::default();
+    // Value true First call -> true
+    main_inst.value = true;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(10));
+    //Turn off after 10ms -> Timer kicks in, output remains true
+    main_inst.value = false;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    //After 15 ms, output still true, time elapsed is 5ms
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 5_000_000);
+}
+
+#[test]
+fn toff_runs_for_preset_time() {
+    let prog = r#"
+    PROGRAM main
+        VAR_INPUT
+            value : BOOL;
+        END_VAR
+        VAR
+            tp_inst : TOF;
+            tp_out  : BOOL;
+            tp_et   : TIME;
+        END_VAR
+        tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
+    END_PROGRAM
+"#;
+
+    let source = add_std!(prog, "timers.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = MainType::default();
+    // Value true First call -> true
+    main_inst.value = true;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(10));
+    //Turn off after 10ms -> Timer kicks in, output remains true
+    main_inst.value = false;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    //After 20ms, output is turned off, time elapsed is equal to tp (9ms)
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(10));
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 9_000_000);
+
+    //On the next true signal, the timer's elapsed time is set to 0 again
+    // Value true First call -> true
+    main_inst.value = true;
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
     assert_eq!(main_inst.tp_et, 0);
 }
 
 #[test]
-fn toff_turns_of_after_time_preset() {}
+fn toff_keeps_returning_true_if_input_returns_to_true() {
+    let prog = r#"
+    PROGRAM main
+        VAR_INPUT
+            value : BOOL;
+        END_VAR
+        VAR
+            tp_inst : TOF;
+            tp_out  : BOOL;
+            tp_et   : TIME;
+        END_VAR
+        tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
+    END_PROGRAM
+"#;
+
+    let source = add_std!(prog, "timers.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = MainType::default();
+    // Value true First call -> false
+    main_inst.value = true;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    //Turn off after 10ms -> Timer kicks in, output remains true
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(10));
+    main_inst.value = false;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    //After 15 ms, output still true, time elapsed is 5ms
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 5_000_000);
+    //After 16ms, the input becomes true again, the timer stops, et is set to 0 but the signal remains true
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(1));
+    main_inst.value = true;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    //After 20ms, the input turns off, the timer starts again
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(4));
+    main_inst.value = false;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 0);
+    //After 25ms, the input is still off, the timer's elapsed time is 5ms, the output is true
+    iec61131std::timers::test_time_helpers::MockClock::advance(Duration::from_millis(5));
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.tp_out);
+    assert_eq!(main_inst.tp_et, 5_000_000);
+}
