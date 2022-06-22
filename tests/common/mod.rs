@@ -215,38 +215,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "SPLIT_DT__ULINT",
             iec61131std::time::SPLIT_DT__ULINT as usize,
         ),
-        (
-            "DAY_OF_WEEK__SINT",
-            iec61131std::time::DAY_OF_WEEK__SINT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__USINT",
-            iec61131std::time::DAY_OF_WEEK__USINT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__INT",
-            iec61131std::time::DAY_OF_WEEK__INT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__UINT",
-            iec61131std::time::DAY_OF_WEEK__UINT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__DINT",
-            iec61131std::time::DAY_OF_WEEK__DINT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__UDINT",
-            iec61131std::time::DAY_OF_WEEK__UDINT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__LINT",
-            iec61131std::time::DAY_OF_WEEK__LINT as usize,
-        ),
-        (
-            "DAY_OF_WEEK__ULINT",
-            iec61131std::time::DAY_OF_WEEK__ULINT as usize,
-        ),
+        ("DAY_OF_WEEK", iec61131std::time::DAY_OF_WEEK as usize),
         ("ADD_TIME", iec61131std::ADD_TIME as usize),
         ("ADD_TOD_TIME", iec61131std::ADD_TOD_TIME as usize),
         ("ADD_DT_TIME", iec61131std::ADD_DT_TIME as usize),

@@ -905,103 +905,13 @@ END_FUNCTION
 
 (********************
 *
-* Returns day of week form given DATE
+* Returns day of week form given DATE in SINT
 * 0 -> sunday, 1 -> monday, ..., 6 -> saturday
 *
 *********************)
-FUNCTION DAY_OF_WEEK <T: ANY_INT> : T
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : T;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for SINT *)
 @EXTERNAL
-FUNCTION DAY_OF_WEEK__SINT : SINT
+FUNCTION DAY_OF_WEEK : SINT
 VAR_INPUT
 	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : SINT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for USINT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__USINT : USINT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : USINT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for INT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__INT : INT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : INT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for UINT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__UINT : UINT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : UINT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for DINT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__DINT : DINT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : DINT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for UDINT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__UDINT : UDINT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : UDINT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for LINT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__LINT : LINT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : LINT;
-END_VAR
-END_FUNCTION
-
-(* Specialized implementation of DAY_OF_WEEK for ULINT *)
-@EXTERNAL
-FUNCTION DAY_OF_WEEK__ULINT : ULINT
-VAR_INPUT
-	in : DATE;
-END_VAR
-VAR_OUTPUT
-	out : ULINT;
 END_VAR
 END_FUNCTION
