@@ -12,9 +12,9 @@ use common::add_std;
 #[repr(C)]
 #[derive(Debug, Default)]
 struct MainType {
-    val : bool,
-    edge : iec61131std::flanks::Trigger,
-    out : bool,
+    val: bool,
+    edge: iec61131std::flanks::Trigger,
+    out: bool,
 }
 
 #[test]
@@ -56,14 +56,14 @@ fn falling_edge_smoke_test() {
         re(CLK := val, Q => out);
     END_PROGRAM
 "#;
-let source = add_std!(prg, "flanks.st");
-let context: Context = Context::create();
-let exec_engine = compile_with_native(&context, source);
-let mut main_inst = MainType::default();
-main_inst.val = true;
-run::<_, ()>(&exec_engine, "main", &mut main_inst);
-assert!(!main_inst.out);
-main_inst.val = false;
-run::<_, ()>(&exec_engine, "main", &mut main_inst);
-assert!(main_inst.out);
+    let source = add_std!(prg, "flanks.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = MainType::default();
+    main_inst.val = true;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.out);
+    main_inst.val = false;
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.out);
 }

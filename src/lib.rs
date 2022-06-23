@@ -5,10 +5,10 @@ use std::{ffi::CStr, os::raw::c_char};
 use chrono::TimeZone;
 
 pub mod bit_shift;
+pub mod flanks;
 pub mod time;
 pub mod timers;
 pub mod utils;
-pub mod flanks;
 
 #[no_mangle]
 pub static PI_LREAL: f64 = std::f64::consts::PI;

@@ -31,9 +31,7 @@ impl Signal {
 
 impl From<bool> for Signal {
     fn from(val: bool) -> Self {
-        Signal{
-            current_value: val
-        }
+        Signal { current_value: val }
     }
 }
 
