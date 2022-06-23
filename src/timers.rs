@@ -91,11 +91,11 @@ impl TimerParams {
         }
     }
 
-    fn is_rising_edge(&mut self) -> bool {
+    fn input_rising_edge(&mut self) -> bool {
         self.input_edge.rising_edge(self.input)
     }
 
-    fn is_falling_edge(&mut self) -> bool {
+    fn input_falling_edge(&mut self) -> bool {
         self.input_edge.falling_edge(self.input)
     }
 }
@@ -110,12 +110,12 @@ pub extern "C" fn TP(timer: &mut TimerParams) {
         if timer.is_in_preset_range() {
             true
         } else {
-            if timer.is_falling_edge() {
+            if timer.input_falling_edge() {
                 timer.reset()
             }
             false
         }
-    } else if timer.is_rising_edge() {
+    } else if timer.input_rising_edge() {
         timer.start();
         true
     } else {
@@ -135,7 +135,7 @@ pub extern "C" fn TON(timer: &mut TimerParams) {
             timer.update_elapsed_time();
             !timer.is_in_preset_range()
             //Timer stopped, but the input is new
-        } else if timer.is_rising_edge() {
+        } else if timer.input_rising_edge() {
             timer.start();
             false
             //Timer stopped, input didn't change (still true from last time)
@@ -155,20 +155,18 @@ pub extern "C" fn TON(timer: &mut TimerParams) {
 #[no_mangle]
 pub extern "C" fn TOF(timer: &mut TimerParams) {
     let output = if timer.input {
-        if timer.is_rising_edge() {
+        if timer.input_rising_edge() {
             timer.reset();
         }
         true
+    } else if timer.input_falling_edge() {
+        timer.start();
+        true
+    } else if timer.is_running() {
+        timer.update_elapsed_time();
+        timer.is_in_preset_range()
     } else {
-        if timer.is_falling_edge() {
-            timer.start();
-            true
-        } else if timer.is_running() {
-            timer.update_elapsed_time();
-            timer.is_in_preset_range()
-        } else {
-            false
-        }
+        false
     };
     timer.set_output(output);
     timer.input_edge.set(timer.input);
@@ -198,7 +196,6 @@ pub extern "C" fn TON_TIME(timer: &mut TimerParams) {
 pub extern "C" fn TON_LTIME(timer: &mut TimerParams) {
     TON(timer)
 }
-
 
 #[allow(non_snake_case)]
 #[no_mangle]
