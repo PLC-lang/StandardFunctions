@@ -92,12 +92,130 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("ROR__LWORD", iec61131std::bit_shift::ROR__LWORD as usize),
         (
             "DATE_AND_TIME_TO_DATE",
-            iec61131std::DATE_AND_TIME_TO_DATE as usize,
+            iec61131std::time::DATE_AND_TIME_TO_DATE as usize,
         ),
         (
             "DATE_AND_TIME_TO_TIME_OF_DAY",
-            iec61131std::DATE_AND_TIME_TO_TIME_OF_DAY as usize,
+            iec61131std::time::DATE_AND_TIME_TO_TIME_OF_DAY as usize,
         ),
+        (
+            "CONCAT_DATE_TOD",
+            iec61131std::time::CONCAT_DATE_TOD as usize,
+        ),
+        (
+            "CONCAT_DATE__INT",
+            iec61131std::time::CONCAT_DATE__INT as usize,
+        ),
+        (
+            "CONCAT_DATE__UINT",
+            iec61131std::time::CONCAT_DATE__UINT as usize,
+        ),
+        (
+            "CONCAT_DATE__DINT",
+            iec61131std::time::CONCAT_DATE__DINT as usize,
+        ),
+        (
+            "CONCAT_TOD__SINT",
+            iec61131std::time::CONCAT_TOD__SINT as usize,
+        ),
+        (
+            "CONCAT_TOD__USINT",
+            iec61131std::time::CONCAT_TOD__USINT as usize,
+        ),
+        (
+            "CONCAT_TOD__INT",
+            iec61131std::time::CONCAT_TOD__INT as usize,
+        ),
+        (
+            "CONCAT_TOD__UINT",
+            iec61131std::time::CONCAT_TOD__UINT as usize,
+        ),
+        (
+            "CONCAT_TOD__DINT",
+            iec61131std::time::CONCAT_TOD__DINT as usize,
+        ),
+        (
+            "CONCAT_TOD__UDINT",
+            iec61131std::time::CONCAT_TOD__UDINT as usize,
+        ),
+        (
+            "CONCAT_TOD__LINT",
+            iec61131std::time::CONCAT_TOD__LINT as usize,
+        ),
+        (
+            "CONCAT_TOD__ULINT",
+            iec61131std::time::CONCAT_TOD__ULINT as usize,
+        ),
+        (
+            "CONCAT_DATE__UDINT",
+            iec61131std::time::CONCAT_DATE__UDINT as usize,
+        ),
+        (
+            "CONCAT_DATE__LINT",
+            iec61131std::time::CONCAT_DATE__LINT as usize,
+        ),
+        (
+            "CONCAT_DATE__ULINT",
+            iec61131std::time::CONCAT_DATE__ULINT as usize,
+        ),
+        (
+            "SPLIT_DATE__INT",
+            iec61131std::time::SPLIT_DATE__INT as usize,
+        ),
+        (
+            "SPLIT_DATE__UINT",
+            iec61131std::time::SPLIT_DATE__UINT as usize,
+        ),
+        (
+            "SPLIT_DATE__DINT",
+            iec61131std::time::SPLIT_DATE__DINT as usize,
+        ),
+        (
+            "SPLIT_DATE__UDINT",
+            iec61131std::time::SPLIT_DATE__UDINT as usize,
+        ),
+        (
+            "SPLIT_DATE__LINT",
+            iec61131std::time::SPLIT_DATE__LINT as usize,
+        ),
+        (
+            "SPLIT_DATE__ULINT",
+            iec61131std::time::SPLIT_DATE__ULINT as usize,
+        ),
+        ("SPLIT_TOD__INT", iec61131std::time::SPLIT_TOD__INT as usize),
+        (
+            "SPLIT_TOD__UINT",
+            iec61131std::time::SPLIT_TOD__UINT as usize,
+        ),
+        (
+            "SPLIT_TOD__DINT",
+            iec61131std::time::SPLIT_TOD__DINT as usize,
+        ),
+        (
+            "SPLIT_TOD__UDINT",
+            iec61131std::time::SPLIT_TOD__UDINT as usize,
+        ),
+        (
+            "SPLIT_TOD__LINT",
+            iec61131std::time::SPLIT_TOD__LINT as usize,
+        ),
+        (
+            "SPLIT_TOD__ULINT",
+            iec61131std::time::SPLIT_TOD__ULINT as usize,
+        ),
+        ("SPLIT_DT__INT", iec61131std::time::SPLIT_DT__INT as usize),
+        ("SPLIT_DT__UINT", iec61131std::time::SPLIT_DT__UINT as usize),
+        ("SPLIT_DT__DINT", iec61131std::time::SPLIT_DT__DINT as usize),
+        (
+            "SPLIT_DT__UDINT",
+            iec61131std::time::SPLIT_DT__UDINT as usize,
+        ),
+        ("SPLIT_DT__LINT", iec61131std::time::SPLIT_DT__LINT as usize),
+        (
+            "SPLIT_DT__ULINT",
+            iec61131std::time::SPLIT_DT__ULINT as usize,
+        ),
+        ("DAY_OF_WEEK", iec61131std::time::DAY_OF_WEEK as usize),
         ("ADD_TIME", iec61131std::ADD_TIME as usize),
         ("ADD_TOD_TIME", iec61131std::ADD_TOD_TIME as usize),
         ("ADD_DT_TIME", iec61131std::ADD_DT_TIME as usize),
