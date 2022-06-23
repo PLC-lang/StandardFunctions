@@ -6,6 +6,7 @@ use std::{ffi::CStr, os::raw::c_char};
 pub mod bit_shift;
 pub mod timers;
 pub mod utils;
+pub mod flanks;
 
 #[no_mangle]
 pub static PI_LREAL: f64 = std::f64::consts::PI;
