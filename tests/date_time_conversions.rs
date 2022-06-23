@@ -86,7 +86,7 @@ fn ldt_to_tod_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 72911542);
+    assert_eq!(res, 72911543);
 }
 
 #[test]
@@ -134,7 +134,7 @@ fn dt_to_tod_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 72911542);
+    assert_eq!(res, 72911543);
 }
 
 #[test]
