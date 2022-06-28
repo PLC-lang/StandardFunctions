@@ -6,6 +6,7 @@ use chrono::TimeZone;
 
 pub mod bit_shift;
 pub mod time;
+pub mod validation;
 
 #[no_mangle]
 pub static PI_LREAL: f64 = std::f64::consts::PI;

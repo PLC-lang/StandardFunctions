@@ -286,6 +286,14 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("DIV__TIME__LREAL", iec61131std::DIV__TIME__LREAL as usize),
         ("DIV_TIME__LREAL", iec61131std::DIV_TIME__LREAL as usize),
         ("DIV_LTIME__LREAL", iec61131std::DIV_LTIME__LREAL as usize),
+        (
+            "IS_VALID__REAL",
+            iec61131std::validation::IS_VALID__REAL as usize,
+        ),
+        (
+            "IS_VALID__LREAL",
+            iec61131std::validation::IS_VALID__LREAL as usize,
+        ),
     ];
 
     let variables = vec![
