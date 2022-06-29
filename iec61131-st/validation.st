@@ -24,6 +24,6 @@ Return:
 ******************************************************************************)
 FUNCTION IS_VALID_BCD <T: ANY_BIT> : BOOL
 VAR_INPUT
-	in : T;
+	IN : T;
 END_VAR
 END_FUNCTION
