@@ -19,8 +19,8 @@ would result in a valid BCD representation
 Input:
   - IN: ANY_BIT
 Return:
-  - TRUE: Value of each 4bits(nibble) is between 0-9, e.g 0110 => 6
-  - FALSE: If any 4bits(nibble) is between 10-15, e.g 1101 => 13
+  - TRUE: The value of each 4bits representet digit must be between 0-9
+  - FALSE: If the value of any 4bits representet digit is higher than 9
 ******************************************************************************)
 FUNCTION IS_VALID_BCD <T: ANY_BIT> : BOOL
 VAR_INPUT
