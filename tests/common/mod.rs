@@ -294,6 +294,22 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "IS_VALID__LREAL",
             iec61131std::validation::IS_VALID__LREAL as usize,
         ),
+        (
+            "IS_VALID_BCD__BYTE",
+            iec61131std::validation::IS_VALID_BCD__BYTE as usize,
+        ),
+        (
+            "IS_VALID_BCD__WORD",
+            iec61131std::validation::IS_VALID_BCD__WORD as usize,
+        ),
+        (
+            "IS_VALID_BCD__DWORD",
+            iec61131std::validation::IS_VALID_BCD__DWORD as usize,
+        ),
+        (
+            "IS_VALID_BCD__LWORD",
+            iec61131std::validation::IS_VALID_BCD__LWORD as usize,
+        ),
     ];
 
     let variables = vec![
