@@ -1,11 +1,10 @@
-#[derive(Default, Debug, PartialEq, Eq)]
-#[repr(C)]
+#[derive(Default, Debug, PartialEq, Eq, Clone, Copy)]
+#[repr(transparent)]
 pub struct Signal {
     current_value: bool,
 }
 
 /// A representation of a boolean signal
-
 impl Signal {
     /// Returns true if the value is true, and the previous value is false, otherwise false
     pub fn rising_edge(&mut self, next_value: bool) -> bool {
@@ -27,6 +26,12 @@ impl Signal {
 
     pub fn get(&self) -> bool {
         self.current_value
+    }
+}
+
+impl From<bool> for Signal {
+    fn from(val: bool) -> Self {
+        Signal { current_value: val }
     }
 }
 

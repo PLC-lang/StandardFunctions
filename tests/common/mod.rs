@@ -286,6 +286,30 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("DIV__TIME__LREAL", iec61131std::DIV__TIME__LREAL as usize),
         ("DIV_TIME__LREAL", iec61131std::DIV_TIME__LREAL as usize),
         ("DIV_LTIME__LREAL", iec61131std::DIV_LTIME__LREAL as usize),
+        (
+            "IS_VALID__REAL",
+            iec61131std::validation::IS_VALID__REAL as usize,
+        ),
+        (
+            "IS_VALID__LREAL",
+            iec61131std::validation::IS_VALID__LREAL as usize,
+        ),
+        (
+            "IS_VALID_BCD__BYTE",
+            iec61131std::validation::IS_VALID_BCD__BYTE as usize,
+        ),
+        (
+            "IS_VALID_BCD__WORD",
+            iec61131std::validation::IS_VALID_BCD__WORD as usize,
+        ),
+        (
+            "IS_VALID_BCD__DWORD",
+            iec61131std::validation::IS_VALID_BCD__DWORD as usize,
+        ),
+        (
+            "IS_VALID_BCD__LWORD",
+            iec61131std::validation::IS_VALID_BCD__LWORD as usize,
+        ),
         ("TP", iec61131std::timers::TP as usize),
         ("TP_TIME", iec61131std::timers::TP_TIME as usize),
         ("TP_LTIME", iec61131std::timers::TP_LTIME as usize),
@@ -297,6 +321,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("TOF_LTIME", iec61131std::timers::TOF_LTIME as usize),
         ("SR", iec61131std::bistable_functionblocks::SR as usize),
         ("RS", iec61131std::bistable_functionblocks::RS as usize),
+        ("R_TRIG", iec61131std::flanks::R_TRIG as usize),
+        ("F_TRIG", iec61131std::flanks::F_TRIG as usize),
     ];
 
     let variables = vec![
