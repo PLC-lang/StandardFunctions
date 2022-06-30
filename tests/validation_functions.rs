@@ -114,8 +114,15 @@ fn is_valid_byte() {
 		valid	: BOOL;
 		invalid	: BOOL;
 	END_VAR
-		valid	:= IS_VALID_BCD(BYTE#50); // 50 => 0011_0010 in BCD 3_2 => VALID
-		invalid	:= IS_VALID_BCD(BYTE#44); // 44 => 0010_1100 in BCD 2_[12] => INVALID
+	VAR_TEMP
+		v_valid : BYTE;
+		v_invalid : BYTE;
+	END_VAR
+		v_valid := 2#0011_0010; // in BCD 3_2 => VALID
+		valid	:= IS_VALID_BCD(v_valid);
+
+		v_invalid := 2#0010_1100; // in BCD 2_[12] => INVALID
+		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
     let sources = add_std!(src, "validation.st");
     let mut maintype = StructBCD::default();
@@ -132,8 +139,15 @@ fn is_valid_word() {
 		valid	: BOOL;
 		invalid	: BOOL;
 	END_VAR
-		valid	:= IS_VALID_BCD(WORD#18_545); // 18_545 => 0100_1000_0111_0001 in BCD 4_8_7_1 => VALID
-		invalid	:= IS_VALID_BCD(WORD#19_313); // 19_313 => 0100_1011_0111_0001 in BCD 4_[11]_7_1 => INVALID
+	VAR_TEMP
+		v_valid : WORD;
+		v_invalid : WORD;
+	END_VAR
+		v_valid := 2#0100_1000_0111_0001; // in BCD 4_8_7_1 => VALID
+		valid	:= IS_VALID_BCD(v_valid);
+
+		v_invalid := 2#0100_1011_0111_0001; // in BCD 4_[11]_7_1 => INVALID
+		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
     let sources = add_std!(src, "validation.st");
     let mut maintype = StructBCD::default();
@@ -150,8 +164,15 @@ fn is_valid_dword() {
 		valid	: BOOL;
 		invalid	: BOOL;
 	END_VAR
-		valid	:= IS_VALID_BCD(DWORD#1_215_383_665); // 1_215_383_665 => 0100_1000_0111_0001_0100_1000_0111_0001 in BCD 4_8_7_1_4_8_7_1 => VALID
-		invalid	:= IS_VALID_BCD(DWORD#1_265_716_081); // 1_265_716_081 => 0100_1011_0111_0001_0100_1011_0111_0001 in BCD 4_[11]_7_1_4_11_7_1 => INVALID
+	VAR_TEMP
+		v_valid : DWORD;
+		v_invalid : DWORD;
+	END_VAR
+		v_valid := 2#0100_1000_0111_0001_0100_1000_0111_0001; // in BCD 4_8_7_1_4_8_7_1 => VALID
+		valid	:= IS_VALID_BCD(v_valid);
+
+		v_invalid := 2#0100_1011_0111_0001_0100_1011_0111_0001; // in BCD 4_[11]_7_1_4_11_7_1 => INVALID
+		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
     let sources = add_std!(src, "validation.st");
     let mut maintype = StructBCD::default();
@@ -168,8 +189,15 @@ fn is_valid_lword() {
 		valid	: BOOL;
 		invalid	: BOOL;
 	END_VAR
-		valid	:= IS_VALID_BCD(LWORD#4_611_686_018_427_387_904); // 4_611_686_018_427_387_904 => 0100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000 in BCD 4_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0 => VALID
-		invalid	:= IS_VALID_BCD(LWORD#4_611_686_018_427_387_919); // 4_611_686_018_427_387_919 => 0100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1111 in BCD 4_0_0_0_0_0_0_0_0_0_0_0_0_0_0_[15] => INVALID
+	VAR_TEMP
+		v_valid : LWORD;
+		v_invalid : LWORD;
+	END_VAR
+		v_valid := 2#0100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000; // in BCD 4_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0 => VALID
+		valid	:= IS_VALID_BCD(v_valid);
+
+		v_invalid := 2#0100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1111; // in BCD 4_0_0_0_0_0_0_0_0_0_0_0_0_0_0_[15] => INVALID
+		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
     let sources = add_std!(src, "validation.st");
     let mut maintype = StructBCD::default();
