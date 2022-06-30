@@ -4,6 +4,7 @@ use std::{ffi::CStr, os::raw::c_char};
 
 use chrono::TimeZone;
 
+pub mod bistable_functionblocks;
 pub mod bit_shift;
 pub mod time;
 pub mod timers;

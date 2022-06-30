@@ -295,6 +295,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("TOF", iec61131std::timers::TOF as usize),
         ("TOF_TIME", iec61131std::timers::TOF_TIME as usize),
         ("TOF_LTIME", iec61131std::timers::TOF_LTIME as usize),
+        ("SR", iec61131std::bistable_functionblocks::SR as usize),
+        ("RS", iec61131std::bistable_functionblocks::RS as usize),
     ];
 
     let variables = vec![
