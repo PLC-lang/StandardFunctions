@@ -3,7 +3,7 @@
 * Converts LWORD to LREAL
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION LWORD_TO_LREAL : LREAL
 VAR_INPUT
 	in : LWORD;
@@ -111,7 +111,7 @@ END_FUNCTION
 * Converts DWORD to REAL
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION DWORD_TO_REAL : REAL
 VAR_INPUT
 	in : DWORD;
@@ -507,7 +507,7 @@ END_FUNCTION
 * Converts LREAL to LWORD
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION LREAL_TO_LWORD : LWORD
 VAR_INPUT
 	in : LREAL;
@@ -519,7 +519,7 @@ END_FUNCTION
 * Converts REAL to DWORD
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION REAL_TO_DWORD : DWORD
 VAR_INPUT
 	in : REAL;

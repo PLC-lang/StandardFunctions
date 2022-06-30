@@ -10,10 +10,16 @@ glob = "0.3"
 
 [dev-dependencies]
 inkwell = {git = "https://github.com/TheDan64/inkwell", branch="master", features=["llvm13-0"] }
-rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" } 
+rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" }
+iec61131std = { path = ".", features = ["mock_time"] }
 
 [dependencies]
 chrono = "0.4"
+
+[features]
+default = []
+mock_time = []
+debug = []
 
 [lib]
 crate-type = ["staticlib", "lib", "cdylib"]

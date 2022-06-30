@@ -1,6 +1,6 @@
 (* Definitions of arithmetic functions defined by the IEC61131-3 standard *)
 
-@EXTERNAL
+{external}
 VAR_GLOBAL
 	PI_REAL : REAL;
 	PI_LREAL : LREAL;
@@ -13,7 +13,7 @@ VAR_GLOBAL
 END_VAR
 
 (* Calculates the square root of a given value *)
-@EXTERNAL
+{external}
 FUNCTION SQRT<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -24,7 +24,7 @@ END_FUNCTION
 
 
 (* Calculates the natural logarithm of the given value *)
-@EXTERNAL
+{external}
 FUNCTION LN<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -33,7 +33,7 @@ END_FUNCTION
 
 
 (* Calculates the base 10 logarithm of the given value *)
-@EXTERNAL
+{external}
 FUNCTION LOG<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -41,7 +41,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculates the natural exporenent of the given value *)
-@EXTERNAL
+{external}
 FUNCTION EXP<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -52,7 +52,7 @@ END_FUNCTION
 
 
 (* Calculates the sine of the given value in radiants *)
-@EXTERNAL
+{external}
 FUNCTION SIN<T : ANY_REAL> : T
 VAR_INPUT
 	rad : T;
@@ -60,7 +60,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculates the cosine of the given value in radiants *)
-@EXTERNAL
+{external}
 FUNCTION COS<T : ANY_REAL> : T
 VAR_INPUT
 	rad : T;
@@ -68,7 +68,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculates the tangent of the given value in radiants *)
-@EXTERNAL
+{external}
 FUNCTION TAN<T : ANY_REAL> : T
 VAR_INPUT
 	rad : T;
@@ -76,7 +76,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculates the arc sine of the given value *)
-@EXTERNAL
+{external}
 FUNCTION ASIN<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -84,7 +84,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculates the arc cosine of the given value *)
-@EXTERNAL
+{external}
 FUNCTION ACOS<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -92,7 +92,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculates the arc tangent of the given value *)
-@EXTERNAL
+{external}
 FUNCTION ATAN<T : ANY_REAL> : T
 VAR_INPUT
 	in : T;
@@ -100,7 +100,7 @@ END_VAR
 END_FUNCTION
 
 (* Calculate the four quadrant arc tangent of the given values *)
-@EXTERNAL
+{external}
 FUNCTION ATAN2<T : ANY_REAL> : T
 VAR_INPUT
 	y : T;

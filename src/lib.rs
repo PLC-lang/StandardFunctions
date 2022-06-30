@@ -6,6 +6,8 @@ use chrono::TimeZone;
 
 pub mod bit_shift;
 pub mod time;
+pub mod timers;
+pub mod utils;
 pub mod validation;
 
 #[no_mangle]
