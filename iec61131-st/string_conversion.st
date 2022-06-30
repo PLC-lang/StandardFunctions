@@ -4,7 +4,7 @@
 * Will return a STRING with default length of 81
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION WSTRING_TO_STRING : STRING
 VAR_INPUT {ref}
 	in : WSTRING;
@@ -33,7 +33,7 @@ END_FUNCTION
 * Will return a WSTRING with default length of 81
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION STRING_TO_WSTRING : WSTRING
 VAR_INPUT {ref}
 	in : STRING;
@@ -77,7 +77,7 @@ END_FUNCTION
 * Converts WCHAR to CHAR
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION WCHAR_TO_CHAR : CHAR
 VAR_INPUT
 	in : WCHAR;
@@ -105,7 +105,7 @@ END_FUNCTION
 * Converts CHAR to WCHAR
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION CHAR_TO_WCHAR : WCHAR
 VAR_INPUT
 	in : CHAR;

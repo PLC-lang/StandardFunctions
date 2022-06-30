@@ -24,7 +24,7 @@ END_FUNCTION
 * This operator returns the value of adding up two TIME operands.
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION ADD_TIME : TIME
 VAR_INPUT
 	IN1 : TIME;
@@ -60,7 +60,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION ADD_TOD_TIME : TOD
 VAR_INPUT
 	IN1 : TOD;
@@ -97,7 +97,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION ADD_DT_TIME : DT
 VAR_INPUT
 	IN1 : DT;
@@ -145,7 +145,7 @@ END_FUNCTION
 * This operator produces the subtraction of two TIME operands
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION SUB_TIME : TIME
 VAR_INPUT
 	IN1 : TIME;
@@ -181,7 +181,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION SUB_DATE_DATE : TIME
 VAR_INPUT
 	IN1 : DATE;
@@ -218,7 +218,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION SUB_TOD_TIME : TOD
 VAR_INPUT
 	IN1 : TOD;
@@ -255,7 +255,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION SUB_TOD_TOD : TIME
 VAR_INPUT
 	IN1 : TOD;
@@ -292,7 +292,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION SUB_DT_TIME : DT
 VAR_INPUT
 	IN1 : DT;
@@ -329,7 +329,7 @@ END_FUNCTION
 * Panic on overflow
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION SUB_DT_DT : TIME
 VAR_INPUT
 	IN1 : DT;
