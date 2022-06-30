@@ -1,10 +1,10 @@
 (******************************************************************************
 Description: Bistable function, set dominant
 Input:
-  - SET1: Dominant input of bistable function.
-  - RESET: input of bistable function.
+  - SET1: Dominant input of bistable function
+  - RESET: Input of bistable function
 Output:
-  - Q1: Result of Bistable function. 
+  - Q1: Result of bistable function
 Return: Output is used as return
 ******************************************************************************)
 {external}
@@ -19,13 +19,13 @@ END_VAR
 END_FUNCTION_BLOCK
 
 (******************************************************************************
-Description: Bistable function, reset dominant.
+Description: Bistable function, reset dominant
 Input:
-  - SET: Bistable input 
-  - RESET1: Dominmant bistable input. 
+  - SET: Input of bistable function
+  - RESET1: Dominant input of bistable function
 Output:
-  - Q1: Result of bistable function 
-Return: Output variable used as return value.
+  - Q1: Result of bistable function
+Return: Output is used as return
 ******************************************************************************)
 {external}
 FUNCTION_BLOCK RS
