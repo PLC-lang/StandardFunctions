@@ -11,6 +11,7 @@ pub mod time;
 pub mod timers;
 pub mod utils;
 pub mod validation;
+pub mod types;
 
 #[no_mangle]
 pub static PI_LREAL: f64 = std::f64::consts::PI;

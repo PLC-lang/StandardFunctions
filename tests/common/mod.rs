@@ -8,7 +8,7 @@ use inkwell::{
 use rusty::{
     compile_module,
     diagnostics::Diagnostician,
-    runner::{run, Compilable},
+    runner::{run, Compilable, run_no_param},
     FilePath, SourceCode, SourceContainer,
 };
 
@@ -394,4 +394,14 @@ pub fn compile_and_run<T, U, S: Compilable>(source: S, params: &mut T) -> U {
     let context: Context = Context::create();
     let exec_engine = compile_with_native(&context, source);
     run::<T, U>(&exec_engine, "main", params)
+}
+
+///
+/// A Convenience method to compile and then run the given source with no parameters
+///
+#[allow(dead_code)] //Not all test modules call the compile and run
+pub fn compile_and_run_no_params<T, S: Compilable>(source: S) -> T {
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    run_no_param::<T>(&exec_engine, "main")
 }
