@@ -25,7 +25,7 @@ fn main() {
         .unwrap_or(OptimizationLevel::None);
     let files = create_file_paths(&["iec61131-st/*.st".to_string()]).unwrap();
     let compile_options = CompileOptions {
-        format: FormatOption::Static,
+        format: Some(FormatOption::Static),
         output: format!("{out_dir}/st.o"),
         target,
         optimization,
