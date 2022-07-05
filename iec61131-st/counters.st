@@ -132,3 +132,138 @@ VAR
 	M : BOOL;
 END_VAR
 END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter down
+Input:
+  - CD: Count down
+  - LD: Load start value 
+  - PV: Start value 
+Output:
+  - Q: Counter reached 0 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTD_INT
+VAR_INPUT
+	CD : BOOL;
+	LD : BOOL;
+	PV : INT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : INT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter down
+Input:
+  - CD: Count down
+  - LD: Load start value 
+  - PV: Start value 
+Output:
+  - Q: Counter reached 0 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTD_DINT
+VAR_INPUT
+	CD : BOOL;
+	LD : BOOL;
+	PV : DINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : DINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter down
+Input:
+  - CD: Count down
+  - LD: Load start value 
+  - PV: Start value 
+Output:
+  - Q: Counter reached 0 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTD_UDINT
+VAR_INPUT
+	CD : BOOL;
+	LD : BOOL;
+	PV : UDINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : UDINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter down
+Input:
+  - CD: Count down
+  - LD: Load start value 
+  - PV: Start value 
+Output:
+  - Q: Counter reached 0 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTD_LINT
+VAR_INPUT
+	CD : BOOL;
+	LD : BOOL;
+	PV : LINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : LINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter down
+Input:
+  - CD: Count down
+  - LD: Load start value 
+  - PV: Start value 
+Output:
+  - Q: Counter reached 0 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTD_ULINT
+VAR_INPUT
+	CD : BOOL;
+	LD : BOOL;
+	PV : ULINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : ULINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
