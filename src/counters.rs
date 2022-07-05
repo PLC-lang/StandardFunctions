@@ -1,6 +1,6 @@
 use std::ops::{Add, Sub};
 
-use num::{One, Zero};
+use num::{Bounded, One, Zero};
 
 use crate::utils::Signal;
 
@@ -58,6 +58,18 @@ where
     }
 }
 
+unsafe fn ctu<T>(params: &mut CTUParams<T>)
+where
+    T: Add<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
+{
+    if params.r {
+        params.reset_cv();
+    } else if params.r_edge() & (*params.cv < T::max_value()) {
+        params.inc();
+    }
+    params.update_q();
+}
+
 ///.
 /// Counter up for INT
 ///
@@ -67,12 +79,7 @@ where
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTU_INT(params: &mut CTUParams<i16>) {
-    if params.r {
-        params.reset_cv();
-    } else if params.r_edge() & (*params.cv < i16::MAX) {
-        params.inc();
-    }
-    params.update_q();
+    ctu(params);
 }
 
 ///.
@@ -84,12 +91,7 @@ pub unsafe extern "C" fn CTU_INT(params: &mut CTUParams<i16>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTU_DINT(params: &mut CTUParams<i32>) {
-    if params.r {
-        params.reset_cv();
-    } else if params.r_edge() & (*params.cv < i32::MAX) {
-        params.inc();
-    }
-    params.update_q();
+    ctu(params);
 }
 
 ///.
@@ -101,12 +103,7 @@ pub unsafe extern "C" fn CTU_DINT(params: &mut CTUParams<i32>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTU_UDINT(params: &mut CTUParams<u32>) {
-    if params.r {
-        params.reset_cv();
-    } else if params.r_edge() & (*params.cv < u32::MAX) {
-        params.inc();
-    }
-    params.update_q();
+    ctu(params);
 }
 
 ///.
@@ -118,12 +115,7 @@ pub unsafe extern "C" fn CTU_UDINT(params: &mut CTUParams<u32>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTU_LINT(params: &mut CTUParams<i64>) {
-    if params.r {
-        params.reset_cv();
-    } else if params.r_edge() & (*params.cv < i64::MAX) {
-        params.inc();
-    }
-    params.update_q();
+    ctu(params);
 }
 
 ///.
@@ -135,12 +127,7 @@ pub unsafe extern "C" fn CTU_LINT(params: &mut CTUParams<i64>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTU_ULINT(params: &mut CTUParams<u64>) {
-    if params.r {
-        params.reset_cv();
-    } else if params.r_edge() & (*params.cv < u64::MAX) {
-        params.inc();
-    }
-    params.update_q();
+    ctu(params);
 }
 
 #[repr(C)]
@@ -197,6 +184,18 @@ where
     }
 }
 
+unsafe fn ctd<T>(params: &mut CTDParams<T>)
+where
+    T: Sub<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
+{
+    if params.ld {
+        params.load();
+    } else if params.r_edge() & (*params.cv > T::min_value()) {
+        params.dec();
+    }
+    params.update_q();
+}
+
 ///.
 /// Counter down for INT
 ///
@@ -206,12 +205,7 @@ where
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTD_INT(params: &mut CTDParams<i16>) {
-    if params.ld {
-        params.load();
-    } else if params.r_edge() & (*params.cv > i16::MIN) {
-        params.dec();
-    }
-    params.update_q();
+    ctd(params);
 }
 
 ///.
@@ -223,12 +217,7 @@ pub unsafe extern "C" fn CTD_INT(params: &mut CTDParams<i16>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTD_DINT(params: &mut CTDParams<i32>) {
-    if params.ld {
-        params.load();
-    } else if params.r_edge() & (*params.cv > i32::MIN) {
-        params.dec();
-    }
-    params.update_q();
+    ctd(params);
 }
 
 ///.
@@ -240,12 +229,7 @@ pub unsafe extern "C" fn CTD_DINT(params: &mut CTDParams<i32>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTD_UDINT(params: &mut CTDParams<u32>) {
-    if params.ld {
-        params.load();
-    } else if params.r_edge() & (*params.cv > u32::MIN) {
-        params.dec();
-    }
-    params.update_q();
+    ctd(params);
 }
 
 ///.
@@ -257,12 +241,7 @@ pub unsafe extern "C" fn CTD_UDINT(params: &mut CTDParams<u32>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTD_LINT(params: &mut CTDParams<i64>) {
-    if params.ld {
-        params.load();
-    } else if params.r_edge() & (*params.cv > i64::MIN) {
-        params.dec();
-    }
-    params.update_q();
+    ctd(params);
 }
 
 ///.
@@ -274,12 +253,7 @@ pub unsafe extern "C" fn CTD_LINT(params: &mut CTDParams<i64>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTD_ULINT(params: &mut CTDParams<u64>) {
-    if params.ld {
-        params.load();
-    } else if params.r_edge() & (*params.cv > u64::MIN) {
-        params.dec();
-    }
-    params.update_q();
+    ctd(params);
 }
 
 #[repr(C)]
@@ -366,6 +340,29 @@ where
     }
 }
 
+unsafe fn ctud<T>(params: &mut CTUDParams<T>)
+where
+    T: Add<Output = T> + Sub<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
+{
+    if params.r {
+        params.reset();
+    } else if params.ld {
+        params.load();
+    } else {
+        let r_edge_up = params.cu_r_edge();
+        let r_edge_down = params.cd_r_edge();
+        if !(r_edge_up & r_edge_down) {
+            if r_edge_up & (*params.cv < T::max_value()) {
+                params.inc();
+            } else if r_edge_down & (*params.cv > T::min_value()) {
+                params.dec();
+            }
+        }
+    }
+    params.update_qu();
+    params.update_qd();
+}
+
 ///.
 /// Counter up and down for INT
 ///
@@ -375,23 +372,7 @@ where
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_INT(params: &mut CTUDParams<i16>) {
-    if params.r {
-        params.reset();
-    } else if params.ld {
-        params.load();
-    } else {
-        let r_edge_up = params.cu_r_edge();
-        let r_edge_down = params.cd_r_edge();
-        if !(r_edge_up & r_edge_down) {
-            if r_edge_up & (*params.cv < i16::MAX) {
-                params.inc();
-            } else if r_edge_down & (*params.cv > i16::MIN) {
-                params.dec();
-            }
-        }
-    }
-    params.update_qu();
-    params.update_qd();
+    ctud(params);
 }
 
 ///.
@@ -403,23 +384,7 @@ pub unsafe extern "C" fn CTUD_INT(params: &mut CTUDParams<i16>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_DINT(params: &mut CTUDParams<i32>) {
-    if params.r {
-        params.reset();
-    } else if params.ld {
-        params.load();
-    } else {
-        let r_edge_up = params.cu_r_edge();
-        let r_edge_down = params.cd_r_edge();
-        if !(r_edge_up & r_edge_down) {
-            if r_edge_up & (*params.cv < i32::MAX) {
-                params.inc();
-            } else if r_edge_down & (*params.cv > i32::MIN) {
-                params.dec();
-            }
-        }
-    }
-    params.update_qu();
-    params.update_qd();
+    ctud(params);
 }
 
 ///.
@@ -431,23 +396,7 @@ pub unsafe extern "C" fn CTUD_DINT(params: &mut CTUDParams<i32>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_UDINT(params: &mut CTUDParams<u32>) {
-    if params.r {
-        params.reset();
-    } else if params.ld {
-        params.load();
-    } else {
-        let r_edge_up = params.cu_r_edge();
-        let r_edge_down = params.cd_r_edge();
-        if !(r_edge_up & r_edge_down) {
-            if r_edge_up & (*params.cv < u32::MAX) {
-                params.inc();
-            } else if r_edge_down & (*params.cv > u32::MIN) {
-                params.dec();
-            }
-        }
-    }
-    params.update_qu();
-    params.update_qd();
+    ctud(params);
 }
 
 ///.
@@ -459,23 +408,7 @@ pub unsafe extern "C" fn CTUD_UDINT(params: &mut CTUDParams<u32>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_LINT(params: &mut CTUDParams<i64>) {
-    if params.r {
-        params.reset();
-    } else if params.ld {
-        params.load();
-    } else {
-        let r_edge_up = params.cu_r_edge();
-        let r_edge_down = params.cd_r_edge();
-        if !(r_edge_up & r_edge_down) {
-            if r_edge_up & (*params.cv < i64::MAX) {
-                params.inc();
-            } else if r_edge_down & (*params.cv > i64::MIN) {
-                params.dec();
-            }
-        }
-    }
-    params.update_qu();
-    params.update_qd();
+    ctud(params);
 }
 
 ///.
@@ -487,21 +420,5 @@ pub unsafe extern "C" fn CTUD_LINT(params: &mut CTUDParams<i64>) {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_ULINT(params: &mut CTUDParams<u64>) {
-    if params.r {
-        params.reset();
-    } else if params.ld {
-        params.load();
-    } else {
-        let r_edge_up = params.cu_r_edge();
-        let r_edge_down = params.cd_r_edge();
-        if !(r_edge_up & r_edge_down) {
-            if r_edge_up & (*params.cv < u64::MAX) {
-                params.inc();
-            } else if r_edge_down & (*params.cv > u64::MIN) {
-                params.dec();
-            }
-        }
-    }
-    params.update_qu();
-    params.update_qd();
+    ctud(params);
 }
