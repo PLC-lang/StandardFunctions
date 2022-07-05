@@ -41,7 +41,7 @@ where
         }
     }
 
-    unsafe fn reset_cv(&mut self) {
+    unsafe fn reset(&mut self) {
         if !self.cv.is_null() {
             *self.cv = Zero::zero();
         }
@@ -63,7 +63,7 @@ where
     T: Add<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
 {
     if params.r {
-        params.reset_cv();
+        params.reset();
     } else if params.r_edge() & (*params.cv < T::max_value()) {
         params.inc();
     }
