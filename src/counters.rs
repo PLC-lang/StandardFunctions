@@ -1,3 +1,7 @@
+use std::ops::{Add, Sub};
+
+use num::{One, Zero};
+
 use crate::utils::Signal;
 
 #[repr(C)]
@@ -27,17 +31,30 @@ where
     }
 }
 
-impl<T> CTUParams<T> {
-    unsafe fn set_q(&mut self, q_value: bool) {
+impl<T> CTUParams<T>
+where
+    T: Add<Output = T> + One + Zero + Copy + PartialOrd,
+{
+    unsafe fn update_q(&mut self) {
         if !self.q.is_null() {
-            *self.q = q_value;
+            *self.q = *self.cv >= self.pv
         }
     }
 
-    unsafe fn set_cv(&mut self, cv_value: T) {
+    unsafe fn reset_cv(&mut self) {
         if !self.cv.is_null() {
-            *self.cv = cv_value;
+            *self.cv = Zero::zero();
         }
+    }
+
+    unsafe fn inc(&mut self) {
+        if !self.cv.is_null() {
+            *self.cv = *self.cv + One::one();
+        }
+    }
+
+    fn r_edge(&mut self) -> bool {
+        self.internal.rising_edge(self.cu)
     }
 }
 
@@ -51,11 +68,11 @@ impl<T> CTUParams<T> {
 #[no_mangle]
 pub unsafe extern "C" fn CTU_INT(params: &mut CTUParams<i16>) {
     if params.r {
-        params.set_cv(0);
-    } else if params.internal.rising_edge(params.cu) & (*params.cv < i16::MAX) {
-        params.set_cv(*params.cv + 1);
+        params.reset_cv();
+    } else if params.r_edge() & (*params.cv < i16::MAX) {
+        params.inc();
     }
-    params.set_q(*params.cv >= params.pv);
+    params.update_q();
 }
 
 ///.
@@ -68,11 +85,11 @@ pub unsafe extern "C" fn CTU_INT(params: &mut CTUParams<i16>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTU_DINT(params: &mut CTUParams<i32>) {
     if params.r {
-        params.set_cv(0);
-    } else if params.internal.rising_edge(params.cu) & (*params.cv < i32::MAX) {
-        params.set_cv(*params.cv + 1);
+        params.reset_cv();
+    } else if params.r_edge() & (*params.cv < i32::MAX) {
+        params.inc();
     }
-    params.set_q(*params.cv >= params.pv);
+    params.update_q();
 }
 
 ///.
@@ -85,11 +102,11 @@ pub unsafe extern "C" fn CTU_DINT(params: &mut CTUParams<i32>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTU_UDINT(params: &mut CTUParams<u32>) {
     if params.r {
-        params.set_cv(0);
-    } else if params.internal.rising_edge(params.cu) & (*params.cv < u32::MAX) {
-        params.set_cv(*params.cv + 1);
+        params.reset_cv();
+    } else if params.r_edge() & (*params.cv < u32::MAX) {
+        params.inc();
     }
-    params.set_q(*params.cv >= params.pv);
+    params.update_q();
 }
 
 ///.
@@ -102,11 +119,11 @@ pub unsafe extern "C" fn CTU_UDINT(params: &mut CTUParams<u32>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTU_LINT(params: &mut CTUParams<i64>) {
     if params.r {
-        params.set_cv(0);
-    } else if params.internal.rising_edge(params.cu) & (*params.cv < i64::MAX) {
-        params.set_cv(*params.cv + 1);
+        params.reset_cv();
+    } else if params.r_edge() & (*params.cv < i64::MAX) {
+        params.inc();
     }
-    params.set_q(*params.cv >= params.pv);
+    params.update_q();
 }
 
 ///.
@@ -119,11 +136,11 @@ pub unsafe extern "C" fn CTU_LINT(params: &mut CTUParams<i64>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTU_ULINT(params: &mut CTUParams<u64>) {
     if params.r {
-        params.set_cv(0);
-    } else if params.internal.rising_edge(params.cu) & (*params.cv < u64::MAX) {
-        params.set_cv(*params.cv + 1);
+        params.reset_cv();
+    } else if params.r_edge() & (*params.cv < u64::MAX) {
+        params.inc();
     }
-    params.set_q(*params.cv >= params.pv);
+    params.update_q();
 }
 
 #[repr(C)]
@@ -153,17 +170,30 @@ where
     }
 }
 
-impl<T> CTDParams<T> {
-    unsafe fn set_q(&mut self, q_value: bool) {
+impl<T> CTDParams<T>
+where
+    T: Sub<Output = T> + One + Zero + Copy + PartialOrd,
+{
+    unsafe fn update_q(&mut self) {
         if !self.q.is_null() {
-            *self.q = q_value;
+            *self.q = *self.cv <= Zero::zero();
         }
     }
 
-    unsafe fn set_cv(&mut self, cv_value: T) {
+    unsafe fn load(&mut self) {
         if !self.cv.is_null() {
-            *self.cv = cv_value;
+            *self.cv = self.pv;
         }
+    }
+
+    unsafe fn dec(&mut self) {
+        if !self.cv.is_null() {
+            *self.cv = *self.cv - One::one();
+        }
+    }
+
+    fn r_edge(&mut self) -> bool {
+        self.internal.rising_edge(self.cd)
     }
 }
 
@@ -177,11 +207,11 @@ impl<T> CTDParams<T> {
 #[no_mangle]
 pub unsafe extern "C" fn CTD_INT(params: &mut CTDParams<i16>) {
     if params.ld {
-        params.set_cv(params.pv);
-    } else if params.internal.rising_edge(params.cd) & (*params.cv > i16::MIN) {
-        params.set_cv(*params.cv - 1);
+        params.load();
+    } else if params.r_edge() & (*params.cv > i16::MIN) {
+        params.dec();
     }
-    params.set_q(*params.cv <= 0);
+    params.update_q();
 }
 
 ///.
@@ -194,11 +224,11 @@ pub unsafe extern "C" fn CTD_INT(params: &mut CTDParams<i16>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTD_DINT(params: &mut CTDParams<i32>) {
     if params.ld {
-        params.set_cv(params.pv);
-    } else if params.internal.rising_edge(params.cd) & (*params.cv > i32::MIN) {
-        params.set_cv(*params.cv - 1);
+        params.load();
+    } else if params.r_edge() & (*params.cv > i32::MIN) {
+        params.dec();
     }
-    params.set_q(*params.cv <= 0);
+    params.update_q();
 }
 
 ///.
@@ -211,11 +241,11 @@ pub unsafe extern "C" fn CTD_DINT(params: &mut CTDParams<i32>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTD_UDINT(params: &mut CTDParams<u32>) {
     if params.ld {
-        params.set_cv(params.pv);
-    } else if params.internal.rising_edge(params.cd) & (*params.cv > u32::MIN) {
-        params.set_cv(*params.cv - 1);
+        params.load();
+    } else if params.r_edge() & (*params.cv > u32::MIN) {
+        params.dec();
     }
-    params.set_q(*params.cv == 0);
+    params.update_q();
 }
 
 ///.
@@ -228,11 +258,11 @@ pub unsafe extern "C" fn CTD_UDINT(params: &mut CTDParams<u32>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTD_LINT(params: &mut CTDParams<i64>) {
     if params.ld {
-        params.set_cv(params.pv);
-    } else if params.internal.rising_edge(params.cd) & (*params.cv > i64::MIN) {
-        params.set_cv(*params.cv - 1);
+        params.load();
+    } else if params.r_edge() & (*params.cv > i64::MIN) {
+        params.dec();
     }
-    params.set_q(*params.cv <= 0);
+    params.update_q();
 }
 
 ///.
@@ -245,11 +275,11 @@ pub unsafe extern "C" fn CTD_LINT(params: &mut CTDParams<i64>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTD_ULINT(params: &mut CTDParams<u64>) {
     if params.ld {
-        params.set_cv(params.pv);
-    } else if params.internal.rising_edge(params.cd) & (*params.cv > u64::MIN) {
-        params.set_cv(*params.cv - 1);
+        params.load();
+    } else if params.r_edge() & (*params.cv > u64::MIN) {
+        params.dec();
     }
-    params.set_q(*params.cv == 0);
+    params.update_q();
 }
 
 #[repr(C)]
@@ -287,23 +317,52 @@ where
     }
 }
 
-impl<T> CTUDParams<T> {
-    unsafe fn set_qu(&mut self, qu_value: bool) {
+impl<T> CTUDParams<T>
+where
+    T: Add<Output = T> + Sub<Output = T> + One + Zero + Copy + PartialOrd,
+{
+    unsafe fn update_qu(&mut self) {
         if !self.qu.is_null() {
-            *self.qu = qu_value;
+            *self.qu = *self.cv >= self.pv
         }
     }
 
-    unsafe fn set_qd(&mut self, qd_value: bool) {
+    unsafe fn update_qd(&mut self) {
         if !self.qd.is_null() {
-            *self.qd = qd_value;
+            *self.qd = *self.cv <= Zero::zero();
         }
     }
 
-    unsafe fn set_cv(&mut self, cv_value: T) {
+    unsafe fn reset(&mut self) {
         if !self.cv.is_null() {
-            *self.cv = cv_value;
+            *self.cv = Zero::zero();
         }
+    }
+
+    unsafe fn load(&mut self) {
+        if !self.cv.is_null() {
+            *self.cv = self.pv;
+        }
+    }
+
+    unsafe fn inc(&mut self) {
+        if !self.cv.is_null() {
+            *self.cv = *self.cv + One::one();
+        }
+    }
+
+    unsafe fn dec(&mut self) {
+        if !self.cv.is_null() {
+            *self.cv = *self.cv - One::one();
+        }
+    }
+
+    fn cu_r_edge(&mut self) -> bool {
+        self.internal_up.rising_edge(self.cu)
+    }
+
+    fn cd_r_edge(&mut self) -> bool {
+        self.internal_down.rising_edge(self.cd)
     }
 }
 
@@ -317,22 +376,22 @@ impl<T> CTUDParams<T> {
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_INT(params: &mut CTUDParams<i16>) {
     if params.r {
-        params.set_cv(0);
+        params.reset();
     } else if params.ld {
-        params.set_cv(params.pv);
+        params.load();
     } else {
-        let r_edge_up = params.internal_up.rising_edge(params.cu);
-        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        let r_edge_up = params.cu_r_edge();
+        let r_edge_down = params.cd_r_edge();
         if !(r_edge_up & r_edge_down) {
             if r_edge_up & (*params.cv < i16::MAX) {
-                params.set_cv(*params.cv + 1);
+                params.inc();
             } else if r_edge_down & (*params.cv > i16::MIN) {
-                params.set_cv(*params.cv - 1);
+                params.dec();
             }
         }
     }
-    params.set_qu(*params.cv >= params.pv);
-    params.set_qd(*params.cv <= 0);
+    params.update_qu();
+    params.update_qd();
 }
 
 ///.
@@ -345,22 +404,22 @@ pub unsafe extern "C" fn CTUD_INT(params: &mut CTUDParams<i16>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_DINT(params: &mut CTUDParams<i32>) {
     if params.r {
-        params.set_cv(0);
+        params.reset();
     } else if params.ld {
-        params.set_cv(params.pv);
+        params.load();
     } else {
-        let r_edge_up = params.internal_up.rising_edge(params.cu);
-        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        let r_edge_up = params.cu_r_edge();
+        let r_edge_down = params.cd_r_edge();
         if !(r_edge_up & r_edge_down) {
             if r_edge_up & (*params.cv < i32::MAX) {
-                params.set_cv(*params.cv + 1);
+                params.inc();
             } else if r_edge_down & (*params.cv > i32::MIN) {
-                params.set_cv(*params.cv - 1);
+                params.dec();
             }
         }
     }
-    params.set_qu(*params.cv >= params.pv);
-    params.set_qd(*params.cv <= 0);
+    params.update_qu();
+    params.update_qd();
 }
 
 ///.
@@ -373,22 +432,22 @@ pub unsafe extern "C" fn CTUD_DINT(params: &mut CTUDParams<i32>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_UDINT(params: &mut CTUDParams<u32>) {
     if params.r {
-        params.set_cv(0);
+        params.reset();
     } else if params.ld {
-        params.set_cv(params.pv);
+        params.load();
     } else {
-        let r_edge_up = params.internal_up.rising_edge(params.cu);
-        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        let r_edge_up = params.cu_r_edge();
+        let r_edge_down = params.cd_r_edge();
         if !(r_edge_up & r_edge_down) {
             if r_edge_up & (*params.cv < u32::MAX) {
-                params.set_cv(*params.cv + 1);
+                params.inc();
             } else if r_edge_down & (*params.cv > u32::MIN) {
-                params.set_cv(*params.cv - 1);
+                params.dec();
             }
         }
     }
-    params.set_qu(*params.cv >= params.pv);
-    params.set_qd(*params.cv == 0);
+    params.update_qu();
+    params.update_qd();
 }
 
 ///.
@@ -401,22 +460,22 @@ pub unsafe extern "C" fn CTUD_UDINT(params: &mut CTUDParams<u32>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_LINT(params: &mut CTUDParams<i64>) {
     if params.r {
-        params.set_cv(0);
+        params.reset();
     } else if params.ld {
-        params.set_cv(params.pv);
+        params.load();
     } else {
-        let r_edge_up = params.internal_up.rising_edge(params.cu);
-        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        let r_edge_up = params.cu_r_edge();
+        let r_edge_down = params.cd_r_edge();
         if !(r_edge_up & r_edge_down) {
             if r_edge_up & (*params.cv < i64::MAX) {
-                params.set_cv(*params.cv + 1);
+                params.inc();
             } else if r_edge_down & (*params.cv > i64::MIN) {
-                params.set_cv(*params.cv - 1);
+                params.dec();
             }
         }
     }
-    params.set_qu(*params.cv >= params.pv);
-    params.set_qd(*params.cv <= 0);
+    params.update_qu();
+    params.update_qd();
 }
 
 ///.
@@ -429,20 +488,20 @@ pub unsafe extern "C" fn CTUD_LINT(params: &mut CTUDParams<i64>) {
 #[no_mangle]
 pub unsafe extern "C" fn CTUD_ULINT(params: &mut CTUDParams<u64>) {
     if params.r {
-        params.set_cv(0);
+        params.reset();
     } else if params.ld {
-        params.set_cv(params.pv);
+        params.load();
     } else {
-        let r_edge_up = params.internal_up.rising_edge(params.cu);
-        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        let r_edge_up = params.cu_r_edge();
+        let r_edge_down = params.cd_r_edge();
         if !(r_edge_up & r_edge_down) {
             if r_edge_up & (*params.cv < u64::MAX) {
-                params.set_cv(*params.cv + 1);
+                params.inc();
             } else if r_edge_down & (*params.cv > u64::MIN) {
-                params.set_cv(*params.cv - 1);
+                params.dec();
             }
         }
     }
-    params.set_qu(*params.cv >= params.pv);
-    params.set_qd(*params.cv == 0);
+    params.update_qu();
+    params.update_qd();
 }

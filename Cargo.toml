@@ -15,6 +15,7 @@ iec61131std = { path = ".", features = ["mock_time"] }
 
 [dependencies]
 chrono = "0.4"
+num = "0.4"
 
 [features]
 default = []
