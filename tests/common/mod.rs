@@ -333,6 +333,11 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CTD_UDINT", iec61131std::counters::CTD_UDINT as usize),
         ("CTD_LINT", iec61131std::counters::CTD_LINT as usize),
         ("CTD_ULINT", iec61131std::counters::CTD_ULINT as usize),
+        ("CTUD_INT", iec61131std::counters::CTUD_INT as usize),
+        ("CTUD_DINT", iec61131std::counters::CTUD_DINT as usize),
+        ("CTUD_UDINT", iec61131std::counters::CTUD_UDINT as usize),
+        ("CTUD_LINT", iec61131std::counters::CTUD_LINT as usize),
+        ("CTUD_ULINT", iec61131std::counters::CTUD_ULINT as usize),
     ];
 
     let variables = vec![

@@ -251,3 +251,198 @@ pub unsafe extern "C" fn CTD_ULINT(params: &mut CTDParams<u64>) {
     }
     params.set_q(*params.cv == 0);
 }
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct CTUDParams<T> {
+    cu: bool,
+    cd: bool,
+    r: bool,
+    ld: bool,
+    pv: T,
+    qu: *mut bool,
+    qd: *mut bool,
+    cv: *mut T,
+    internal_up: Signal,
+    internal_down: Signal,
+}
+
+impl<T> Default for CTUDParams<T>
+where
+    T: Default,
+{
+    fn default() -> Self {
+        Self {
+            cu: Default::default(),
+            cd: Default::default(),
+            r: Default::default(),
+            ld: Default::default(),
+            pv: Default::default(),
+            qu: std::ptr::null_mut(),
+            qd: std::ptr::null_mut(),
+            cv: std::ptr::null_mut(),
+            internal_up: Default::default(),
+            internal_down: Default::default(),
+        }
+    }
+}
+
+impl<T> CTUDParams<T> {
+    unsafe fn set_qu(&mut self, qu_value: bool) {
+        if !self.qu.is_null() {
+            *self.qu = qu_value;
+        }
+    }
+
+    unsafe fn set_qd(&mut self, qd_value: bool) {
+        if !self.qd.is_null() {
+            *self.qd = qd_value;
+        }
+    }
+
+    unsafe fn set_cv(&mut self, cv_value: T) {
+        if !self.cv.is_null() {
+            *self.cv = cv_value;
+        }
+    }
+}
+
+///.
+/// Counter up and down for INT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTUD_INT(params: &mut CTUDParams<i16>) {
+    if params.r {
+        params.set_cv(0);
+    } else if params.ld {
+        params.set_cv(params.pv);
+    } else {
+        let r_edge_up = params.internal_up.rising_edge(params.cu);
+        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        if !(r_edge_up & r_edge_down) {
+            if r_edge_up & (*params.cv < i16::MAX) {
+                params.set_cv(*params.cv + 1);
+            } else if r_edge_down & (*params.cv > i16::MIN) {
+                params.set_cv(*params.cv - 1);
+            }
+        }
+    }
+    params.set_qu(*params.cv >= params.pv);
+    params.set_qd(*params.cv <= 0);
+}
+
+///.
+/// Counter up and down for DINT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTUD_DINT(params: &mut CTUDParams<i32>) {
+    if params.r {
+        params.set_cv(0);
+    } else if params.ld {
+        params.set_cv(params.pv);
+    } else {
+        let r_edge_up = params.internal_up.rising_edge(params.cu);
+        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        if !(r_edge_up & r_edge_down) {
+            if r_edge_up & (*params.cv < i32::MAX) {
+                params.set_cv(*params.cv + 1);
+            } else if r_edge_down & (*params.cv > i32::MIN) {
+                params.set_cv(*params.cv - 1);
+            }
+        }
+    }
+    params.set_qu(*params.cv >= params.pv);
+    params.set_qd(*params.cv <= 0);
+}
+
+///.
+/// Counter up and down for UDINT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTUD_UDINT(params: &mut CTUDParams<u32>) {
+    if params.r {
+        params.set_cv(0);
+    } else if params.ld {
+        params.set_cv(params.pv);
+    } else {
+        let r_edge_up = params.internal_up.rising_edge(params.cu);
+        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        if !(r_edge_up & r_edge_down) {
+            if r_edge_up & (*params.cv < u32::MAX) {
+                params.set_cv(*params.cv + 1);
+            } else if r_edge_down & (*params.cv > u32::MIN) {
+                params.set_cv(*params.cv - 1);
+            }
+        }
+    }
+    params.set_qu(*params.cv >= params.pv);
+    params.set_qd(*params.cv == 0);
+}
+
+///.
+/// Counter up and down for LINT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTUD_LINT(params: &mut CTUDParams<i64>) {
+    if params.r {
+        params.set_cv(0);
+    } else if params.ld {
+        params.set_cv(params.pv);
+    } else {
+        let r_edge_up = params.internal_up.rising_edge(params.cu);
+        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        if !(r_edge_up & r_edge_down) {
+            if r_edge_up & (*params.cv < i64::MAX) {
+                params.set_cv(*params.cv + 1);
+            } else if r_edge_down & (*params.cv > i64::MIN) {
+                params.set_cv(*params.cv - 1);
+            }
+        }
+    }
+    params.set_qu(*params.cv >= params.pv);
+    params.set_qd(*params.cv <= 0);
+}
+
+///.
+/// Counter up and down for ULINT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTUD_ULINT(params: &mut CTUDParams<u64>) {
+    if params.r {
+        params.set_cv(0);
+    } else if params.ld {
+        params.set_cv(params.pv);
+    } else {
+        let r_edge_up = params.internal_up.rising_edge(params.cu);
+        let r_edge_down = params.internal_down.rising_edge(params.cd);
+        if !(r_edge_up & r_edge_down) {
+            if r_edge_up & (*params.cv < u64::MAX) {
+                params.set_cv(*params.cv + 1);
+            } else if r_edge_down & (*params.cv > u64::MIN) {
+                params.set_cv(*params.cv - 1);
+            }
+        }
+    }
+    params.set_qu(*params.cv >= params.pv);
+    params.set_qd(*params.cv == 0);
+}
