@@ -1,0 +1,134 @@
+(******************************************************************************
+Description: Counter up
+Input:
+  - CU: Count up 
+  - R: Reset counter to 0 
+  - PV: Counter limit 
+Output:
+  - Q: Counter reached limit 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTU_INT
+VAR_INPUT
+	CU : BOOL;
+	R : BOOL;
+	PV : INT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : INT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter up
+Input:
+  - CU: Count up 
+  - R: Reset counter to 0 
+  - PV: Counter limit 
+Output:
+  - Q: Counter reached limit 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTU_DINT
+VAR_INPUT
+	CU : BOOL;
+	R : BOOL;
+	PV : DINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : DINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter up
+Input:
+  - CU: Count up 
+  - R: Reset counter to 0 
+  - PV: Counter limit 
+Output:
+  - Q: Counter reached limit 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTU_UDINT
+VAR_INPUT
+	CU : BOOL;
+	R : BOOL;
+	PV : UDINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : UDINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter up
+Input:
+  - CU: Count up 
+  - R: Reset counter to 0 
+  - PV: Counter limit 
+Output:
+  - Q: Counter reached limit 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTU_LINT
+VAR_INPUT
+	CU : BOOL;
+	R : BOOL;
+	PV : LINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : LINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK
+
+(******************************************************************************
+Description: Counter up
+Input:
+  - CU: Count up 
+  - R: Reset counter to 0 
+  - PV: Counter limit 
+Output:
+  - Q: Counter reached limit 
+  - CV: Current counter value 
+Return: Output is used as return value
+******************************************************************************)
+{external}
+FUNCTION_BLOCK CTU_ULINT
+VAR_INPUT
+	CU : BOOL;
+	R : BOOL;
+	PV : ULINT;
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+	CV : ULINT;
+END_VAR
+VAR
+	M : BOOL;
+END_VAR
+END_FUNCTION_BLOCK

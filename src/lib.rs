@@ -6,6 +6,7 @@ use chrono::TimeZone;
 
 pub mod bistable_functionblocks;
 pub mod bit_shift;
+pub mod counters;
 pub mod flanks;
 pub mod time;
 pub mod timers;

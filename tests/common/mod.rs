@@ -323,6 +323,11 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("RS", iec61131std::bistable_functionblocks::RS as usize),
         ("R_TRIG", iec61131std::flanks::R_TRIG as usize),
         ("F_TRIG", iec61131std::flanks::F_TRIG as usize),
+        ("CTU_INT", iec61131std::counters::CTU_INT as usize),
+        ("CTU_DINT", iec61131std::counters::CTU_DINT as usize),
+        ("CTU_UDINT", iec61131std::counters::CTU_UDINT as usize),
+        ("CTU_LINT", iec61131std::counters::CTU_LINT as usize),
+        ("CTU_ULINT", iec61131std::counters::CTU_ULINT as usize),
     ];
 
     let variables = vec![
