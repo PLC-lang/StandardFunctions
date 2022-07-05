@@ -1,6 +1,4 @@
-use std::ops::{Add, Sub};
-
-use num::{Bounded, One, Zero};
+use num::{Bounded, Integer, One, Zero};
 
 use crate::utils::Signal;
 
@@ -33,7 +31,7 @@ where
 
 impl<T> CTUParams<T>
 where
-    T: Add<Output = T> + One + Zero + Copy + PartialOrd,
+    T: Integer + Copy,
 {
     unsafe fn update_q(&mut self) {
         if !self.q.is_null() {
@@ -60,7 +58,7 @@ where
 
 unsafe fn ctu<T>(params: &mut CTUParams<T>)
 where
-    T: Add<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
+    T: Integer + Copy + Bounded,
 {
     if params.r {
         params.reset();
@@ -159,7 +157,7 @@ where
 
 impl<T> CTDParams<T>
 where
-    T: Sub<Output = T> + One + Zero + Copy + PartialOrd,
+    T: Integer + Copy,
 {
     unsafe fn update_q(&mut self) {
         if !self.q.is_null() {
@@ -186,7 +184,7 @@ where
 
 unsafe fn ctd<T>(params: &mut CTDParams<T>)
 where
-    T: Sub<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
+    T: Integer + Copy + Bounded,
 {
     if params.ld {
         params.load();
@@ -293,7 +291,7 @@ where
 
 impl<T> CTUDParams<T>
 where
-    T: Add<Output = T> + Sub<Output = T> + One + Zero + Copy + PartialOrd,
+    T: Integer + Copy,
 {
     unsafe fn update_qu(&mut self) {
         if !self.qu.is_null() {
@@ -342,7 +340,7 @@ where
 
 unsafe fn ctud<T>(params: &mut CTUDParams<T>)
 where
-    T: Add<Output = T> + Sub<Output = T> + One + Zero + Copy + PartialOrd + Bounded,
+    T: Integer + Copy + Bounded,
 {
     if params.r {
         params.reset();
