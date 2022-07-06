@@ -38,7 +38,7 @@ fn is_valid_real() {
 		inf_ := IS_VALID(INF);
 		nan_ := IS_VALID(NaN);
 	END_PROGRAM";
-    let sources = add_std!(src, "validation.st");
+    let sources = add_std!(src, "validation_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     // MIN valid
@@ -77,7 +77,7 @@ fn is_valid_lreal() {
 		inf_ := IS_VALID(INF);
 		nan_ := IS_VALID(NaN);
 	END_PROGRAM";
-    let sources = add_std!(src, "validation.st");
+    let sources = add_std!(src, "validation_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     // MIN valid
@@ -124,7 +124,7 @@ fn is_valid_byte() {
 		v_invalid := 2#0010_1100; // in BCD 2_[12] => INVALID
 		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
-    let sources = add_std!(src, "validation.st");
+    let sources = add_std!(src, "validation_functions.st");
     let mut maintype = StructBCD::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert!(maintype.valid);
@@ -149,7 +149,7 @@ fn is_valid_word() {
 		v_invalid := 2#0100_1011_0111_0001; // in BCD 4_[11]_7_1 => INVALID
 		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
-    let sources = add_std!(src, "validation.st");
+    let sources = add_std!(src, "validation_functions.st");
     let mut maintype = StructBCD::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert!(maintype.valid);
@@ -174,7 +174,7 @@ fn is_valid_dword() {
 		v_invalid := 2#0100_1011_0111_0001_0100_1011_0111_0001; // in BCD 4_[11]_7_1_4_11_7_1 => INVALID
 		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
-    let sources = add_std!(src, "validation.st");
+    let sources = add_std!(src, "validation_functions.st");
     let mut maintype = StructBCD::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert!(maintype.valid);
@@ -199,7 +199,7 @@ fn is_valid_lword() {
 		v_invalid := 2#0100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_1111; // in BCD 4_0_0_0_0_0_0_0_0_0_0_0_0_0_0_[15] => INVALID
 		invalid	:= IS_VALID_BCD(v_invalid);
 	END_PROGRAM";
-    let sources = add_std!(src, "validation.st");
+    let sources = add_std!(src, "validation_functions.st");
     let mut maintype = StructBCD::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert!(maintype.valid);

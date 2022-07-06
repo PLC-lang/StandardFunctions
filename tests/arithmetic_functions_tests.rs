@@ -4,7 +4,7 @@ mod common;
 use common::add_std;
 use std::fmt::Debug;
 
-use crate::common::compile_and_run;
+use common::compile_and_run;
 
 #[derive(Default, Debug)]
 struct MainType<T>
@@ -25,7 +25,7 @@ fn sqrt_called_on_real() {
             b := SQRT(REAL#1.0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -43,7 +43,7 @@ fn sqrt_called_on_lreal() {
             b := SQRT(LREAL#1.0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -62,7 +62,7 @@ fn sqrt_called_on_none_real() {
             b := SQRT(DINT_TO_REAL(1));
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st", "num.st");
+    let sources = add_std!(src, "arithmetic_functions.st", "num.st");
     let mut maintype = MainType::<i32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -80,7 +80,7 @@ fn ln_called_on_real() {
             b := LN(REAL#1.0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -98,7 +98,7 @@ fn ln_called_on_lreal() {
             b := LN(LREAL#1.0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -116,7 +116,7 @@ fn log_called_on_real() {
                 b := LOG(REAL#100);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -134,7 +134,7 @@ fn log_called_on_lreal() {
                 b := LOG(LREAL#100);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -152,7 +152,7 @@ fn exp_called_on_real() {
             b := EXP(REAL#0.0) - REAL#1.0;
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -170,7 +170,7 @@ fn exp_called_on_lreal() {
             b := EXP(LREAL#0.0) - LREAL#1.0;
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -188,7 +188,7 @@ fn sin_called_on_real() {
             b := SIN(REAL#0.0); 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -206,7 +206,7 @@ fn sin_called_on_lreal() {
             b := SIN(LREAL#0.0); 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -224,7 +224,7 @@ fn cos_called_on_real() {
             b := COS(REAL#0.0) - REAL#1.0; 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -242,7 +242,7 @@ fn cos_called_on_lreal() {
             b := COS(LREAL#0.0) - LREAL#1.0; 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -260,7 +260,7 @@ fn tan_called_on_real() {
             b := TAN(PI_REAL); 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -278,7 +278,7 @@ fn tan_called_on_lreal() {
             a := TAN(PI_LREAL); 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -295,7 +295,7 @@ fn asin_called_on_real() {
             a := ASIN(REAL#1.0) - FRAC_PI_2_REAL;
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -311,7 +311,7 @@ fn asin_called_on_lreal() {
             a := ASIN(LREAL#1.0) - FRAC_PI_2_LREAL;
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -327,7 +327,7 @@ fn acos_called_on_real() {
             a := ACOS(REAL#0.0) - FRAC_PI_2_REAL;
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -343,7 +343,7 @@ fn acos_called_on_lreal() {
             a := ACOS(LREAL#0.0) - FRAC_PI_2_LREAL;
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -359,7 +359,7 @@ fn atan_called_on_real() {
             a := ATAN(REAL#1.0) - FRAC_PI_4_REAL; 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -375,7 +375,7 @@ fn atan_called_on_lreal() {
             a := ATAN(LREAL#1.0) - FRAC_PI_4_LREAL; 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -392,7 +392,7 @@ fn atan2_called_on_real() {
             b := ATAN2(REAL#3.0, REAL#-3.0) - (REAL#3.0 * FRAC_PI_4_REAL); 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
@@ -410,7 +410,7 @@ fn atan2_called_on_lreal() {
             b := ATAN2(LREAL#3.0, LREAL#-3.0) - (REAL#3.0 * FRAC_PI_4_LREAL); 
             END_PROGRAM
         ";
-    let sources = add_std!(src, "math.st");
+    let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
 
