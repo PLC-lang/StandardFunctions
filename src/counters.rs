@@ -76,6 +76,18 @@ where
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
+pub unsafe extern "C" fn CTU(params: &mut CTUParams<i16>) {
+    ctu(params);
+}
+
+///.
+/// Counter up for INT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
 pub unsafe extern "C" fn CTU_INT(params: &mut CTUParams<i16>) {
     ctu(params);
 }
@@ -192,6 +204,18 @@ where
         params.dec();
     }
     params.update_q();
+}
+
+///.
+/// Counter down for INT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTD(params: &mut CTDParams<i16>) {
+    ctd(params);
 }
 
 ///.
@@ -359,6 +383,18 @@ where
     }
     params.update_qu();
     params.update_qd();
+}
+
+///.
+/// Counter up and down for INT
+///
+/// # Safety
+/// Working with raw pointers
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CTUD(params: &mut CTUDParams<i16>) {
+    ctud(params);
 }
 
 ///.

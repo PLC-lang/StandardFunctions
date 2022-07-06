@@ -19,6 +19,50 @@ struct CTUType<T> {
 }
 
 #[test]
+fn ctu() {
+    let prog = r#"
+        PROGRAM main
+		VAR
+			ctu_inst : CTU;
+			Q_res : BOOL;
+			CV_res : INT;
+		END_VAR
+			// count up until Q_res true and then reset CV_res
+			IF Q_res THEN
+				ctu_inst(CU:= TRUE, R:= TRUE, PV:= INT#3, Q:= Q_res, CV:= CV_res);
+			ELSE
+				ctu_inst(CU:= TRUE, R:= FALSE, PV:= INT#3, Q:= Q_res, CV:= CV_res);
+				// input CU evaluated by R_EDGE, this call will enable to count up again
+				ctu_inst(CU:= FALSE, R:= FALSE, PV:= INT#3, Q:= Q_res, CV:= CV_res);
+			END_IF
+        END_PROGRAM
+    "#;
+
+    let source = add_std!(prog, "counters.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = CTUType::<i16> {
+        ..CTUType::default()
+    };
+    // count up
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.q);
+    assert_eq!(main_inst.cv, 1);
+    // count up
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.q);
+    assert_eq!(main_inst.cv, 2);
+    // count up
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.q);
+    assert_eq!(main_inst.cv, 3);
+    // reset
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.q);
+    assert_eq!(main_inst.cv, 0);
+}
+
+#[test]
 fn ctu_int() {
     let prog = r#"
         PROGRAM main
@@ -245,6 +289,52 @@ struct CTDType<T> {
     load: bool,
     q: bool,
     cv: T,
+}
+
+#[test]
+fn ctd() {
+    let prog = r#"
+        PROGRAM main
+		VAR
+			ctd_inst : CTD;
+			load : BOOL := TRUE;
+			Q_res : BOOL;
+			CV_res : INT;
+		END_VAR
+			// load PV value
+			IF load THEN
+				ctd_inst(CD:= TRUE, LD:= load, PV:= INT#3, Q:= Q_res, CV:= CV_res);
+				load := FALSE;
+			END_IF
+			ctd_inst(CD:= TRUE, LD:= load, PV:= INT#3, Q:= Q_res, CV:= CV_res);
+			// input CD evaluated by R_EDGE, this call will enable to count down again
+			ctd_inst(CD:= FALSE, LD:= load, PV:= INT#3, Q:= Q_res, CV:= CV_res);
+        END_PROGRAM
+    "#;
+
+    let source = add_std!(prog, "counters.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = CTDType::<i16> {
+        load: true,
+        ..CTDType::default()
+    };
+    // count down
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.q);
+    assert_eq!(main_inst.cv, 2);
+    // count down
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.q);
+    assert_eq!(main_inst.cv, 1);
+    // count down
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.q);
+    assert_eq!(main_inst.cv, 0);
+    // count down
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.q);
+    assert_eq!(main_inst.cv, -1);
 }
 
 #[test]
@@ -486,6 +576,84 @@ struct CTUDType<T> {
     qd: bool,
     cv: T,
     i: u8,
+}
+
+#[test]
+fn ctud() {
+    let prog = r#"
+        PROGRAM main
+		VAR
+			ctud_inst : CTUD;
+			load : BOOL := TRUE;
+			QU_res : BOOL;
+			QD_res : BOOL;
+			CV_res : INT;
+			i : SINT;
+		END_VAR
+			// 1st call, load PV value
+			IF load THEN
+				ctud_inst(CU:= FALSE, CD:= FALSE, R:= FALSE, LD:= TRUE, PV:= INT#1, QU:= QU_res, QD:= QD_res, CV:= CV_res);
+				load := FALSE;
+			END_IF
+
+			// 2nd call, CU/CD both true, nothing should happen
+			IF i = 1 THEN
+				ctud_inst(CU:= TRUE, CD:= TRUE, R:= FALSE, LD:= FALSE, PV:= INT#1, QU:= QU_res, QD:= QD_res, CV:= CV_res);
+			END_IF
+
+			// 3rd call, count down
+			IF i = 2 THEN
+				// input CD evaluated by R_EDGE, this call will enable count down again
+				ctud_inst(CU:= FALSE, CD:= FALSE, R:= FALSE, LD:= FALSE, PV:= INT#1, QU:= QU_res, QD:= QD_res, CV:= CV_res);
+				ctud_inst(CU:= FALSE, CD:= TRUE, R:= FALSE, LD:= FALSE, PV:= INT#1, QU:= QU_res, QD:= QD_res, CV:= CV_res);
+			END_IF
+
+			// 4th call, count up
+			IF i = 3 THEN
+				// input CU evaluated by R_EDGE, third call enabled count up again
+				ctud_inst(CU:= TRUE, CD:= FALSE, R:= FALSE, LD:= FALSE, PV:= INT#1, QU:= QU_res, QD:= QD_res, CV:= CV_res);
+			END_IF
+
+			// 5th call, reset
+			IF i = 4 THEN
+				ctud_inst(CU:= FALSE, CD:= FALSE, R:= TRUE, LD:= FALSE, PV:= INT#1, QU:= QU_res, QD:= QD_res, CV:= CV_res);
+			END_IF
+			i := i + 1;
+        END_PROGRAM
+    "#;
+
+    let source = add_std!(prog, "counters.st");
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    let mut main_inst = CTUDType::<i16> {
+        load: true,
+        ..CTUDType::default()
+    };
+    // 1st call, load PV value
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.qu);
+    assert!(!main_inst.qd);
+    assert_eq!(main_inst.cv, 1);
+    // 2nd call, CU/CD both true, nothing should happen
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.qu);
+    assert!(!main_inst.qd);
+    assert_eq!(main_inst.cv, 1);
+    // 3rd call, count down
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.qu);
+    assert!(main_inst.qd);
+    assert_eq!(main_inst.cv, 0);
+    // 4th call, count up
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(main_inst.qu);
+    assert!(!main_inst.qd);
+    assert_eq!(main_inst.cv, 1);
+    // 5th call, reset
+    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    assert!(!main_inst.qu);
+    assert!(main_inst.qd);
+    assert_eq!(main_inst.cv, 0);
 }
 
 #[test]
