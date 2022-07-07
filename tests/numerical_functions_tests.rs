@@ -3,7 +3,7 @@ mod common;
 
 use common::add_std;
 
-use crate::common::compile_and_run;
+use common::compile_and_run;
 
 #[derive(Default)]
 struct MainType<T: Default> {
@@ -25,7 +25,7 @@ fn absolute_on_sint_test() {
             res := ABS(SINT#0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = MainType::<i8>::default();
     let _: i8 = compile_and_run(sources, &mut maintype);
 
@@ -47,7 +47,7 @@ fn absolute_on_int_test() {
             res := ABS(INT#0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = MainType::<i16>::default();
     let _: i16 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.res, 0i16);
@@ -68,7 +68,7 @@ fn absolute_on_dint_test() {
             res := ABS(0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = MainType::<i32>::default();
     let _: i32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.res, 0i32);
@@ -89,7 +89,7 @@ fn absolute_on_lint_test() {
             res := ABS(LINT#0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.res, 0i64);
@@ -110,7 +110,7 @@ fn absolute_on_real_test() {
             res := ABS(REAL#0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = MainType::<f32>::default();
     let _: f32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.res, 0.0f32);
@@ -131,7 +131,7 @@ fn absolute_on_lreal_test() {
             res := ABS(LREAL#0);
             END_PROGRAM
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = MainType::<f64>::default();
     let _: f64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.res, 0.0f64);
@@ -147,7 +147,7 @@ fn test_round_real() {
             main := ROUND(REAL#2.5);
         END_FUNCTION
         ";
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let mut maintype = rusty::runner::MainType::default();
     let res: f32 = compile_and_run(sources, &mut maintype);
     assert_eq!(res, 3.0f32);
@@ -161,7 +161,7 @@ fn test_round_lreal() {
         END_FUNCTION
         ";
     let mut maintype = rusty::runner::MainType::default();
-    let sources = add_std!(src, "num.st");
+    let sources = add_std!(src, "numerical_functions.st");
     let res: f64 = compile_and_run(sources, &mut maintype);
     assert_eq!(res, 3.0f64);
 }

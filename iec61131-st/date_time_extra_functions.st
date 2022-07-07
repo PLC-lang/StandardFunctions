@@ -3,7 +3,7 @@
 * Concatenates DATE and TOD to DT
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION CONCAT_DATE_TOD : DT
 VAR_INPUT
 	date_input : DATE;
@@ -29,7 +29,7 @@ END_FUNCTION
 * Concatenates year, month and day of type ANY_INT to DATE
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION CONCAT_DATE <T: ANY_INT> : DATE
 VAR_INPUT
 	year : T;
@@ -43,7 +43,7 @@ END_FUNCTION
 * Concatenates hour, minute, second, millisecond of type ANY_INT to TOD
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION CONCAT_TOD <T: ANY_INT> : TOD
 VAR_INPUT
 	hour : T;
@@ -374,7 +374,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DATE for INT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DATE__INT : INT
 VAR_INPUT
 	in : DATE;
@@ -387,7 +387,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DATE for UINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DATE__UINT : INT
 VAR_INPUT
 	in : DATE;
@@ -400,7 +400,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DATE for DINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DATE__DINT : INT
 VAR_INPUT
 	in : DATE;
@@ -413,7 +413,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DATE for UDINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DATE__UDINT : INT
 VAR_INPUT
 	in : DATE;
@@ -426,7 +426,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DATE for LINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DATE__LINT : INT
 VAR_INPUT
 	in : DATE;
@@ -439,7 +439,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DATE for ULINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DATE__ULINT : INT
 VAR_INPUT
 	in : DATE;
@@ -469,7 +469,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_TOD for INT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_TOD__INT : INT
 VAR_INPUT
 	in : TOD;
@@ -483,7 +483,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_TOD for UINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_TOD__UINT : INT
 VAR_INPUT
 	in : TOD;
@@ -497,7 +497,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_TOD for DINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_TOD__DINT : INT
 VAR_INPUT
 	in : TOD;
@@ -511,7 +511,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_TOD for UDINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_TOD__UDINT : INT
 VAR_INPUT
 	in : TOD;
@@ -525,7 +525,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_TOD for LINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_TOD__LINT : INT
 VAR_INPUT
 	in : TOD;
@@ -539,7 +539,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_TOD for ULINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_TOD__ULINT : INT
 VAR_INPUT
 	in : TOD;
@@ -674,7 +674,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DT for INT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DT__INT : INT
 VAR_INPUT
 	in : DT;
@@ -691,7 +691,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DT for UINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DT__UINT : INT
 VAR_INPUT
 	in : DT;
@@ -708,7 +708,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DT for DINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DT__DINT : INT
 VAR_INPUT
 	in : DT;
@@ -725,7 +725,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DT for UDINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DT__UDINT : INT
 VAR_INPUT
 	in : DT;
@@ -742,7 +742,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DT for LINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DT__LINT : INT
 VAR_INPUT
 	in : DT;
@@ -759,7 +759,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_DT for ULINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_DT__ULINT : INT
 VAR_INPUT
 	in : DT;
@@ -796,7 +796,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_LDT for INT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_LDT__INT : INT
 VAR_INPUT
 	in : LDT;
@@ -814,7 +814,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_LDT for UINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_LDT__UINT : INT
 VAR_INPUT
 	in : LDT;
@@ -832,7 +832,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_LDT for DINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_LDT__DINT : INT
 VAR_INPUT
 	in : LDT;
@@ -850,7 +850,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_LDT for UDINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_LDT__UDINT : INT
 VAR_INPUT
 	in : LDT;
@@ -868,7 +868,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_LDT for LINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_LDT__LINT : INT
 VAR_INPUT
 	in : LDT;
@@ -886,7 +886,7 @@ END_VAR
 END_FUNCTION
 
 (* Specialized implementation of SPLIT_LDT for ULINT *)
-@EXTERNAL
+{external}
 FUNCTION SPLIT_LDT__ULINT : INT
 VAR_INPUT
 	in : LDT;
@@ -909,7 +909,7 @@ END_FUNCTION
 * 0 -> sunday, 1 -> monday, ..., 6 -> saturday
 *
 *********************)
-@EXTERNAL
+{external}
 FUNCTION DAY_OF_WEEK : SINT
 VAR_INPUT
 	in : DATE;
