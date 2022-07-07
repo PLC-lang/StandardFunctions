@@ -4,7 +4,8 @@
  * Rounds half values away from zero
  * 
 *************************)
-{external} FUNCTION ROUND<T : ANY_REAL> : T 
+{external}
+FUNCTION ROUND<T : ANY_REAL> : T 
 VAR_INPUT
 	in : T;
 END_VAR

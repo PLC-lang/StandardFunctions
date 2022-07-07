@@ -27,7 +27,7 @@ fn concat_date_tod() {
 	FUNCTION main : DT
 		main := CONCAT_DATE_TOD(D#2010-03-12, TOD#12:30:15.121);
 	END_FUNCTION";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = SingleType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
     let dt_2010y_3m_12d_12h_30m_15s_121ms = chrono::NaiveDate::from_ymd(2010, 3, 12)
@@ -42,7 +42,7 @@ fn concat_date_ltod() {
 	FUNCTION main : LDT
 		main := CONCAT_DATE_LTOD(D#2010-03-12, LTOD#12:30:15.121);
 	END_FUNCTION";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = SingleType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
     let dt_2010y_3m_12d_12h_30m_15s_121ms = chrono::NaiveDate::from_ymd(2010, 3, 12)
@@ -75,7 +75,7 @@ fn concat_date_signed_ints() {
 		b := CONCAT_DATE(DINT#2000,DINT#01,DINT#01);
 		c := CONCAT_DATE(LINT#2000,LINT#01,LINT#01);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     let date_2000y_1m_1d = chrono::NaiveDate::from_ymd(2000, 1, 1)
@@ -99,7 +99,7 @@ fn concat_date_unsigned_ints() {
 		b := CONCAT_DATE(UDINT#2000,UDINT#01,UDINT#01);
 		c := CONCAT_DATE(ULINT#2000,ULINT#01,ULINT#01);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     let date_2000y_1m_1d = chrono::NaiveDate::from_ymd(2000, 1, 1)
@@ -125,7 +125,7 @@ fn concat_tod_signed_ints() {
 		c := CONCAT_TOD(DINT#20,DINT#15,DINT#12,DINT#341);
 		d := CONCAT_TOD(LINT#20,LINT#15,LINT#12,LINT#341);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
@@ -153,7 +153,7 @@ fn concat_tod_unsigned_ints() {
 		c := CONCAT_TOD(UDINT#20,UDINT#15,UDINT#12,UDINT#341);
 		d := CONCAT_TOD(ULINT#20,ULINT#15,ULINT#12,ULINT#341);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
@@ -181,7 +181,7 @@ fn concat_ltod_signed_ints() {
 		c := CONCAT_LTOD(DINT#20,DINT#15,DINT#12,DINT#341);
 		d := CONCAT_LTOD(LINT#20,LINT#15,LINT#12,LINT#341);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
@@ -209,7 +209,7 @@ fn concat_ltod_unsigned_ints() {
 		c := CONCAT_LTOD(UDINT#20,UDINT#15,UDINT#12,UDINT#341);
 		d := CONCAT_LTOD(ULINT#20,ULINT#15,ULINT#12,ULINT#341);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
@@ -235,7 +235,7 @@ fn concat_dt_signed_ints() {
 		b := CONCAT_DT(DINT#2000,DINT#1,DINT#2,DINT#20,DINT#15,DINT#12,DINT#111);
 		c := CONCAT_DT(LINT#2000,LINT#1,LINT#2,LINT#20,LINT#15,LINT#12,LINT#111);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
@@ -259,7 +259,7 @@ fn concat_dt_unsigned_ints() {
 		b := CONCAT_DT(UDINT#2000,UDINT#1,UDINT#2,UDINT#20,UDINT#15,UDINT#12,UDINT#111);
 		c := CONCAT_DT(ULINT#2000,ULINT#1,ULINT#2,ULINT#20,ULINT#15,ULINT#12,ULINT#111);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
@@ -283,7 +283,7 @@ fn concat_ldt_signed_ints() {
 		b := CONCAT_LDT(DINT#2000,DINT#1,DINT#2,DINT#20,DINT#15,DINT#12,DINT#111);
 		c := CONCAT_LDT(LINT#2000,LINT#1,LINT#2,LINT#20,LINT#15,LINT#12,LINT#111);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
@@ -307,7 +307,7 @@ fn concat_ldt_unsigned_ints() {
 		b := CONCAT_LDT(UDINT#2000,UDINT#1,UDINT#2,UDINT#20,UDINT#15,UDINT#12,UDINT#111);
 		c := CONCAT_LDT(ULINT#2000,ULINT#1,ULINT#2,ULINT#20,ULINT#15,ULINT#12,ULINT#111);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
@@ -329,7 +329,7 @@ fn split_date_int() {
 	END_VAR
 		SPLIT_DATE(DATE#2000-01-02, a, b, c);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -348,7 +348,7 @@ fn split_date_uint() {
 	END_VAR
 		SPLIT_DATE(DATE#2000-01-02, a, b, c);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -367,7 +367,7 @@ fn split_date_dint() {
 	END_VAR
 		SPLIT_DATE(DATE#2000-01-02, a, b, c);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -386,7 +386,7 @@ fn split_date_udint() {
 	END_VAR
 		SPLIT_DATE(DATE#2000-01-02, a, b, c);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -405,7 +405,7 @@ fn split_date_lint() {
 	END_VAR
 		SPLIT_DATE(DATE#2000-01-02, a, b, c);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -424,7 +424,7 @@ fn split_date_ulint() {
 	END_VAR
 		SPLIT_DATE(DATE#2000-01-02, a, b, c);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -444,7 +444,7 @@ fn split_tod_int() {
 	END_VAR
 		SPLIT_TOD(TOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -465,7 +465,7 @@ fn split_tod_uint() {
 	END_VAR
 		SPLIT_TOD(TOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -486,7 +486,7 @@ fn split_tod_dint() {
 	END_VAR
 		SPLIT_TOD(TOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -507,7 +507,7 @@ fn split_tod_udint() {
 	END_VAR
 		SPLIT_TOD(TOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -528,7 +528,7 @@ fn split_tod_lint() {
 	END_VAR
 		SPLIT_TOD(TOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -549,7 +549,7 @@ fn split_tod_ulint() {
 	END_VAR
 		SPLIT_TOD(TOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -570,7 +570,7 @@ fn split_ltod_int() {
 	END_VAR
 		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -591,7 +591,7 @@ fn split_ltod_uint() {
 	END_VAR
 		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -612,7 +612,7 @@ fn split_ltod_dint() {
 	END_VAR
 		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -633,7 +633,7 @@ fn split_ltod_udint() {
 	END_VAR
 		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -654,7 +654,7 @@ fn split_ltod_lint() {
 	END_VAR
 		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -675,7 +675,7 @@ fn split_ltod_ulint() {
 	END_VAR
 		SPLIT_TOD(LTOD#14:12:03.123, a, b, c, d);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 14); // hour
@@ -699,7 +699,7 @@ fn split_dt_int() {
 	END_VAR
 		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -726,7 +726,7 @@ fn split_dt_uint() {
 	END_VAR
 		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -753,7 +753,7 @@ fn split_dt_dint() {
 	END_VAR
 		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -780,7 +780,7 @@ fn split_dt_udint() {
 	END_VAR
 		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -807,7 +807,7 @@ fn split_dt_lint() {
 	END_VAR
 		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -834,7 +834,7 @@ fn split_dt_ulint() {
 	END_VAR
 		SPLIT_DT(DT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -861,7 +861,7 @@ fn split_ldt_int() {
 	END_VAR
 		SPLIT_DT(LDT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -888,7 +888,7 @@ fn split_ldt_uint() {
 	END_VAR
 		SPLIT_DT(LDT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u16>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -915,7 +915,7 @@ fn split_ldt_dint() {
 	END_VAR
 		SPLIT_DT(LDT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -942,7 +942,7 @@ fn split_ldt_udint() {
 	END_VAR
 		SPLIT_DT(LDT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u32>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -969,7 +969,7 @@ fn split_ldt_lint() {
 	END_VAR
 		SPLIT_DT(LDT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -996,7 +996,7 @@ fn split_ldt_ulint() {
 	END_VAR
 		SPLIT_DT(LDT#2000-01-02-14:12:03.123, a, b, c, d, e, f, g);
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<u64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2000); // year
@@ -1021,7 +1021,7 @@ fn day_of_week() {
 		b := DAY_OF_WEEK(DATE#2022-06-12); // sunday = 0
 		c := DAY_OF_WEEK(DATE#2022-06-18); // saturday = 6
 	END_PROGRAM";
-    let sources = add_std!(src, "time_extra_functions.st");
+    let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i8>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.a, 2);
