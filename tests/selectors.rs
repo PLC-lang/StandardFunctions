@@ -97,15 +97,36 @@ fn test_max_char() {
 
 #[test]
 fn test_max_date() {
-    let src = r"FUNCTION main : CHAR
+    let src = r"FUNCTION main : TIME
     main := MAX(T#35ms, T#40ms,T#1ms,T#30ms);
     END_FUNCTION";
     
     let src = add_std!(src, "selectors.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, 70_000_000);
+    assert_eq!(res, 40_000_000);
 }
 
+#[test]
+fn test_max_real() {
+    let src = r"FUNCTION main : REAL
+    main := MAX(0.5, 0.1,1.5,1.2);
+    END_FUNCTION";
+    
+    let src = add_std!(src, "selectors.st");
+    let res: f32 = compile_and_run_no_params(src);
+    assert!((res - 1.5_f32).abs() < f32::EPSILON);
+}
+
+#[test]
+fn test_max_lreal() {
+    let src = r"FUNCTION main : LREAL
+    main := MAX(LREAL#0.5, 0.1,1.5,1.2);
+    END_FUNCTION";
+    
+    let src = add_std!(src, "selectors.st");
+    let res: f64 = compile_and_run_no_params(src);
+    assert!((dbg!(res) - 1.5_f64).abs() < f64::EPSILON);
+}
 
 #[test]
 fn test_min_int() {
@@ -153,7 +174,7 @@ fn test_min_char() {
 
 #[test]
 fn test_min_date() {
-    let src = r"FUNCTION main : CHAR
+    let src = r"FUNCTION main : TIME
     main := MIN(T#40ms,T#1d,T#30ms,T#5m);
     END_FUNCTION";
     
