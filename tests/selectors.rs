@@ -120,12 +120,12 @@ fn test_max_real() {
 #[test]
 fn test_max_lreal() {
     let src = r"FUNCTION main : LREAL
-    main := MAX(LREAL#0.5, 0.1,1.5,1.2);
+    main := MAX(LREAL#0.5, 0.1, 1.5, 1.2);
     END_FUNCTION";
     
     let src = add_std!(src, "selectors.st");
     let res: f64 = compile_and_run_no_params(src);
-    assert!((dbg!(res) - 1.5_f64).abs() < f64::EPSILON);
+    assert!((res - 1.5_f64).abs() < f64::EPSILON);
 }
 
 #[test]
@@ -181,6 +181,28 @@ fn test_min_date() {
     let src = add_std!(src, "selectors.st");
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(res, 30_000_000);
+}
+
+#[test]
+fn test_min_real() {
+    let src = r"FUNCTION main : REAL
+    main := MIN(0.5,0.1,1.5,1.2);
+    END_FUNCTION";
+    
+    let src = add_std!(src, "selectors.st");
+    let res: f32 = compile_and_run_no_params(src);
+    assert!((res - 0.1_f32).abs() <= f32::EPSILON);
+}
+
+#[test]
+fn test_min_lreal() {
+    let src = r"FUNCTION main : LREAL
+    main := MIN(LREAL#0.5, LREAL#0.1,LREAL#1.5,LREAL#1.2);
+    END_FUNCTION";
+    
+    let src = add_std!(src, "selectors.st");
+    let res: f64 = compile_and_run_no_params(src);
+    assert!((res - 0.1_f64).abs() < f64::EPSILON);
 }
 
 #[test]

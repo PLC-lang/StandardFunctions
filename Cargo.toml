@@ -11,7 +11,7 @@ glob = "0.3"
 [dev-dependencies]
 inkwell = {git = "https://github.com/TheDan64/inkwell", branch="master", features=["llvm13-0"] }
 rusty = {git = "https://github.com/PLC-lang/rusty", branch="460-builtin-functions" }
-iec61131std = { path = ".", features = ["mock_time", "debug"] }
+iec61131std = { path = ".", features = ["mock_time"] }
 
 [dependencies]
 chrono = "0.4"
