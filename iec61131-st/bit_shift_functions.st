@@ -6,13 +6,12 @@
  * IN is shifted by n bit to the left and is filled from the right with zeros.
  * 
 *************************)
-{external} FUNCTION SHL<T: ANY_BIT> : T
-
+{external}
+FUNCTION SHL<T: ANY_BIT> : T
 VAR_INPUT
 	IN : T;
 	n : UDINT;
 END_VAR
-
 END_FUNCTION
 
 (**************************
@@ -26,13 +25,12 @@ END_FUNCTION
  * i.e. it is filled with the value of the highest bit.
  * 
 *************************)
-{external} FUNCTION SHR<T: ANY_BIT> : T
-
+{external}
+FUNCTION SHR<T: ANY_BIT> : T
 VAR_INPUT
 	IN : T;
 	n : UDINT;
 END_VAR
-
 END_FUNCTION
 
 (**************************
@@ -44,13 +42,12 @@ END_FUNCTION
  * whereby the highest bit from the right is again inserted.
  * 
 *************************)
-{external} FUNCTION ROL<T : ANY_BIT> : T 
-
+{external}
+FUNCTION ROL<T : ANY_BIT> : T 
 VAR_INPUT
 	IN : T;
 	n : UDINT;
 END_VAR
-
 END_FUNCTION
 
 (**************************
@@ -62,12 +59,11 @@ END_FUNCTION
  * whereby the lowest bit from the left is again inserted.
  * 
 *************************)
-{external} FUNCTION ROR<T: ANY_BIT> : T 
-
+{external}
+FUNCTION ROR<T: ANY_BIT> : T 
 VAR_INPUT
 	IN : T; 
 	n : UDINT;
 END_VAR
-
 END_FUNCTION
 

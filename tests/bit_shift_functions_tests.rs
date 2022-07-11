@@ -30,7 +30,7 @@ fn shift_left_test() {
         l := SHL(LWORD#2#0001_1001,59);
         END_PROGRAM
         ";
-    let sources = add_std!(src, "bit_shift.st");
+    let sources = add_std!(src, "bit_shift_functions.st");
     let mut maintype = MainType::default();
     let _res: u32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.byte, 0b1100_1000);
@@ -58,7 +58,7 @@ fn shift_right_test() {
         l := SHR(LWORD#16#1_0000_0000_0001,3);
         END_PROGRAM
         ";
-    let sources = add_std!(src, "bit_shift.st");
+    let sources = add_std!(src, "bit_shift_functions.st");
     let mut maintype = MainType::default();
     let _res: u32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.byte, 0x2);
@@ -83,7 +83,7 @@ fn rotate_left_test() {
         l := ROL(LWORD#16#8000_0000_0000_0001,3);
         END_PROGRAM
         ";
-    let sources = add_std!(src, "bit_shift.st");
+    let sources = add_std!(src, "bit_shift_functions.st");
     let mut maintype = MainType::default();
     let _res: u32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.byte, 0xC);
@@ -108,7 +108,7 @@ fn rotate_right_test() {
         l := ROR(LWORD#16#8000_0000_0000_0001,3);
         END_PROGRAM
         ";
-    let sources = add_std!(src, "bit_shift.st");
+    let sources = add_std!(src, "bit_shift_functions.st");
     let mut maintype = MainType::default();
     let _res: u32 = compile_and_run(sources, &mut maintype);
     assert_eq!(maintype.byte, 0x30);
