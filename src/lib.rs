@@ -11,6 +11,6 @@ pub mod flanks;
 pub mod numerical_functions;
 pub mod string_conversion;
 pub mod timers;
+pub mod types;
 pub mod utils;
 pub mod validation_functions;
-pub mod types;
