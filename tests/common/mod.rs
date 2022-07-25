@@ -8,7 +8,7 @@ use inkwell::{
 use rusty::{
     compile_module,
     diagnostics::Diagnostician,
-    runner::{run, Compilable},
+    runner::{run, run_no_param, Compilable},
     FilePath, SourceCode, SourceContainer,
 };
 
@@ -695,6 +695,87 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("RS", iec61131std::bistable_functionblocks::RS as usize),
         ("R_TRIG", iec61131std::flanks::R_TRIG as usize),
         ("F_TRIG", iec61131std::flanks::F_TRIG as usize),
+        ("MIN__BOOL", iec61131std::types::MIN__BOOL as usize),
+        ("MIN__SINT", iec61131std::types::MIN__SINT as usize),
+        ("MIN__USINT", iec61131std::types::MIN__USINT as usize),
+        ("MIN__BYTE", iec61131std::types::MIN__BYTE as usize),
+        ("MIN__CHAR", iec61131std::types::MIN__CHAR as usize),
+        ("MIN__INT", iec61131std::types::MIN__INT as usize),
+        ("MIN__UINT", iec61131std::types::MIN__UINT as usize),
+        ("MIN__WORD", iec61131std::types::MIN__WORD as usize),
+        ("MIN__WCHAR", iec61131std::types::MIN__WCHAR as usize),
+        ("MIN__DINT", iec61131std::types::MIN__DINT as usize),
+        ("MIN__UDINT", iec61131std::types::MIN__UDINT as usize),
+        ("MIN__DWORD", iec61131std::types::MIN__DWORD as usize),
+        ("MIN__LINT", iec61131std::types::MIN__LINT as usize),
+        ("MIN__ULINT", iec61131std::types::MIN__ULINT as usize),
+        ("MIN__LWORD", iec61131std::types::MIN__LWORD as usize),
+        ("MIN__REAL", iec61131std::types::MIN__REAL as usize),
+        ("MIN__LREAL", iec61131std::types::MIN__LREAL as usize),
+        ("MIN__DATE", iec61131std::types::MIN__DATE as usize),
+        (
+            "MIN__DATE_AND_TIME",
+            iec61131std::types::MIN__DATE_AND_TIME as usize,
+        ),
+        ("MIN__TIME", iec61131std::types::MIN__TIME as usize),
+        (
+            "MIN__TIME_OF_DAY",
+            iec61131std::types::MIN__TIME_OF_DAY as usize,
+        ),
+        ("MAX__BOOL", iec61131std::types::MAX__BOOL as usize),
+        ("MAX__SINT", iec61131std::types::MAX__SINT as usize),
+        ("MAX__USINT", iec61131std::types::MAX__USINT as usize),
+        ("MAX__BYTE", iec61131std::types::MAX__BYTE as usize),
+        ("MAX__CHAR", iec61131std::types::MAX__CHAR as usize),
+        ("MAX__INT", iec61131std::types::MAX__INT as usize),
+        ("MAX__UINT", iec61131std::types::MAX__UINT as usize),
+        ("MAX__WORD", iec61131std::types::MAX__WORD as usize),
+        ("MAX__WCHAR", iec61131std::types::MAX__WCHAR as usize),
+        ("MAX__DINT", iec61131std::types::MAX__DINT as usize),
+        ("MAX__UDINT", iec61131std::types::MAX__UDINT as usize),
+        ("MAX__DWORD", iec61131std::types::MAX__DWORD as usize),
+        ("MAX__LINT", iec61131std::types::MAX__LINT as usize),
+        ("MAX__ULINT", iec61131std::types::MAX__ULINT as usize),
+        ("MAX__LWORD", iec61131std::types::MAX__LWORD as usize),
+        ("MAX__REAL", iec61131std::types::MAX__REAL as usize),
+        ("MAX__LREAL", iec61131std::types::MAX__LREAL as usize),
+        ("MAX__DATE", iec61131std::types::MAX__DATE as usize),
+        (
+            "MAX__DATE_AND_TIME",
+            iec61131std::types::MAX__DATE_AND_TIME as usize,
+        ),
+        ("MAX__TIME", iec61131std::types::MAX__TIME as usize),
+        (
+            "MAX__TIME_OF_DAY",
+            iec61131std::types::MAX__TIME_OF_DAY as usize,
+        ),
+        ("LIMIT__BOOL", iec61131std::types::LIMIT__BOOL as usize),
+        ("LIMIT__SINT", iec61131std::types::LIMIT__SINT as usize),
+        ("LIMIT__USINT", iec61131std::types::LIMIT__USINT as usize),
+        ("LIMIT__BYTE", iec61131std::types::LIMIT__BYTE as usize),
+        ("LIMIT__CHAR", iec61131std::types::LIMIT__CHAR as usize),
+        ("LIMIT__INT", iec61131std::types::LIMIT__INT as usize),
+        ("LIMIT__UINT", iec61131std::types::LIMIT__UINT as usize),
+        ("LIMIT__WORD", iec61131std::types::LIMIT__WORD as usize),
+        ("LIMIT__WCHAR", iec61131std::types::LIMIT__WCHAR as usize),
+        ("LIMIT__DINT", iec61131std::types::LIMIT__DINT as usize),
+        ("LIMIT__UDINT", iec61131std::types::LIMIT__UDINT as usize),
+        ("LIMIT__DWORD", iec61131std::types::LIMIT__DWORD as usize),
+        ("LIMIT__LINT", iec61131std::types::LIMIT__LINT as usize),
+        ("LIMIT__ULINT", iec61131std::types::LIMIT__ULINT as usize),
+        ("LIMIT__LWORD", iec61131std::types::LIMIT__LWORD as usize),
+        ("LIMIT__REAL", iec61131std::types::LIMIT__REAL as usize),
+        ("LIMIT__LREAL", iec61131std::types::LIMIT__LREAL as usize),
+        ("LIMIT__DATE", iec61131std::types::LIMIT__DATE as usize),
+        (
+            "LIMIT__DATE_AND_TIME",
+            iec61131std::types::LIMIT__DATE_AND_TIME as usize,
+        ),
+        ("LIMIT__TIME", iec61131std::types::LIMIT__TIME as usize),
+        (
+            "LIMIT__TIME_OF_DAY",
+            iec61131std::types::LIMIT__TIME_OF_DAY as usize,
+        ),
         ("CTU", iec61131std::counters::CTU as usize),
         ("CTU_INT", iec61131std::counters::CTU_INT as usize),
         ("CTU_DINT", iec61131std::counters::CTU_DINT as usize),
@@ -793,4 +874,14 @@ pub fn compile_and_run<T, U, S: Compilable>(source: S, params: &mut T) -> U {
     let context: Context = Context::create();
     let exec_engine = compile_with_native(&context, source);
     run::<T, U>(&exec_engine, "main", params)
+}
+
+///
+/// A Convenience method to compile and then run the given source with no parameters
+///
+#[allow(dead_code)] //Not all test modules call the compile and run
+pub fn compile_and_run_no_params<T, S: Compilable>(source: S) -> T {
+    let context: Context = Context::create();
+    let exec_engine = compile_with_native(&context, source);
+    run_no_param::<T>(&exec_engine, "main")
 }
