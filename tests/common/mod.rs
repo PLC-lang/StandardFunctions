@@ -26,6 +26,24 @@ macro_rules! add_std {
 }
 pub(crate) use add_std;
 
+#[macro_export]
+macro_rules! assert_almost_eq {
+    ($left:expr, $right:expr, $prec:expr) => {{
+        match (&$left, &$right) {
+            (left_val, right_val) => {
+                let diff = (left_val - right_val).abs();
+
+                if diff > $prec {
+                    panic!(
+                        "assertion failed: `(left == right)`\n      left: `{:?}`,\n     right: `{:?}`",
+                        &*left_val, &*right_val
+                    )
+                }
+            }
+        }
+    }};
+}
+
 /// Gets a file from the ST defined standard functions
 pub fn get_st_file(name: &str) -> SourceCode {
     let mut data_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -794,6 +812,30 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CTUD_UDINT", iec61131std::counters::CTUD_UDINT as usize),
         ("CTUD_LINT", iec61131std::counters::CTUD_LINT as usize),
         ("CTUD_ULINT", iec61131std::counters::CTUD_ULINT as usize),
+        (
+            "EXPT__DINT__UDINT",
+            iec61131std::arithmetic_functions::EXPT__DINT__UDINT as usize,
+        ),
+        (
+            "EXPT__LINT__UDINT",
+            iec61131std::arithmetic_functions::EXPT__LINT__UDINT as usize,
+        ),
+        (
+            "EXPT__REAL__DINT",
+            iec61131std::arithmetic_functions::EXPT__REAL__DINT as usize,
+        ),
+        (
+            "EXPT__REAL__REAL",
+            iec61131std::arithmetic_functions::EXPT__REAL__REAL as usize,
+        ),
+        (
+            "EXPT__LREAL__DINT",
+            iec61131std::arithmetic_functions::EXPT__LREAL__DINT as usize,
+        ),
+        (
+            "EXPT__LREAL__LREAL",
+            iec61131std::arithmetic_functions::EXPT__LREAL__LREAL as usize,
+        ),
     ];
 
     let variables = vec![

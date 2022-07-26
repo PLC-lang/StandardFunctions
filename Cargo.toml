@@ -5,12 +5,12 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [build-dependencies]
-rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" } 
+rusty = {git = "https://github.com/PLC-lang/rusty", branch="expt" } 
 glob = "0.3"
 
 [dev-dependencies]
 inkwell = {git = "https://github.com/TheDan64/inkwell", branch="master", features=["llvm13-0"] }
-rusty = {git = "https://github.com/PLC-lang/rusty", branch="master" }
+rusty = {git = "https://github.com/PLC-lang/rusty", branch="expt" }
 iec61131std = { path = ".", features = ["mock_time"] }
 
 [dependencies]
