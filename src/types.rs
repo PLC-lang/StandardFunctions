@@ -14,6 +14,7 @@ macro_rules! define_float_type {
         /// # Safety
         /// Dealing with raw pointers
         #[allow(non_snake_case)]
+        #[no_mangle]
         pub unsafe extern "C" fn $max_name(size: u32, value: *const $rust_type) -> $rust_type {
             // Declare array for value
             let arr = if !value.is_null() {
@@ -30,6 +31,7 @@ macro_rules! define_float_type {
         /// # Safety
         /// Dealing with raw pointers
         #[allow(non_snake_case)]
+        #[no_mangle]
         pub unsafe extern "C" fn $min_name(size: u32, value: *const $rust_type) -> $rust_type {
             // Declare array for value
             let arr = if !value.is_null() {
@@ -46,6 +48,7 @@ macro_rules! define_float_type {
 
         //Limit
         #[allow(non_snake_case)]
+        #[no_mangle]
         pub extern "C" fn $limit_name(
             min: $rust_type,
             value: $rust_type,
@@ -63,6 +66,7 @@ macro_rules! define_order_type {
         /// # Safety
         /// Dealing with raw pointers
         #[allow(non_snake_case)]
+        #[no_mangle]
         pub unsafe extern "C" fn $max_name(size: u32, value: *const $rust_type) -> $rust_type {
             if !value.is_null() {
                 let arr = slice::from_raw_parts(value, size as usize);
@@ -75,6 +79,7 @@ macro_rules! define_order_type {
         /// # Safety
         /// Dealing with raw pointers
         #[allow(non_snake_case)]
+        #[no_mangle]
         pub unsafe extern "C" fn $min_name(size: u32, value: *const $rust_type) -> $rust_type {
             if !value.is_null() {
                 let arr = slice::from_raw_parts(value, size as usize);
@@ -86,6 +91,7 @@ macro_rules! define_order_type {
 
         //Limit
         #[allow(non_snake_case)]
+        #[no_mangle]
         pub extern "C" fn $limit_name(
             min: $rust_type,
             value: $rust_type,
