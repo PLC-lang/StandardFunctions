@@ -794,6 +794,31 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CTUD_UDINT", iec61131std::counters::CTUD_UDINT as usize),
         ("CTUD_LINT", iec61131std::counters::CTUD_LINT as usize),
         ("CTUD_ULINT", iec61131std::counters::CTUD_ULINT as usize),
+
+        ("TO_BIG_ENDIAN__INT", iec61131std::endianess_conversion_functions::TO_BIG_ENDIAN__INT as usize),
+        ("TO_LITTLE_ENDIAN__INT", iec61131std::endianess_conversion_functions::TO_LITTLE_ENDIAN__INT as usize),
+        ("BIG_ENDIAN_TO__INT", iec61131std::endianess_conversion_functions::BIG_ENDIAN_TO__INT as usize),
+        ("LITTLE_ENDIAN_TO__INT", iec61131std::endianess_conversion_functions::LITTLE_ENDIAN_TO__INT as usize),
+
+        ("TO_BIG_ENDIAN__DINT", iec61131std::endianess_conversion_functions::TO_BIG_ENDIAN__DINT as usize),
+        ("TO_LITTLE_ENDIAN__DINT", iec61131std::endianess_conversion_functions::TO_LITTLE_ENDIAN__DINT as usize),
+        ("BIG_ENDIAN_TO__DINT", iec61131std::endianess_conversion_functions::BIG_ENDIAN_TO__DINT as usize),
+        ("LITTLE_ENDIAN_TO__DINT", iec61131std::endianess_conversion_functions::LITTLE_ENDIAN_TO__DINT as usize),
+
+        ("TO_BIG_ENDIAN__UDINT", iec61131std::endianess_conversion_functions::TO_BIG_ENDIAN__UDINT as usize),
+        ("TO_LITTLE_ENDIAN__UDINT", iec61131std::endianess_conversion_functions::TO_LITTLE_ENDIAN__UDINT as usize),
+        ("BIG_ENDIAN_TO__UDINT", iec61131std::endianess_conversion_functions::BIG_ENDIAN_TO__UDINT as usize),
+        ("LITTLE_ENDIAN_TO__UDINT", iec61131std::endianess_conversion_functions::LITTLE_ENDIAN_TO__UDINT as usize),
+
+        ("TO_BIG_ENDIAN__LINT", iec61131std::endianess_conversion_functions::TO_BIG_ENDIAN__LINT as usize),
+        ("TO_LITTLE_ENDIAN__LINT", iec61131std::endianess_conversion_functions::TO_LITTLE_ENDIAN__LINT as usize),
+        ("BIG_ENDIAN_TO__LINT", iec61131std::endianess_conversion_functions::BIG_ENDIAN_TO__LINT as usize),
+        ("LITTLE_ENDIAN_TO__LINT", iec61131std::endianess_conversion_functions::LITTLE_ENDIAN_TO__LINT as usize),
+
+        ("TO_BIG_ENDIAN__ULINT", iec61131std::endianess_conversion_functions::TO_BIG_ENDIAN__ULINT as usize),
+        ("TO_LITTLE_ENDIAN__ULINT", iec61131std::endianess_conversion_functions::TO_LITTLE_ENDIAN__ULINT as usize),
+        ("BIG_ENDIAN_TO__ULINT", iec61131std::endianess_conversion_functions::BIG_ENDIAN_TO__ULINT as usize),
+        ("LITTLE_ENDIAN_TO__ULINT", iec61131std::endianess_conversion_functions::LITTLE_ENDIAN_TO__ULINT as usize),
     ];
 
     let variables = vec![

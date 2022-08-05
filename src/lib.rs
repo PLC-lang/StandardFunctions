@@ -15,3 +15,4 @@ pub mod timers;
 pub mod types;
 pub mod utils;
 pub mod validation_functions;
+pub mod endianess_conversion_functions;
