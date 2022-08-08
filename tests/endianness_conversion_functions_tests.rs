@@ -872,7 +872,15 @@ fn test_to_big_endian_ldt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos().to_be())
+
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms_nano(0, 0, 0, 0)
+            .timestamp_nanos()
+            .to_be()
+        )
 }
 
 #[test]

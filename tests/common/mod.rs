@@ -1003,22 +1003,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DATE as usize
         ),
         (
-            "TO_BIG_ENDIAN__LDATE",
-            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__LDATE as usize
-        ),
-        (
-            "TO_LITTLE_ENDIAN__LDATE",
-            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__LDATE as usize
-        ),
-        (
-            "FROM_BIG_ENDIAN__LDATE",
-            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__LDATE as usize
-        ),
-        (
-            "FROM_LITTLE_ENDIAN__LDATE",
-            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__LDATE as usize
-        ),
-        (
             "TO_BIG_ENDIAN__TIME_OF_DAY",
             iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__TIME_OF_DAY as usize
         ),
@@ -1035,22 +1019,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__TIME_OF_DAY as usize
         ),
         (
-            "TO_BIG_ENDIAN__LTOD",
-            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__LTOD as usize
-        ),
-        (
-            "TO_LITTLE_ENDIAN__LTOD",
-            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__LTOD as usize
-        ),
-        (
-            "FROM_BIG_ENDIAN__LTOD",
-            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__LTOD as usize
-        ),
-        (
-            "FROM_LITTLE_ENDIAN__LTOD",
-            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__LTOD as usize
-        ),
-        (
             "TO_BIG_ENDIAN__DATE_AND_TIME",
             iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__DATE_AND_TIME as usize
         ),
@@ -1065,22 +1033,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         (
             "FROM_LITTLE_ENDIAN__DATE_AND_TIME",
             iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DATE_AND_TIME as usize
-        ),
-        (
-            "TO_BIG_ENDIAN__LDT",
-            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__LDT as usize
-        ),
-        (
-            "TO_LITTLE_ENDIAN__LDT",
-            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__LDT as usize
-        ),
-        (
-            "FROM_BIG_ENDIAN__LDT",
-            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__LDT as usize
-        ),
-        (
-            "FROM_LITTLE_ENDIAN__LDT",
-            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__LDT as usize
         ),
     ];
 
