@@ -8,11 +8,11 @@ use common::add_std;
 #[test]
 fn test_to_big_endian_int() {
     let src = r#"FUNCTION main : INT
-        main := TO_BIG_ENDIAN(16#A00A);
+        main := TO_BIG_ENDIAN(INT#16#1001);
         END_FUNCTION    
     "#;
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i16 = compile_and_run_no_params(src);
-    assert_eq!(res, 0x0AA0);
+    assert_eq!(res, 0x0110)
 }

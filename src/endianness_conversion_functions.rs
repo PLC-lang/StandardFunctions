@@ -1,6 +1,3 @@
-// TIME datatype - specified by manufacturer
-// wchar - external crate?
-
 /// .
 ///-------------------------------INT
 ///
