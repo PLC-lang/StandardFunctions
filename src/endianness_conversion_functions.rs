@@ -1,5 +1,3 @@
-
-
 /// .
 ///-------------------------------INT
 ///
@@ -383,25 +381,25 @@ pub fn FROM_LITTLE_ENDIAN__LDATE(input: i64) -> i64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn TO_BIG_ENDIAN__TOD(input: i64) -> i64 {
+pub fn TO_BIG_ENDIAN__TIME_OF_DAY(input: i64) -> i64 {
     input.to_be()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn TO_LITTLE_ENDIAN__TOD(input: i64) -> i64 {
+pub fn TO_LITTLE_ENDIAN__TIME_OF_DAY(input: i64) -> i64 {
     input.to_le()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn FROM_BIG_ENDIAN__TOD(input: i64) -> i64 {
+pub fn FROM_BIG_ENDIAN__TIME_OF_DAY(input: i64) -> i64 {
     input.to_le()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn FROM_LITTLE_ENDIAN__TOD(input: i64) -> i64 {
+pub fn FROM_LITTLE_ENDIAN__TIME_OF_DAY(input: i64) -> i64 {
     input.to_be()
 }
 
@@ -437,25 +435,25 @@ pub fn FROM_LITTLE_ENDIAN__LTOD(input: i64) -> i64 {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn TO_BIG_ENDIAN__DT(input: i64) -> i64 {
+pub fn TO_BIG_ENDIAN__DATE_AND_TIME(input: i64) -> i64 {
     input.to_be()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn TO_LITTLE_ENDIAN__DT(input: i64) -> i64 {
+pub fn TO_LITTLE_ENDIAN__DATE_AND_TIME(input: i64) -> i64 {
     input.to_le()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn FROM_BIG_ENDIAN__DT(input: i64) -> i64 {
+pub fn FROM_BIG_ENDIAN__DATE_AND_TIME(input: i64) -> i64 {
     input.to_le()
 }
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn FROM_LITTLE_ENDIAN__DT(input: i64) -> i64 {
+pub fn FROM_LITTLE_ENDIAN__DATE_AND_TIME(input: i64) -> i64 {
     input.to_be()
 }
 
