@@ -1,3 +1,5 @@
+
+
 /// .
 ///-------------------------------INT
 ///
@@ -295,4 +297,191 @@ pub fn FROM_LITTLE_ENDIAN__LWORD(input: u64) -> u64 {
     input.to_be()
 }
 
+/// .
+///-------------------------------WCHAR
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__WCHAR(input: u16) -> u16 {
+    input.to_be()
+}
 
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__WCHAR(input: u16) -> u16 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__WCHAR(input: u16) -> u16 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__WCHAR(input: u16) -> u16 {
+    input.to_be()
+}
+
+/// .
+///------------------------------DATE
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__DATE(input: i64) -> i64 {
+    input.to_be()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__DATE(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__DATE(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__DATE(input: i64) -> i64 {
+    input.to_be()
+}
+
+/// .
+///-------------------------------LDATE
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__LDATE(input: i64) -> i64 {
+    input.to_be()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__LDATE(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__LDATE(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__LDATE(input: i64) -> i64 {
+    input.to_be()
+}
+
+/// .
+///-------------------------------TOD
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__TOD(input: i64) -> i64 {
+    input.to_be()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__TOD(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__TOD(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__TOD(input: i64) -> i64 {
+    input.to_be()
+}
+
+/// .
+///-------------------------------LTOD
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__LTOD(input: i64) -> i64 {
+    input.to_be()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__LTOD(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__LTOD(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__LTOD(input: i64) -> i64 {
+    input.to_be()
+}
+
+/// .
+///-------------------------------DT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__DT(input: i64) -> i64 {
+    input.to_be()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__DT(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__DT(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__DT(input: i64) -> i64 {
+    input.to_be()
+}
+
+/// .
+///-------------------------------LDT
+///
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_BIG_ENDIAN__LDT(input: i64) -> i64 {
+    input.to_be()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn TO_LITTLE_ENDIAN__LDT(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_BIG_ENDIAN__LDT(input: i64) -> i64 {
+    input.to_le()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub fn FROM_LITTLE_ENDIAN__LDT(input: i64) -> i64 {
+    input.to_be()
+}
