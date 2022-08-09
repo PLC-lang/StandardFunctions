@@ -1,5 +1,3 @@
-// ANY_REAL and ANY_BIT bit-width constraint >=16 -> how?
-
 (********************
 *
 * Converts little endian data format to big endian data format

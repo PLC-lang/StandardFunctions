@@ -312,7 +312,7 @@ fn test_to_big_endian_f32() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: f32 = compile_and_run_no_params(src);
-    assert_eq!(res, f32::from_be_bytes(12.5f32.to_be_bytes()))
+    assert_eq!(res, f32::from_be_bytes(12.5_f32.to_be_bytes()))
 }
 
 #[test]
@@ -348,7 +348,7 @@ fn test_from_little_endian_f32() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: f32 = compile_and_run_no_params(src);
-    assert_eq!(res, f32::from_be_bytes(12.5f32.to_be_bytes()))
+    assert_eq!(res, f32::from_be_bytes(12.5_f32.to_be_bytes()))
 }
 
 ///-------------------------------LREAL
@@ -361,7 +361,7 @@ fn test_to_big_endian_f64() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: f64 = compile_and_run_no_params(src);
-    assert_eq!(res, f64::from_be_bytes(12.5f64.to_be_bytes()))
+    assert_eq!(res, f64::from_be_bytes(12.5_f64.to_be_bytes()))
 }
 
 #[test]
@@ -605,7 +605,14 @@ fn test_to_big_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis().to_be())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
 }
 
 #[test]
@@ -616,7 +623,13 @@ fn test_to_little_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
 }
 
 #[test]
@@ -627,7 +640,13 @@ fn test_from_big_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
 }
 
 #[test]
@@ -638,7 +657,14 @@ fn test_from_little_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis().to_be())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
 }
 
 ///-------------------------------LDATE
@@ -823,7 +849,13 @@ fn test_to_big_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis().to_be())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis().to_be()
+        )
 }
 
 #[test]
@@ -835,7 +867,13 @@ fn test_to_little_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
 }
 
 #[test]
@@ -847,7 +885,13 @@ fn test_from_big_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis())
+    assert_eq!(
+        res,
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
 }
 
 #[test]
@@ -859,7 +903,14 @@ fn test_from_little_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis().to_be())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
 }
 
 ///-------------------------------LDT
@@ -892,7 +943,13 @@ fn test_to_little_endian_ldt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_nanos()
+        )
 }
 
 #[test]
@@ -904,7 +961,13 @@ fn test_from_big_endian_ldt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_nanos()
+        )
 }
 
 #[test]
@@ -916,5 +979,213 @@ fn test_from_little_endian_ldt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos().to_be())
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_nanos()
+            .to_be()
+        )
+}
+
+
+//-------------------------------long datetime type tests in millis to confirm functionality - redundant after types changed to nanoseconds
+// ldate millis
+#[test]
+fn test_to_big_endian_ldate_millis() {
+    let src = r#"FUNCTION main : LDATE
+    main := TO_BIG_ENDIAN(LDATE#1984-06-25);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");    
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
+}
+
+#[test]
+fn test_to_little_endian_ldate_millis() {
+    let src = r#"FUNCTION main : LDATE
+    main := TO_LITTLE_ENDIAN(LDATE#1984-06-25);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
+}
+
+#[test]
+fn test_from_big_endian_ldate_millis() {
+    let src = r#"FUNCTION main : LDATE
+    main := FROM_BIG_ENDIAN(LDATE#1984-06-25);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");    
+    let res: i64 = compile_and_run_no_params(src);assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
+}
+
+#[test]
+fn test_from_little_endian_ldate_millis() {
+    let src = r#"FUNCTION main : LDATE
+    main := FROM_LITTLE_ENDIAN(LDATE#1984-06-25);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(
+        res,
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
+}
+
+// ldt millis
+#[test]
+fn test_to_big_endian_ldt_millis() {
+    let src = r#"FUNCTION main : LDT
+    main := TO_BIG_ENDIAN(LDT#1984-06-25-00:00:00);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms_nano(0, 0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
+}
+
+#[test]
+fn test_to_little_endian_ldt_millis() {
+    let src = r#"FUNCTION main : LDT
+    main := TO_LITTLE_ENDIAN(LDT#1984-06-25-00:00:00);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
+}
+
+#[test]
+fn test_from_big_endian_millis() {
+    let src = r#"FUNCTION main : LDT
+    main := FROM_BIG_ENDIAN(LDT#1984-06-25-00:00:00);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+        )
+}
+
+#[test]
+fn test_from_little_endian_millis() {
+    let src = r#"FUNCTION main : LDT
+    main := FROM_LITTLE_ENDIAN(LDT#1984-06-25-00:00:00);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(
+        res, 
+        Utc
+            .ymd(1984, 6, 25)
+            .and_hms(0, 0, 0)
+            .timestamp_millis()
+            .to_be()
+        )
+}
+
+// ltod millis
+#[test]
+fn test_to_big_endian_ltod_millis() {
+    let src = r#"FUNCTION main : LTOD
+    main := TO_BIG_ENDIAN(LTOD#22:22:22);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(res, DURATION_MILLIS.to_be())
+}
+
+#[test]
+fn test_to_little_endian_ltod_millis() {
+    let src = r#"FUNCTION main : LTOD
+    main := TO_LITTLE_ENDIAN(LTOD#22:22:22);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(res, DURATION_MILLIS)
+}
+
+#[test]
+fn test_from_big_endian_ltod_millis() {
+    let src = r#"FUNCTION main : LTOD
+    main := FROM_BIG_ENDIAN(LTOD#22:22:22);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(res, DURATION_MILLIS)
+}
+
+#[test]
+fn test_from_little_endian_ltod_millis() {
+    let src = r#"FUNCTION main : LTOD
+    main := FROM_LITTLE_ENDIAN(LTOD#22:22:22);
+    END_FUNCTION    
+"#;
+
+    let src = add_std!(src, "endianness_conversion_functions.st");
+    let res: i64 = compile_and_run_no_params(src);
+    assert_eq!(res, DURATION_MILLIS.to_be())
 }
