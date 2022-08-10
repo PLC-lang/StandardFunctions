@@ -4,16 +4,16 @@ use std::process::Command;
 
 use glob::glob;
 use glob::PatternError;
-use rusty::build;
-use rusty::get_target_triple;
-use rusty::CompileOptions;
-use rusty::FilePath;
-use rusty::FormatOption;
-use rusty::OptimizationLevel;
+use rusty::{
+    build_and_link, CompileOptions, ErrorFormat, FilePath, FormatOption, OptimizationLevel, Target,
+};
 
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let target = env::var("TARGET").ok();
+    let target = env::var("TARGET")
+        .ok()
+        .map(|it| vec![Target::from(it)])
+        .unwrap_or_default();
     let optimization = env::var("PROFILE")
         .map(|it| {
             if it == "release" {
@@ -27,19 +27,11 @@ fn main() {
     let compile_options = CompileOptions {
         format: Some(FormatOption::Static),
         output: format!("{out_dir}/st.o"),
-        target,
         optimization,
+        error_format: ErrorFormat::default(),
     };
-    let target = get_target_triple(compile_options.target.as_deref());
     //Build the object file
-    let _ = build(
-        files,
-        vec![],
-        &compile_options,
-        None,
-        &rusty::ErrorFormat::Rich,
-        &target,
-    );
+    let _ = build_and_link(files, vec![], None, &compile_options, target, None, None);
 
     Command::new("ar")
         .args(&["crs", "libst.a", "st.o"])
