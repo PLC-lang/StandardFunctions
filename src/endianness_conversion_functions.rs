@@ -4,41 +4,41 @@ macro_rules! define_endianness_for_int_types {
         paste! {
             /// .
             /// Converts given integer type from little endian data format to big endian data format
-            /// 
+            ///
             #[allow(non_snake_case)]
             #[no_mangle]
             pub fn [<TO_BIG_ENDIAN__ $st_type>](input: $t) -> $t {
                 return input.to_be();
             }
-            
+
             /// .
             /// Converts given integer type from big endian data format to little endian data format
-            /// 
+            ///
             #[allow(non_snake_case)]
             #[no_mangle]
             pub fn [<TO_LITTLE_ENDIAN__ $st_type>](input: $t) -> $t {
                 return input.to_le();
             }
-            
+
             /// .
             /// Converts given integer type from big endian data format to little endian data format
-            /// 
+            ///
             #[allow(non_snake_case)]
             #[no_mangle]
             pub fn [<FROM_BIG_ENDIAN__ $st_type>](input: $t) -> $t {
                 return input.to_le();
             }
-            
+
             /// .
             /// Converts given integer type from little endian data format to big endian data format
-            /// 
+            ///
             #[allow(non_snake_case)]
             #[no_mangle]
             pub fn [<FROM_LITTLE_ENDIAN__ $st_type>](input: $t) -> $t {
                 return input.to_be();
             }
         }
-    }
+    };
 }
 
 // Define endianness for types specified in DIN-EN 61131-3 (with the exception of structs)
@@ -58,7 +58,7 @@ define_endianness_for_int_types!(DATE_AND_TIME, i64);
 
 /// .
 /// Converts given f32 from little endian data format to big endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn TO_BIG_ENDIAN__REAL(input: f32) -> f32 {
@@ -67,7 +67,7 @@ pub fn TO_BIG_ENDIAN__REAL(input: f32) -> f32 {
 
 /// .
 /// Converts given f32 from big endian data format to little endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn TO_LITTLE_ENDIAN__REAL(input: f32) -> f32 {
@@ -76,7 +76,7 @@ pub fn TO_LITTLE_ENDIAN__REAL(input: f32) -> f32 {
 
 /// .
 /// Converts given f32 from big endian data format to little endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn FROM_BIG_ENDIAN__REAL(input: f32) -> f32 {
@@ -85,7 +85,7 @@ pub fn FROM_BIG_ENDIAN__REAL(input: f32) -> f32 {
 
 /// .
 /// Converts given f32 from little endian data format to big endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn FROM_LITTLE_ENDIAN__REAL(input: f32) -> f32 {
@@ -94,7 +94,7 @@ pub fn FROM_LITTLE_ENDIAN__REAL(input: f32) -> f32 {
 
 /// .
 /// Converts given f64 from little endian data format to big endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn TO_BIG_ENDIAN__LREAL(input: f64) -> f64 {
@@ -103,7 +103,7 @@ pub fn TO_BIG_ENDIAN__LREAL(input: f64) -> f64 {
 
 /// .
 /// Converts given f64 from big endian data format to little endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn TO_LITTLE_ENDIAN__LREAL(input: f64) -> f64 {
@@ -112,7 +112,7 @@ pub fn TO_LITTLE_ENDIAN__LREAL(input: f64) -> f64 {
 
 /// .
 /// Converts given f64 from big endian data format to little endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn FROM_BIG_ENDIAN__LREAL(input: f64) -> f64 {
@@ -121,7 +121,7 @@ pub fn FROM_BIG_ENDIAN__LREAL(input: f64) -> f64 {
 
 /// .
 /// Converts given f64 from little endian data format to big endian data format
-/// 
+///
 #[allow(non_snake_case)]
 #[no_mangle]
 pub fn FROM_LITTLE_ENDIAN__LREAL(input: f64) -> f64 {
