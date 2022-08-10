@@ -794,6 +794,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CTUD_UDINT", iec61131std::counters::CTUD_UDINT as usize),
         ("CTUD_LINT", iec61131std::counters::CTUD_LINT as usize),
         ("CTUD_ULINT", iec61131std::counters::CTUD_ULINT as usize),
+
+        ("LEFT_EXT__STRING", iec61131std::counters::LEFT_EXT__STRING as usize),
     ];
 
     let variables = vec![

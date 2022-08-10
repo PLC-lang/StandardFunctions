@@ -1,7 +1,8 @@
 (******************************************************************************
-Description: 
-Input:
-Return:
+Description: String length
+Input: 
+    - IN:   A character string
+Return: String length
 ******************************************************************************)
 {external}
 FUNCTION LEN <T: ANY_STRING> : DINT
@@ -11,21 +12,26 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Left
 Input:
-Return:
+    - IN:   A character string
+    - L:    The length of the substring
+Return: A substring consisting of the leftmost L characters of IN
 ******************************************************************************)
 {external}
-FUNCTION LEFT <T: ANY_STRING> : T
+FUNCTION LEFT <T: ANY_STRING, U: ANY_INT> : T
 VAR_INPUT {ref}
 	IN : T;
+    L  : U;
 END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Right
 Input:
-Return:
+    - IN:   A character string
+    - L:    The length of the substring
+Return: A substring consisting of the rightmost L characters of IN
 ******************************************************************************)
 {external}
 FUNCTION RIGHT <T: ANY_STRING, U: ANY_INT> : T
@@ -36,9 +42,14 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Middle
 Input:
-Return:
+    - IN:   A character string
+    - L:    The length of the substring
+    - P:    The starting index position
+Return: 
+    A substring that contains L characters starting 
+    from position P in a string.
 ******************************************************************************)
 {external}
 FUNCTION MID <T: ANY_STRING, U: ANY_INT> : T
@@ -50,9 +61,12 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Extensible concatenation
 Input:
+    - IN:   Two or more comma-separated strings
 Return:
+    A string combining all given input strings in the same order
+    as the given string parameters.
 ******************************************************************************)
 {external}
 FUNCTION CONCAT <T: ANY_STRING> : T
@@ -62,9 +76,13 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Insert
 Input:
+    IN1:    The string to insert into
+    IN2:    The string to insert
+    P:      The position at which to insert
 Return:
+    A string consisting of IN2 inserted at position P into string IN1
 ******************************************************************************)
 {external}
 FUNCTION INSERT <T: ANY_STRING, U: ANY_INT> : T
@@ -76,7 +94,7 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Delete
 Input:
 Return:
 ******************************************************************************)
@@ -90,7 +108,7 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Replace
 Input:
 Return:
 ******************************************************************************)
@@ -105,7 +123,7 @@ END_VAR
 END_FUNCTION
 
 (******************************************************************************
-Description: 
+Description: Find
 Input:
 Return:
 ******************************************************************************)
@@ -117,3 +135,17 @@ VAR_IN_OUT {ref}
 END_VAR
 END_FUNCTION
 
+(******************************************************************************
+Description: Left extended
+Input:
+    - IN:   A character string
+    - L:    The length of the substring
+Return: A substring consisting of the leftmost L characters of IN
+******************************************************************************)
+{external}
+FUNCTION LEFT_EXT <T: ANY_STRING, U: ANY_INT> : T
+VAR_INPUT {ref}
+	IN : T;
+    L  : U;
+END_VAR
+END_FUNCTION
