@@ -32,7 +32,7 @@ fn main() {
         error_format: ErrorFormat::default(),
     };
     //Build the object file
-    let _ = build_and_link(files, vec![], None, &compile_options, target, None, None);
+    let _ = build_and_link(files, vec![], None, &compile_options, target, None, None).unwrap();
 
     Command::new("ar")
         .args(&["crs", "libst.a", "st.o"])

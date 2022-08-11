@@ -129,9 +129,9 @@ Return:
 ******************************************************************************)
 {external}
 FUNCTION FIND <T: ANY_STRING> : DINT
-VAR_IN_OUT {ref}
+VAR_INPUT {ref}
 	IN1 : T;
-    IN2 : U;
+    IN2 : T;
 END_VAR
 END_FUNCTION
 

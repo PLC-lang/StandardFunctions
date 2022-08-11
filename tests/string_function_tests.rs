@@ -4,8 +4,3 @@ use common::compile_and_run;
 mod common;
 
 use common::add_std;
-
-#[test]
-fn test_left_ext_string() {
-    
-}
