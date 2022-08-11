@@ -2,4 +2,4 @@
 linker = "aarch64-linux-gnu-gcc"
 
 [build]
-jobs = 4 #Limit t 4 jobs as the tests are sometimes taking up all system resources 
+jobs = 4 # Limit t 4 jobs as the tests are sometimes taking up all system resources 

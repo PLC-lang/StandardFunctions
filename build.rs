@@ -26,6 +26,7 @@ fn main() {
     let files = create_file_paths(&["iec61131-st/*.st".to_string()]).unwrap();
     let compile_options = CompileOptions {
         format: Some(FormatOption::Static),
+        build_location: None,
         output: format!("{out_dir}/st.o"),
         optimization,
         error_format: ErrorFormat::default(),
