@@ -2,38 +2,28 @@ use std::env;
 use std::path::Path;
 use std::process::Command;
 
-use glob::glob;
-use glob::PatternError;
-use rusty::{
-    build_and_link, CompileOptions, ErrorFormat, FilePath, FormatOption, OptimizationLevel, Target,
-};
-
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let target = env::var("TARGET")
-        .ok()
-        .map(|it| vec![Target::from(it)])
-        .unwrap_or_default();
-    let optimization = env::var("PROFILE")
-        .map(|it| {
-            if it == "release" {
-                OptimizationLevel::Default
-            } else {
-                OptimizationLevel::None
-            }
-        })
-        .unwrap_or(OptimizationLevel::None);
-    let files = create_file_paths(&["iec61131-st/*.st".to_string()]).unwrap();
-    let compile_options = CompileOptions {
-        format: Some(FormatOption::Static),
-        build_location: None,
-        output: format!("{out_dir}/st.o"),
-        optimization,
-        error_format: ErrorFormat::default(),
-    };
-    //Build the object file
-    let _ = build_and_link(files, vec![], None, &compile_options, target, None, None);
-
+    let mut args = vec![
+        "rustyc".to_owned(),
+        "iec61131-st/*.st".to_owned(),
+        "-c".to_owned(),
+        "-o".to_owned(),
+        format!("{out_dir}/st.o"),
+    ];
+    if let Ok(target) = env::var("TARGET") {
+        args.push("--target".to_owned());
+        args.push(target);
+    }
+    if let Ok(optimization) = env::var("PROFILE") {
+        args.push("-O".to_owned());
+        if optimization == "release" {
+            args.push("default".to_owned());
+        } else {
+            args.push("none".to_owned());
+        }
+    }
+    rusty::build_with_params(rusty::cli::CompileParameters::parse(args).unwrap()).unwrap();
     Command::new("ar")
         .args(&["crs", "libst.a", "st.o"])
         .current_dir(&Path::new(&out_dir))
@@ -43,24 +33,11 @@ fn main() {
     //link the object file
     println!("cargo:rustc-link-search=native={out_dir}");
     println!("cargo:rustc-link-lib=static=st");
+    println!("cargo:rerun-if-changed=iec61131-st/*")
     //We can link against the st lib gernerated, but this will only be reflected in static libs.
     // The shared lib still has to be generated later.
     // There is a planned feature in rust to allow whole-archive linking, but i could not get it to
     // work (should look something like this : `println!("cargo:rustc-flags=-l static:+whole-archive=st");`)
     // The following clang command is equivalent:  clang -o libiec.so --shared -Wl,--whole-archive -lst -L. -Wl,--no-whole-archive  iec.o
     // https://stackoverflow.com/questions/55886779/how-to-link-a-c-library-without-calling-one-of-its-functions
-}
-
-fn create_file_paths(inputs: &[String]) -> Result<Vec<FilePath>, PatternError> {
-    let mut sources = Vec::new();
-    for input in inputs {
-        let paths = glob(input)?;
-
-        for p in paths {
-            sources.push(FilePath {
-                path: p.unwrap().to_string_lossy().to_string(),
-            });
-        }
-    }
-    Ok(sources)
 }
