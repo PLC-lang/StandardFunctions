@@ -12,6 +12,7 @@ use rusty::{
     FilePath, SourceCode, SourceContainer,
 };
 
+#[allow(unused_macros)] //This is actually used in subtests
 macro_rules! add_std {
     ($src:expr, $($name:expr),* ) => {
         {
@@ -24,6 +25,8 @@ macro_rules! add_std {
         }
     };
 }
+
+#[allow(unused_imports)] //This is actually used in subtests
 pub(crate) use add_std;
 
 #[macro_export]
@@ -45,6 +48,7 @@ macro_rules! assert_almost_eq {
 }
 
 /// Gets a file from the ST defined standard functions
+#[allow(dead_code)]
 pub fn get_st_file(name: &str) -> SourceCode {
     let mut data_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     data_path.push("iec61131-st");
@@ -836,6 +840,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "EXPT__LREAL__LREAL",
             iec61131std::arithmetic_functions::EXPT__LREAL__LREAL as usize,
         ),
+        (
             "TO_BIG_ENDIAN__INT",
             iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__INT as usize,
         ),
