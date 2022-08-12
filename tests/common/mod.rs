@@ -836,6 +836,246 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "EXPT__LREAL__LREAL",
             iec61131std::arithmetic_functions::EXPT__LREAL__LREAL as usize,
         ),
+            "TO_BIG_ENDIAN__INT",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__INT as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__INT",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__INT as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__INT",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__INT as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__INT",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__INT as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__DINT",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__DINT as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__DINT",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__DINT as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__DINT",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__DINT as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__DINT",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DINT as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__LINT",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__LINT as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__LINT",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__LINT as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__LINT",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__LINT as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__LINT",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__LINT as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__UINT",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__UINT as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__UINT",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__UINT as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__UINT",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__UINT as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__UINT",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__UINT as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__UDINT",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__UDINT as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__UDINT",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__UDINT as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__UDINT",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__UDINT as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__UDINT",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__UDINT as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__ULINT",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__ULINT as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__ULINT",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__ULINT as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__ULINT",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__ULINT as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__ULINT",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__ULINT as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__REAL",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__REAL as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__REAL",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__REAL as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__REAL",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__REAL as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__REAL",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__REAL as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__LREAL",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__LREAL as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__LREAL",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__LREAL as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__LREAL",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__LREAL as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__LREAL",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__LREAL as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__WORD",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__WORD as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__WORD",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__WORD as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__WORD",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__WORD as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__WORD",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__WORD as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__DWORD",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__DWORD as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__DWORD",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__DWORD as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__DWORD",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__DWORD as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__DWORD",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DWORD as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__LWORD",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__LWORD as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__LWORD",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__LWORD as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__LWORD",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__LWORD as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__LWORD",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__LWORD as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__WCHAR",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__WCHAR as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__WCHAR",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__WCHAR as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__WCHAR",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__WCHAR as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__WCHAR",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__WCHAR as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__DATE",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__DATE as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__DATE",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__DATE as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__DATE",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__DATE as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__DATE",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DATE as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__TIME_OF_DAY",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__TIME_OF_DAY as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__TIME_OF_DAY",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__TIME_OF_DAY as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__TIME_OF_DAY",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__TIME_OF_DAY as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__TIME_OF_DAY",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__TIME_OF_DAY as usize,
+        ),
+        (
+            "TO_BIG_ENDIAN__DATE_AND_TIME",
+            iec61131std::endianness_conversion_functions::TO_BIG_ENDIAN__DATE_AND_TIME as usize,
+        ),
+        (
+            "TO_LITTLE_ENDIAN__DATE_AND_TIME",
+            iec61131std::endianness_conversion_functions::TO_LITTLE_ENDIAN__DATE_AND_TIME as usize,
+        ),
+        (
+            "FROM_BIG_ENDIAN__DATE_AND_TIME",
+            iec61131std::endianness_conversion_functions::FROM_BIG_ENDIAN__DATE_AND_TIME as usize,
+        ),
+        (
+            "FROM_LITTLE_ENDIAN__DATE_AND_TIME",
+            iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DATE_AND_TIME
+                as usize,
+        ),
     ];
 
     let variables = vec![
