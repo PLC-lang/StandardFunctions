@@ -1,7 +1,7 @@
 /// Helper function
 /// Gets the amount of continuous characters in u8 array before
 /// the first null-terminator.
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -18,7 +18,7 @@ unsafe fn get_null_terminated_len_utf8(src: *const u8) -> usize {
 /// Helper function
 /// Gets the amount of continuous characters in u16 array before
 /// the first null-terminator.
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -32,7 +32,6 @@ unsafe fn get_null_terminated_len_utf16(src: *const u16) -> usize {
     (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
 }
 
-/// .
 /// Gets length of the given character string.
 /// UTF8
 ///
@@ -42,10 +41,9 @@ pub fn LEN__STRING(src: &str) -> i32 {
     src.len() as i32
 }
 
-/// .
 /// Gets length of the given string.
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe
@@ -55,7 +53,6 @@ pub unsafe fn LEN__WSTRING(src: *const u16) -> i32 {
     get_null_terminated_len_utf16(src) as i32
 }
 
-/// .
 /// Finds the first occurance of the second string (in2)
 /// within the first string (in1).
 /// UTF8
@@ -66,11 +63,10 @@ pub fn FIND__STRING(in1: &str, in2: &str) -> i32 {
     in1.find(in2).unwrap_or_default() as i32
 }
 
-/// .
 /// Finds the first occurance of the second string (src2)
 /// within the first string (src1).
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe
@@ -103,11 +99,10 @@ pub unsafe fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i32 {
     0
 }
 
-/// .
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, beginning with the first (leftmost) character.
 /// UTF8
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -115,7 +110,7 @@ pub unsafe fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i32 {
 /// longer than the base string.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest: *mut u8) {
+pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest: *mut u8) -> i32 {
     if substr_len < 0 {
         panic!("Length parameter cannot be negative.");
     }
@@ -132,13 +127,14 @@ pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest:
 
     // null-terminate created string
     *dest.add(len) = b'\0';
+
+    0
 }
 
-/// .
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, beginning with the first (leftmost) character.
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -146,7 +142,11 @@ pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest:
 /// longer than the base string.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn LEFT_EXT__WSTRING(src: *const u16, substr_len: i32, dest: *mut u16) {
+pub unsafe extern "C" fn LEFT_EXT__WSTRING(
+    src: *const u16,
+    substr_len: i32,
+    dest: *mut u16,
+) -> i32 {
     if substr_len < 0 {
         panic!("Length parameter cannot be negative.");
     }
@@ -160,16 +160,17 @@ pub unsafe extern "C" fn LEFT_EXT__WSTRING(src: *const u16, substr_len: i32, des
     for i in 0..substr_len as usize {
         *dest.add(i) = *src.add(i);
     }
-    
+
     // null-terminate created string
     *dest.add(len) = 0;
+
+    0
 }
 
-/// .
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, ending with the last (rightmost) character.
 /// UTF8
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -177,7 +178,7 @@ pub unsafe extern "C" fn LEFT_EXT__WSTRING(src: *const u16, substr_len: i32, des
 /// longer than the base string.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest: *mut u8) {
+pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest: *mut u8) -> i32 {
     if substr_len < 0 {
         panic!("Length parameter cannot be negative.");
     }
@@ -195,13 +196,14 @@ pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest
 
     // null-terminate created string
     *dest.add(len) = b'\0';
+
+    0
 }
 
-/// .
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, ending with the last (rightmost) character.
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -209,7 +211,11 @@ pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest
 /// longer than the base string.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn RIGHT_EXT__WSTRING(src: *const u16, substr_len: i32, dest: *mut u16) {
+pub unsafe extern "C" fn RIGHT_EXT__WSTRING(
+    src: *const u16,
+    substr_len: i32,
+    dest: *mut u16,
+) -> i32 {
     if substr_len < 0 {
         panic!("Length parameter cannot be negative.");
     }
@@ -227,18 +233,19 @@ pub unsafe extern "C" fn RIGHT_EXT__WSTRING(src: *const u16, substr_len: i32, de
 
     // null-terminate created string
     *dest.add(len) = 0;
+
+    0
 }
 
-/// .
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, beginning at the given index.
 /// UTF8
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
 /// Will panic if the requested substring length or position are negative
-/// or the substring length exceeds the remaining characters from the 
+/// or the substring length exceeds the remaining characters from the
 /// starting position of the base string.
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -247,7 +254,7 @@ pub unsafe extern "C" fn MID_EXT__STRING(
     substr_len: i32,
     start_index: i32,
     dest: *mut u8,
-) {
+) -> i32 {
     if substr_len < 0 || start_index < 0 {
         panic!("Length/Position parameters cannot be negative.");
     }
@@ -270,18 +277,19 @@ pub unsafe extern "C" fn MID_EXT__STRING(
 
     // null-terminate created string
     *dest.add(len) = b'\0';
+
+    0
 }
 
-/// .
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, beginning at the given index.
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
 /// Will panic if the requested substring length or position are negative
-/// or the substring length exceeds the remaining characters from the 
+/// or the substring length exceeds the remaining characters from the
 /// starting position of the base string.
 #[allow(non_snake_case)]
 #[no_mangle]
@@ -290,7 +298,7 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
     substr_len: i32,
     start_index: i32,
     dest: *mut u16,
-) {
+) -> i32 {
     if substr_len < 0 || start_index < 0 {
         panic!("Length/Position parameters cannot be negative.");
     }
@@ -302,7 +310,7 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
 
     // correct for 0-indexing
     let start_index: i32 = start_index as i32 - 1;
-    
+
     if start_index < 0 || (start_index + substr_len as i32) > len as i32 {
         panic!("Index out of range. Check Length and Position parameters.");
     }
@@ -313,14 +321,15 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
 
     // null-terminate created string
     *dest.add(len) = 0;
+
+    0
 }
 
-/// .
 /// Inserts a string into another string at the
 /// specified position and writes the resulting string to
 /// the destination buffer.
 /// UTF8
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -333,7 +342,7 @@ pub unsafe extern "C" fn INSERT_EXT__STRING(
     src_to_insert: *const u8,
     pos: i32,
     dest: *mut u8,
-) {
+) -> i32 {
     if pos < 0 {
         panic!("Positional parameter cannot be negative.");
     }
@@ -363,14 +372,15 @@ pub unsafe extern "C" fn INSERT_EXT__STRING(
 
     // null-terminate created string
     *dest.add(len1 + len2) = b'\0';
+
+    0
 }
 
-/// .
 /// Inserts a string into another string at the
 /// specified position and writes the resulting string to
 /// the destination buffer.
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -383,7 +393,7 @@ pub unsafe extern "C" fn INSERT_EXT__WSTRING(
     src_to_insert: *const u16,
     pos: i32,
     dest: *mut u16,
-) {
+) -> i32 {
     if pos < 0 {
         panic!("Positional parameter cannot be negative.");
     }
@@ -413,14 +423,15 @@ pub unsafe extern "C" fn INSERT_EXT__WSTRING(
 
     // null-terminate created string
     *dest.add(len1 + len2) = 0;
+
+    0
 }
 
-/// .
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
 /// string into a destination buffer.
 /// UTF8
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -433,7 +444,7 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
     num_chars_to_delete: i32,
     pos: i32,
     dest: *mut u8,
-) {
+) -> i32 {
     let len = get_null_terminated_len_utf8(src);
 
     if pos < 1 || pos > len as i32 {
@@ -458,7 +469,7 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
         *dest.add(i) = *src.add(i)
     }
 
-    // skip the amount of characters to be deleted and 
+    // skip the amount of characters to be deleted and
     // add the remaining characters
     for i in pos..(len - ndel) {
         *dest.add(i) = *src.add(i + ndel)
@@ -466,14 +477,15 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
 
     // null-terminate created string
     *dest.add(len - ndel) = b'\0';
+
+    0
 }
 
-/// .
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
 /// string into a destination buffer.
 /// UTF16
-/// 
+///
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
@@ -486,7 +498,7 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
     num_chars_to_delete: i32,
     pos: i32,
     dest: *mut u16,
-) {
+) -> i32 {
     let len = get_null_terminated_len_utf16(src);
 
     if pos < 1 || pos > len as i32 {
@@ -511,7 +523,7 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
         *dest.add(i) = *src.add(i)
     }
 
-    // skip the amount of characters to be deleted and 
+    // skip the amount of characters to be deleted and
     // add the remaining characters
     for i in pos..(len - ndel) {
         *dest.add(i) = *src.add(i + ndel)
@@ -519,9 +531,10 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
 
     // null-terminate created string
     *dest.add(len - ndel) = 0;
+
+    0
 }
 
-/// .
 /// Replaces the given amount of characters in a string, starting
 /// from a specified location in the string, with another string and
 /// writes it to the destination buffer.
@@ -540,7 +553,7 @@ pub unsafe extern "C" fn REPLACE_EXT__STRING(
     num_chars_to_replace: i32,
     pos: i32,
     dest: *mut u8,
-) {
+) -> i32 {
     let len1 = get_null_terminated_len_utf8(src_base);
     let len2 = get_null_terminated_len_utf8(src_replacement);
 
@@ -580,9 +593,10 @@ pub unsafe extern "C" fn REPLACE_EXT__STRING(
 
     // null-terminate created string
     *dest.add(resulting_len) = b'\0';
+
+    0
 }
 
-/// .
 /// Replaces the given amount of characters in a string, starting
 /// from a specified location in the string, with another string and
 /// writes it to the destination buffer.
@@ -601,7 +615,7 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
     num_chars_to_replace: i32,
     pos: i32,
     dest: *mut u16,
-) {
+) -> i32 {
     let len1 = get_null_terminated_len_utf16(src_base);
     let len2 = get_null_terminated_len_utf16(src_replacement);
 
@@ -641,6 +655,8 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 
     // null-terminate created string
     *dest.add(resulting_len) = 0;
+
+    0
 }
 
 // -------------------------------------------------unit tests-----------------------------------------

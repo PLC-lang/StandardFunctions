@@ -4,7 +4,6 @@ Input:
     - IN:   A character string
 Return: String length
 ******************************************************************************)
-{external}
 FUNCTION LEN <T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN : T;
@@ -18,7 +17,6 @@ Input:
     - L:    The length of the substring
 Return: A substring consisting of the leftmost L characters of IN
 ******************************************************************************)
-{external}
 FUNCTION LEFT <T: ANY_STRING, U: ANY_INT> : T
 VAR_INPUT {ref}
 	IN : T;
@@ -28,9 +26,8 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-// TODO -> change sig to DINT
 {external}
-FUNCTION LEFT_EXT<T: ANY_STRING, U: ANY_INT> : __VOID
+FUNCTION LEFT_EXT<T: ANY_STRING, U: ANY_INT> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
@@ -42,44 +39,44 @@ VAR_IN_OUT
 END_VAR
 END_FUNCTION
 
-FUNCTION LEFT__STRING__DINT : STRING[1024] 
+FUNCTION LEFT__STRING__DINT : STRING 
 VAR_INPUT {ref}
-	IN : STRING[1024];
+	IN : STRING;
 END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT);
+    LEFT_EXT(IN, L, LEFT__STRING__DINT);
 END_FUNCTION
 
-FUNCTION LEFT__STRING__LINT : STRING[1024] 
+FUNCTION LEFT__STRING__LINT : STRING 
 VAR_INPUT {ref}
-	IN : STRING[1024];
+	IN : STRING;
 END_VAR
 VAR_INPUT
     L  : LINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT);
+    LEFT_EXT(IN, L, LEFT__STRING__LINT);
 END_FUNCTION
 
-FUNCTION LEFT__WSTRING__DINT : WSTRING[1024] 
+FUNCTION LEFT__WSTRING__DINT : WSTRING
 VAR_INPUT {ref}
-	IN : WSTRING[1024];
+	IN : WSTRING;
 END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT);
+    LEFT_EXT(IN, L, LEFT__WSTRING__DINT);
 END_FUNCTION
 
-FUNCTION LEFT__WSTRING__LINT : WSTRING[1024] 
+FUNCTION LEFT__WSTRING__LINT : WSTRING
 VAR_INPUT {ref}
-	IN : WSTRING[1024];
+	IN : WSTRING;
 END_VAR
 VAR_INPUT
     L  : LINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT);
+    LEFT_EXT(IN, L, LEFT__WSTRING__LINT);
 END_FUNCTION
 
 (******************************************************************************
@@ -89,7 +86,6 @@ Input:
     - L:    The length of the substring
 Return: A substring consisting of the rightmost L characters of IN
 ******************************************************************************)
-{external}
 FUNCTION RIGHT <T: ANY_STRING, U: ANY_INT> : T
 VAR_INPUT {ref}
 	IN : T;
@@ -99,9 +95,8 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-// TODO -> change sig to DINT
 {external}
-FUNCTION RIGHT_EXT<T: ANY_STRING, U: ANY_INT> : __VOID
+FUNCTION RIGHT_EXT<T: ANY_STRING, U: ANY_INT> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
@@ -120,7 +115,7 @@ END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT);
+    RIGHT_EXT(IN, L, RIGHT__STRING__DINT);
 END_FUNCTION
 
 FUNCTION RIGHT__STRING__LINT : STRING[1024] 
@@ -130,7 +125,7 @@ END_VAR
 VAR_INPUT
     L  : LINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT);
+    RIGHT_EXT(IN, L, RIGHT__STRING__LINT);
 END_FUNCTION
 
 FUNCTION RIGHT__WSTRING__DINT : WSTRING[1024] 
@@ -140,7 +135,7 @@ END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT);
+    RIGHT_EXT(IN, L, RIGHT__WSTRING__DINT);
 END_FUNCTION
 
 FUNCTION RIGHT__WSTRING__LINT : WSTRING[1024] 
@@ -150,7 +145,7 @@ END_VAR
 VAR_INPUT
     L  : LINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT);
+    RIGHT_EXT(IN, L, RIGHT__WSTRING__LINT);
 END_FUNCTION
 
 (******************************************************************************
@@ -174,9 +169,8 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-// TODO -> change sig to DINT
 {external}
-FUNCTION MID_EXT<T: ANY_STRING, U: ANY_INT> : __VOID
+FUNCTION MID_EXT<T: ANY_STRING, U: ANY_INT> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
@@ -268,9 +262,8 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-// TODO -> change sig to DINT
 {external}
-FUNCTION INSERT_EXT<T: ANY_STRING, U: ANY_INT> : __VOID
+FUNCTION INSERT_EXT<T: ANY_STRING, U: ANY_INT> : DINT
 VAR_INPUT {ref}
 	IN1 : T;
     IN2 : T;
@@ -343,9 +336,8 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
-// TODO -> change sig to DINT
 {external}
-FUNCTION DELETE_EXT<T: ANY_STRING, U: ANY_INT> : __VOID
+FUNCTION DELETE_EXT<T: ANY_STRING, U: ANY_INT> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
@@ -420,7 +412,7 @@ END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION REPLACE_EXT <T: ANY_STRING, U: ANY_INT> : __VOID
+FUNCTION REPLACE_EXT <T: ANY_STRING, U: ANY_INT> : DINT
 VAR_INPUT {ref}
     IN1 : T;
     IN2 : T;
