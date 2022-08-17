@@ -34,8 +34,10 @@ fn rising_edge_smoke_test() {
     let source = add_std!(prg, "flanks.st");
     let context: Context = Context::create();
     let exec_engine = compile_with_native(&context, source);
-    let mut main_inst = MainType::default();
-    main_inst.val = true;
+    let mut main_inst = MainType {
+        val: true,
+        ..Default::default()
+    };
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(main_inst.out);
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
@@ -59,7 +61,10 @@ fn falling_edge_smoke_test() {
     let source = add_std!(prg, "flanks.st");
     let context: Context = Context::create();
     let exec_engine = compile_with_native(&context, source);
-    let mut main_inst = MainType::default();
+    let mut main_inst = MainType {
+        val: true,
+        ..Default::default()
+    };
     main_inst.val = true;
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
     assert!(!main_inst.out);

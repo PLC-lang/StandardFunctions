@@ -215,3 +215,39 @@ pub extern "C" fn ATAN2__REAL(in1: f32, in2: f32) -> f32 {
 pub extern "C" fn ATAN2__LREAL(in1: f64, in2: f64) -> f64 {
     in1.atan2(in2)
 }
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__DINT__UDINT(in1: i32, in2: u32) -> i32 {
+    in1.pow(in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__LINT__UDINT(in1: i64, in2: u32) -> i64 {
+    in1.pow(in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__REAL__DINT(in1: f32, in2: i32) -> f32 {
+    in1.powi(in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__LREAL__DINT(in1: f64, in2: i32) -> f64 {
+    in1.powi(in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__REAL__REAL(in1: f32, in2: f32) -> f32 {
+    in1.powf(in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__LREAL__LREAL(in1: f64, in2: f64) -> f64 {
+    in1.powf(in2)
+}
