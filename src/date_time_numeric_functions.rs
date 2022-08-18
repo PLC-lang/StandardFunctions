@@ -670,7 +670,7 @@ fn checked_mul_time_with_f32(in1: i64, in2: f32) -> i64 {
     // std::time::Duration can't handle negatives
     // we need to check for negative numbers and convert them to positives if necessary
     let is_in1_negative = in1.is_negative();
-    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+    let duration = std::time::Duration::from_nanos(in1.unsigned_abs());
 
     // if overflows i64 return panic
     let is_in2_negative = in2.is_sign_negative();
@@ -718,7 +718,7 @@ fn checked_mul_time_with_f64(in1: i64, in2: f64) -> i64 {
     // std::time::Duration can't handle negatives
     // we need to check for negative numbers and convert them to positives if necessary
     let is_in1_negative = in1.is_negative();
-    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+    let duration = std::time::Duration::from_nanos(in1.unsigned_abs());
 
     // if overflows i64 return panic
     let is_in2_negative = in2.is_sign_negative();
@@ -766,7 +766,7 @@ fn checked_div_time_by_f32(in1: i64, in2: f32) -> i64 {
     // std::time::Duration can't handle negatives
     // we need to check for negative numbers and convert them to positives if necessary
     let is_in1_negative = in1.is_negative();
-    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+    let duration = std::time::Duration::from_nanos(in1.unsigned_abs());
 
     // if overflows i64 return panic
     let is_in2_negative = in2.is_sign_negative();
@@ -814,7 +814,7 @@ fn checked_div_time_by_f64(in1: i64, in2: f64) -> i64 {
     // std::time::Duration can't handle negatives
     // we need to check for negative numbers and convert them to positives if necessary
     let is_in1_negative = in1.is_negative();
-    let duration = std::time::Duration::from_nanos(in1.abs() as u64);
+    let duration = std::time::Duration::from_nanos(in1.unsigned_abs());
 
     // if overflows i64 return panic
     let is_in2_negative = in2.is_sign_negative();
