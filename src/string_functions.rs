@@ -5,7 +5,7 @@
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
-/// May return a false value if passed an
+/// May return an incorrect value if passed an
 /// array filled with (non-zero) garbage values.
 fn get_null_terminated_len_utf8(src: *const u8) -> usize {
     unsafe {
@@ -13,8 +13,41 @@ fn get_null_terminated_len_utf8(src: *const u8) -> usize {
             return 0;
         }
 
-        (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
+        (0..).take_while(|&i| *src.add(i) != 0).count() as usize
     }
+}
+
+
+/// Helper function
+/// Gets the amount of utf8-encoded characters in u8 array before
+/// the first null-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// May return an incorrect value if passed an
+/// array filled with (non-zero) garbage values.
+fn get_utf8_char_count(src: *const u8, nbytes: usize) -> usize {
+    // count amount of utf8 characters in array
+    let mut nchars = 0;
+    for offset in 0..nbytes {
+        // skip continuation-bytes
+        unsafe {
+            if is_continuation_byte(*src.add(offset)) {
+                continue;
+            }
+        }      
+        nchars += 1;  
+    }
+
+    nchars
+}
+
+/// Helper function
+/// Checks if byte is a utf8 continuation byte
+/// (part of a multi-byte character)
+fn is_continuation_byte(byte: u8) -> bool{
+    byte & 0xC0 == 0x80   
 }
 
 /// Helper function
@@ -24,7 +57,7 @@ fn get_null_terminated_len_utf8(src: *const u8) -> usize {
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
-/// May return a false value if passed an
+/// May return an incorrect value if passed an
 /// array filled with (non-zero) garbage values.
 fn get_null_terminated_len_utf16(src: *const u16) -> usize {
     unsafe {
@@ -32,39 +65,107 @@ fn get_null_terminated_len_utf16(src: *const u16) -> usize {
             return 0;
         }
 
-        (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
+        (0..).take_while(|&i| *src.add(i) != 0).count() as usize
     }
+}
+
+/// Helper function
+/// Gets the amount of utf16-encoded characters in u16 array before
+/// the first null-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// May return an incorrect value if passed an
+/// array filled with (non-zero) garbage values.
+fn get_utf16_char_count(src: *const u16, nwords: usize) -> usize {
+    // count amount of utf8 characters in array
+    let mut nchars = 0;
+    for offset in 0..nwords {
+        // skip low surrogates for chars outside of BMP
+        unsafe {
+            if is_low_surrogate(*src.add(offset)) {
+                continue;
+            }
+        }        
+
+        nchars += 1;
+    }
+
+    nchars
+}
+
+/// Helper function
+/// Checks if word is a utf16 low surrogate
+/// (part of a multi-word character)
+fn is_low_surrogate(word: u16) -> bool{
+    word & 0b110111<<10 == 0b110111<<10   
 }
 
 /// Gets length of the given character string.
 /// UTF8
 ///
+/// Works on raw pointers, inherently unsafe.
+/// May return an incorrect value if passed an
+/// array filled with (non-zero) garbage values.
+/// 
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn LEN__STRING(src: *const u8) -> i32 {
-    get_null_terminated_len_utf8(src) as i32
+    let nbytes = get_null_terminated_len_utf8(src);
+    get_utf8_char_count(src, nbytes) as i32
 }
 
 /// Gets length of the given string.
 /// UTF16
 ///
-/// # Safety
-///
-/// Works on raw pointers, inherently unsafe
+/// Works on raw pointers, inherently unsafe.
+/// May return an incorrect value if passed an
+/// array filled with (non-zero) garbage values.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe fn LEN__WSTRING(src: *const u16) -> i32 {
-    get_null_terminated_len_utf16(src) as i32
+pub extern "C" fn LEN__WSTRING(src: *const u16) -> i32 {
+    let nwords = get_null_terminated_len_utf16(src);
+    get_utf16_char_count(src, nwords) as i32
 }
 
 /// Finds the first occurance of the second string (in2)
 /// within the first string (in1).
 /// UTF8
 ///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn FIND__STRING(in1: &str, in2: &str) -> i32 {
-    in1.find(in2).unwrap_or_default() as i32
+pub unsafe extern "C" fn FIND__STRING(src1: *const u8, src2: *const u8) -> i32 {
+    let nbytes1 = get_null_terminated_len_utf8(src1);
+    let nbytes2 = get_null_terminated_len_utf8(src2);
+
+    if nbytes2 > nbytes1 || nbytes1 == 0 || nbytes2 == 0 {
+        return 0;
+    }
+
+    for i in 0..=(nbytes1 - nbytes2) {
+        let mut consecutive_matches = 0;
+
+        for j in 0..nbytes2 {
+            if *src1.add(i + j) == *src2.add(j) {
+                consecutive_matches += 1;
+            } else {
+                break;
+            }            
+        }
+
+        if consecutive_matches == nbytes2 {            
+            return get_utf8_char_count(src1, i) as i32 + 1 
+        }
+    }
+
+    0
 }
 
 /// Finds the first occurance of the second string (src2)
@@ -76,27 +177,27 @@ pub fn FIND__STRING(in1: &str, in2: &str) -> i32 {
 /// Works on raw pointers, inherently unsafe
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i32 {
-    let len1 = get_null_terminated_len_utf16(src1);
-    let len2 = get_null_terminated_len_utf16(src2);
+pub unsafe extern "C" fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i32 {
+    let nwords1 = get_null_terminated_len_utf16(src1);
+    let nwords2 = get_null_terminated_len_utf16(src2);
 
-    if len2 > len1 || len1 == 0 || len2 == 0 {
+    if nwords2 > nwords1 || nwords1 == 0 || nwords2 == 0 {
         return 0;
     }
 
-    for i in 0..(len1 - len2) {
+    for i in 0..=(nwords1 - nwords2) {
         let mut consecutive_matches = 0;
 
-        for j in 0..len2 {
+        for j in 0..nwords2 {
             if *src1.add(i + j) == *src2.add(j) {
                 consecutive_matches += 1;
             } else {
                 break;
-            }
+            }            
         }
 
-        if consecutive_matches == len2 {
-            return (i + 1) as i32;
+        if consecutive_matches == nwords2 {            
+            return get_utf16_char_count(src1, i) as i32 + 1 
         }
     }
 
@@ -119,18 +220,28 @@ pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest:
         panic!("Length parameter cannot be negative.");
     }
 
-    let len = get_null_terminated_len_utf8(src);
+    let nbytes = get_null_terminated_len_utf8(src);
+    let nchars = get_utf8_char_count(src, nbytes);
 
-    if len < substr_len as usize {
+    if nchars < substr_len as usize {
         panic!("Substring length exceeds string length");
     }
 
-    for i in 0..substr_len as usize {
-        *dest.add(i) = *src.add(i);
+    let mut len = 0;
+    let mut byte_offset = 0;
+
+    while len < substr_len {
+        *dest.add(byte_offset) = *src.add(byte_offset);
+        
+        if !is_continuation_byte(*dest.add(byte_offset)) {            
+            len += 1;
+        }
+
+        byte_offset += 1;
     }
 
-    // null-terminate created string
-    *dest.add(len) = b'\0';
+    // null-terminator
+    *dest.add(byte_offset + 1) = 0;
 
     0
 }
@@ -200,7 +311,6 @@ pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest
 
     // null-terminate created string
     *dest.add(len) = b'\0';
-
     0
 }
 
@@ -671,9 +781,65 @@ mod test {
 
     // -----------------------------------UTF8
     #[test]
+    fn test_len_correct_utf8_character_count()
+    {
+        let s = "ϕϚϡϗabcd\0";
+        let raw_src = s.as_ptr();
+        let res = LEN__STRING(raw_src);
+        assert_eq!(res, 8)        
+    }
+
+    #[test]
+    fn test_find_index_correct() {
+        let s1 = "hello world\0";
+        let s2 = "worl\0";
+        let raw_src1 = s1.as_ptr();
+        let raw_src2 = s2.as_ptr();
+        unsafe {
+            let res = FIND__STRING(raw_src1, raw_src2);
+            assert_eq!(res, 7) 
+        }
+    }
+
+    #[test]
+    fn test_find_index_correct_edge_case() {
+        let s1 = "hello world\0";
+        let s2 = "orld\0";
+        let raw_src1 = s1.as_ptr();
+        let raw_src2 = s2.as_ptr();
+        unsafe {
+            let res = FIND__STRING(raw_src1, raw_src2);
+            assert_eq!(res, 8) 
+        }
+    }
+
+    #[test]
+    fn test_find_index_correct_edge_case2() {
+        let s1 = "hello world\0";
+        let s2 = "d\0";
+        let raw_src1 = s1.as_ptr();
+        let raw_src2 = s2.as_ptr();
+        unsafe {
+            let res = FIND__STRING(raw_src1, raw_src2);
+            assert_eq!(res, 11) 
+        }
+    }
+    #[test]
+    fn test_find_index_correct_multibyte() {
+        let s1 = "hello ϕϚϡϗ\0";
+        let s2 = "ϗ\0";
+        let raw_src1 = s1.as_ptr();
+        let raw_src2 = s2.as_ptr();
+        unsafe {
+            let res = FIND__STRING(raw_src1, raw_src2);
+            assert_eq!(res, 10) 
+        }
+    }
+    
+    #[test]
     fn test_left_ext_str() {
-        let s = "hello\0";
-        let len = 4;
+        let s = "ϕϚϡϗ hello\0";
+        let len = 7;
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src = s.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -682,7 +848,23 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("hell", str_slice)
+            assert_eq!("ϕϚϡϗ he", str_slice)
+        }
+    }
+
+    #[test]
+    fn test_left_ext_str_edge_case() {
+        let s = "ϕϚϡϗ hello\0";
+        let len = 10;
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let raw_src = s.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            LEFT_EXT__STRING(raw_src, len, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("ϕϚϡϗ hello", str_slice)
         }
     }
 
@@ -925,8 +1107,9 @@ mod test {
 
     #[test]
     fn test_replace_ext_str_replace_at_end() {
-        let base = "hello world\0";
-        let s = "aldo, how are you\0";
+        // 
+        let base = "hællø wørlÞ\0";
+        let s = "aldo, how are you😀\0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
         let raw_src2 = s.as_ptr();
@@ -936,7 +1119,7 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("hello waldo, how are you", str_slice)
+            assert_eq!("hællo waldo, how are you😀", str_slice)
         }
     }
 
@@ -984,20 +1167,22 @@ mod test {
 
     // -----------------------------------UTF16
     #[test]
+    fn test_len_correct_utf16_character_count()
+    {
+        let v1: Vec<u16> = "😀123ϕϚϡϗ😀\0".encode_utf16().collect();
+        let s = &v1[..];
+        let raw_src = s.as_ptr();
+        let res = LEN__WSTRING(raw_src);
+        assert_eq!(res, 9)
+        
+    }
+
+    #[test]
     fn test_find_wstring() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "lo\0".encode_utf16().collect();
-        let mut base = [0_u16; 20];
-        let mut find = [0_u16; 20];
-
-        for (place, element) in base.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in find.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
+        let base = &v1[..];
+        let find = &v2[..];
         let raw_src1 = base.as_ptr();
         let raw_src2 = find.as_ptr();
         unsafe {
@@ -1010,17 +1195,8 @@ mod test {
     fn test_find_wstring_no_match() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "zzzzzz\0".encode_utf16().collect();
-        let mut base = [0_u16; 20];
-        let mut find = [0_u16; 20];
-
-        for (place, element) in base.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in find.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
+        let base = &v1[..];
+        let find = &v2[..];
         let raw_src1 = base.as_ptr();
         let raw_src2 = find.as_ptr();
         unsafe {
@@ -1033,17 +1209,8 @@ mod test {
     fn test_find_wstring_base_string_too_short() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "hello world oachkatzlschwoaf\0".encode_utf16().collect();
-        let mut base = [0_u16; 20];
-        let mut find = [0_u16; 20];
-
-        for (place, element) in base.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in find.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
+        let base = &v1[..];
+        let find = &v2[..];
         let raw_src1 = base.as_ptr();
         let raw_src2 = find.as_ptr();
         unsafe {
@@ -1055,13 +1222,8 @@ mod test {
     #[test]
     fn test_left_ext_wstring() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr = [0_u16; 20];
+        let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
@@ -1079,13 +1241,8 @@ mod test {
     #[should_panic]
     fn test_left_ext_wstring_len_out_of_range() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr = [0_u16; 20];
+        let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
@@ -1097,13 +1254,8 @@ mod test {
     #[test]
     fn test_right_ext_wstring() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr = [0_u16; 20];
+        let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
@@ -1120,13 +1272,8 @@ mod test {
     #[test]
     fn test_right_ext_wstring_zero_length_strings() {
         let v1: Vec<u16> = "\0".encode_utf16().collect();
-        let mut arr = [0_u16; 20];
+        let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
@@ -1143,13 +1290,8 @@ mod test {
     #[test]
     fn test_mid_ext_wstring() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr = [0_u16; 20];
+        let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
@@ -1167,13 +1309,8 @@ mod test {
     #[should_panic]
     fn test_mid_ext_wstring_index_out_of_range() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr = [0_u16; 20];
+        let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
@@ -1186,21 +1323,13 @@ mod test {
     fn test_insert_ext_wstring() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
+
         unsafe {
             INSERT_EXT__WSTRING(raw_src1, raw_src2, 6, raw_dest);
             let slice =
@@ -1215,21 +1344,13 @@ mod test {
     fn test_insert_ext_wstring_insert_at_zero() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
+
         unsafe {
             INSERT_EXT__WSTRING(raw_src1, raw_src2, 0, raw_dest);
             let slice =
@@ -1244,21 +1365,13 @@ mod test {
     fn test_insert_ext_wstring_insert_at_end() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
+
         unsafe {
             INSERT_EXT__WSTRING(raw_src1, raw_src2, 11, raw_dest);
             let slice =
@@ -1274,21 +1387,13 @@ mod test {
     fn test_insert_ext_wstring_pos_out_of_range() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
+
         unsafe {
             INSERT_EXT__WSTRING(raw_src1, raw_src2, 12, raw_dest);
         }
@@ -1297,15 +1402,11 @@ mod test {
     #[test]
     fn test_delete_ext_wstring() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
+        let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr1.as_ptr();
         let raw_dest = dest.as_mut_ptr();
+
         unsafe {
             DELETE_EXT__WSTRING(raw_src, 6, 3, raw_dest);
             let slice =
@@ -1319,13 +1420,8 @@ mod test {
     #[test]
     fn test_delete_ext_wstring_delete_all() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
+        let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr1.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
@@ -1342,13 +1438,8 @@ mod test {
     #[should_panic]
     fn test_delete_ext_wstring_too_many_del_chars() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
+        let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr1.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
@@ -1360,13 +1451,8 @@ mod test {
     #[should_panic]
     fn test_delete_ext_wstring_pos_out_of_range_lower() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
+        let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr1.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
@@ -1378,13 +1464,8 @@ mod test {
     #[should_panic]
     fn test_delete_ext_wstring_pos_out_of_range_upper() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
+        let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
         let raw_src = arr1.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
@@ -1396,18 +1477,9 @@ mod test {
     fn test_replace_ext_wstring_replace_at_beginning() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -1425,18 +1497,9 @@ mod test {
     fn test_replace_ext_wstring_replace_at_middle() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = " is out of this \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -1454,18 +1517,9 @@ mod test {
     fn test_replace_ext_wstring_replace_at_end() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = "aldo, how are you?\0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -1475,7 +1529,7 @@ mod test {
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("hello waldo, how are you?", res)
+            assert_eq!("hello waldo, how are you? 😀", res)
         }
     }
 
@@ -1484,18 +1538,9 @@ mod test {
     fn test_replace_ext_wstring_replace_too_many_chars() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = " is out of this \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -1509,18 +1554,9 @@ mod test {
     fn test_replace_ext_wstring_pos_out_of_bounds_lower() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = " is out of this \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -1534,18 +1570,9 @@ mod test {
     fn test_replace_ext_wstring_pos_out_of_bounds_upper() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
         let v2: Vec<u16> = " is out of this \0".encode_utf16().collect();
-        let mut arr1 = [0_u16; 20];
-        let mut arr2 = [0_u16; 20];
+        let arr1 = &v1[..];
+        let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
-
-        for (place, element) in arr1.iter_mut().zip(v1.iter()) {
-            *place = *element;
-        }
-
-        for (place, element) in arr2.iter_mut().zip(v2.iter()) {
-            *place = *element;
-        }
-
         let raw_src1 = arr1.as_ptr();
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
