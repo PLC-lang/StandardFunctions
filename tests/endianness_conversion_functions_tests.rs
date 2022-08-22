@@ -609,7 +609,7 @@ fn test_to_big_endian_date() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms(0, 0, 0)
-            .timestamp_millis()
+            .timestamp_nanos()
             .to_be()
     )
 }
@@ -622,10 +622,7 @@ fn test_to_little_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
@@ -636,10 +633,7 @@ fn test_from_big_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
@@ -648,75 +642,6 @@ fn test_from_little_endian_date() {
     main := FROM_LITTLE_ENDIAN(DATE#1984-06-25);
     END_FUNCTION    
 "#;
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
-            .timestamp_millis()
-            .to_be()
-    )
-}
-
-//-------------------------------LDATE nanos
-#[test]
-#[ignore = r#"LDATE is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_to_big_endian_ldate() {
-    let src = r#"FUNCTION main : LDATE
-    main := TO_BIG_ENDIAN(LDATE#1984-06-25);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
-            .timestamp_nanos()
-            .to_be()
-    )
-}
-
-#[test]
-#[ignore = r#"LDATE is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_to_little_endian_ldate() {
-    let src = r#"FUNCTION main : LDATE
-    main := TO_LITTLE_ENDIAN(LDATE#1984-06-25);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
-}
-
-#[test]
-#[ignore = r#"LDATE is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_from_big_endian_ldate() {
-    let src = r#"FUNCTION main : LDATE
-    main := FROM_BIG_ENDIAN(LDATE#1984-06-25);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
-}
-
-#[test]
-#[ignore = r#"LDATE is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_from_little_endian_ldate() {
-    let src = r#"FUNCTION main : LDATE
-    main := FROM_LITTLE_ENDIAN(LDATE#1984-06-25);
-    END_FUNCTION    
-"#;
-
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
@@ -738,7 +663,7 @@ fn test_to_big_endian_tod() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS.to_be())
+    assert_eq!(res, DURATION_NANOS.to_be())
 }
 
 #[test]
@@ -750,7 +675,7 @@ fn test_to_little_endian_tod() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS)
+    assert_eq!(res, DURATION_NANOS)
 }
 
 #[test]
@@ -762,70 +687,13 @@ fn test_from_big_endian_tod() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS)
+    assert_eq!(res, DURATION_NANOS)
 }
 
 #[test]
 fn test_from_little_endian_tod() {
     let src = r#"FUNCTION main : TIME_OF_DAY
     main := FROM_LITTLE_ENDIAN(TIME_OF_DAY#22:22:22);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS.to_be())
-}
-
-///-------------------------------LTOD nanos
-#[test]
-#[ignore = r#"LTOD is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_to_big_endian_ltod() {
-    let src = r#"FUNCTION main : LTOD
-    main := TO_BIG_ENDIAN(LTOD#22:22:22);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_NANOS.to_be())
-}
-
-#[test]
-#[ignore = r#"LTOD is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_to_little_endian_ltod() {
-    let src = r#"FUNCTION main : LTOD
-    main := TO_LITTLE_ENDIAN(LTOD#22:22:22);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_NANOS)
-}
-
-#[test]
-#[ignore = r#"LTOD is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_from_big_endian_ltod() {
-    let src = r#"FUNCTION main : LTOD
-    main := FROM_BIG_ENDIAN(LTOD#22:22:22);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_NANOS)
-}
-
-#[test]
-#[ignore = r#"LTOD is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_from_little_endian_ltod() {
-    let src = r#"FUNCTION main : LTOD
-    main := FROM_LITTLE_ENDIAN(LTOD#22:22:22);
     END_FUNCTION    
 "#;
 
@@ -848,7 +716,7 @@ fn test_to_big_endian_dt() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms(0, 0, 0)
-            .timestamp_millis()
+            .timestamp_nanos()
             .to_be()
     )
 }
@@ -862,10 +730,7 @@ fn test_to_little_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
@@ -877,10 +742,7 @@ fn test_from_big_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
@@ -896,87 +758,15 @@ fn test_from_little_endian_dt() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms(0, 0, 0)
-            .timestamp_millis()
-            .to_be()
-    )
-}
-
-///-------------------------------LDT nanos
-#[test]
-#[ignore = r#"LDT is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_to_big_endian_ldt() {
-    let src = r#"FUNCTION main : LDT
-    main := TO_BIG_ENDIAN(LDT#1984-06-25-00:00:00);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms_nano(0, 0, 0, 0)
             .timestamp_nanos()
             .to_be()
     )
 }
 
+// long datetime type tests in nanos to confirm functionality.
+// ldate nanos
 #[test]
-#[ignore = r#"LDT is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_to_little_endian_ldt() {
-    let src = r#"FUNCTION main : LDT
-    main := TO_LITTLE_ENDIAN(LDT#1984-06-25-00:00:00);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
-}
-
-#[test]
-#[ignore = r#"LDT is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_from_big_endian_ldt() {
-    let src = r#"FUNCTION main : LDT
-    main := FROM_BIG_ENDIAN(LDT#1984-06-25-00:00:00);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
-}
-
-#[test]
-#[ignore = r#"LDT is currently not in nanoseconds
-(see https://github.com/PLC-lang/rusty/issues/539)"#]
-fn test_from_little_endian_ldt() {
-    let src = r#"FUNCTION main : LDT
-    main := FROM_LITTLE_ENDIAN(LDT#1984-06-25-00:00:00);
-    END_FUNCTION    
-"#;
-
-    let src = add_std!(src, "endianness_conversion_functions.st");
-    let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
-            .timestamp_nanos()
-            .to_be()
-    )
-}
-
-// long datetime type tests in millis to confirm functionality.
-// redundant after types changed to nanoseconds -> uncomment above nanos tests
-//
-// ldate millis
-#[test]
-fn test_to_big_endian_ldate_millis() {
+fn test_to_big_endian_ldate_nanos() {
     let src = r#"FUNCTION main : LDATE
     main := TO_BIG_ENDIAN(LDATE#1984-06-25);
     END_FUNCTION    
@@ -988,13 +778,13 @@ fn test_to_big_endian_ldate_millis() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms(0, 0, 0)
-            .timestamp_millis()
+            .timestamp_nanos()
             .to_be()
     )
 }
 
 #[test]
-fn test_to_little_endian_ldate_millis() {
+fn test_to_little_endian_ldate_nanos() {
     let src = r#"FUNCTION main : LDATE
     main := TO_LITTLE_ENDIAN(LDATE#1984-06-25);
     END_FUNCTION    
@@ -1002,14 +792,11 @@ fn test_to_little_endian_ldate_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
-fn test_from_big_endian_ldate_millis() {
+fn test_from_big_endian_ldate_nanos() {
     let src = r#"FUNCTION main : LDATE
     main := FROM_BIG_ENDIAN(LDATE#1984-06-25);
     END_FUNCTION    
@@ -1017,14 +804,11 @@ fn test_from_big_endian_ldate_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
-fn test_from_little_endian_ldate_millis() {
+fn test_from_little_endian_ldate_nanos() {
     let src = r#"FUNCTION main : LDATE
     main := FROM_LITTLE_ENDIAN(LDATE#1984-06-25);
     END_FUNCTION    
@@ -1036,14 +820,14 @@ fn test_from_little_endian_ldate_millis() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms(0, 0, 0)
-            .timestamp_millis()
+            .timestamp_nanos()
             .to_be()
     )
 }
 
-// ldt millis
+// ldt nanos
 #[test]
-fn test_to_big_endian_ldt_millis() {
+fn test_to_big_endian_ldt_nanos() {
     let src = r#"FUNCTION main : LDT
     main := TO_BIG_ENDIAN(LDT#1984-06-25-00:00:00);
     END_FUNCTION    
@@ -1056,13 +840,13 @@ fn test_to_big_endian_ldt_millis() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms_nano(0, 0, 0, 0)
-            .timestamp_millis()
+            .timestamp_nanos()
             .to_be()
     )
 }
 
 #[test]
-fn test_to_little_endian_ldt_millis() {
+fn test_to_little_endian_ldt_nanos() {
     let src = r#"FUNCTION main : LDT
     main := TO_LITTLE_ENDIAN(LDT#1984-06-25-00:00:00);
     END_FUNCTION    
@@ -1070,14 +854,11 @@ fn test_to_little_endian_ldt_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
-fn test_from_big_endian_millis() {
+fn test_from_big_endian_nanos() {
     let src = r#"FUNCTION main : LDT
     main := FROM_BIG_ENDIAN(LDT#1984-06-25-00:00:00);
     END_FUNCTION    
@@ -1085,14 +866,11 @@ fn test_from_big_endian_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(
-        res,
-        Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_millis()
-    )
+    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
 }
 
 #[test]
-fn test_from_little_endian_millis() {
+fn test_from_little_endian_nanos() {
     let src = r#"FUNCTION main : LDT
     main := FROM_LITTLE_ENDIAN(LDT#1984-06-25-00:00:00);
     END_FUNCTION    
@@ -1104,14 +882,14 @@ fn test_from_little_endian_millis() {
         res,
         Utc.ymd(1984, 6, 25)
             .and_hms(0, 0, 0)
-            .timestamp_millis()
+            .timestamp_nanos()
             .to_be()
     )
 }
 
-// ltod millis
+// ltod nanos
 #[test]
-fn test_to_big_endian_ltod_millis() {
+fn test_to_big_endian_ltod_nanos() {
     let src = r#"FUNCTION main : LTOD
     main := TO_BIG_ENDIAN(LTOD#22:22:22);
     END_FUNCTION    
@@ -1119,11 +897,11 @@ fn test_to_big_endian_ltod_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS.to_be())
+    assert_eq!(res, DURATION_NANOS.to_be())
 }
 
 #[test]
-fn test_to_little_endian_ltod_millis() {
+fn test_to_little_endian_ltod_nanos() {
     let src = r#"FUNCTION main : LTOD
     main := TO_LITTLE_ENDIAN(LTOD#22:22:22);
     END_FUNCTION    
@@ -1131,11 +909,11 @@ fn test_to_little_endian_ltod_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS)
+    assert_eq!(res, DURATION_NANOS)
 }
 
 #[test]
-fn test_from_big_endian_ltod_millis() {
+fn test_from_big_endian_ltod_nanos() {
     let src = r#"FUNCTION main : LTOD
     main := FROM_BIG_ENDIAN(LTOD#22:22:22);
     END_FUNCTION    
@@ -1143,11 +921,11 @@ fn test_from_big_endian_ltod_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS)
+    assert_eq!(res, DURATION_NANOS)
 }
 
 #[test]
-fn test_from_little_endian_ltod_millis() {
+fn test_from_little_endian_ltod_nanos() {
     let src = r#"FUNCTION main : LTOD
     main := FROM_LITTLE_ENDIAN(LTOD#22:22:22);
     END_FUNCTION    
@@ -1155,5 +933,5 @@ fn test_from_little_endian_ltod_millis() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, DURATION_MILLIS.to_be())
+    assert_eq!(res, DURATION_NANOS.to_be())
 }
