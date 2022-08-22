@@ -816,7 +816,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CTUD_UDINT", iec61131std::counters::CTUD_UDINT as usize),
         ("CTUD_LINT", iec61131std::counters::CTUD_LINT as usize),
         ("CTUD_ULINT", iec61131std::counters::CTUD_ULINT as usize),
-        // TODO: all aliases for each generic
         (
             "LEN__STRING",
             iec61131std::string_functions::LEN__STRING as usize,
@@ -841,10 +840,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "LEFT_EXT__WSTRING",
             iec61131std::string_functions::LEFT_EXT__WSTRING as usize,
         ),
-        // ("LEFT__STRING__DINT", iec61131std::string_functions::LEFT__STRING__DINT as usize),
-        // ("LEFT__STRING__LINT", iec61131std::string_functions::LEFT__STRING__LINT as usize),
-        // ("LEFT__WSTRING__DINT", iec61131std::string_functions::LEFT__WSTRING__DINT as usize),
-        // ("LEFT__WSTRING__LINT", iec61131std::string_functions::LEFT__WSTRING__LINT as usize),
         (
             "RIGHT_EXT__STRING",
             iec61131std::string_functions::RIGHT_EXT__STRING as usize,
@@ -853,10 +848,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "RIGHT_EXT__WSTRING",
             iec61131std::string_functions::RIGHT_EXT__WSTRING as usize,
         ),
-        // ("RIGHT__STRING__DINT", iec61131std::string_functions::RIGHT__STRING__DINT as usize),
-        // ("RIGHT__STRING__LINT", iec61131std::string_functions::RIGHT__STRING__LINT as usize),
-        // ("RIGHT__WSTRING__DINT", iec61131std::string_functions::RIGHT__WSTRING__DINT as usize),
-        // ("RIGHT__WSTRING__LINT", iec61131std::string_functions::RIGHT__WSTRING__LINT as usize),
         (
             "MID_EXT__STRING",
             iec61131std::string_functions::MID_EXT__STRING as usize,
@@ -865,10 +856,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "MID_EXT__WSTRING",
             iec61131std::string_functions::MID_EXT__WSTRING as usize,
         ),
-        // ("MID__STRING__DINT", iec61131std::string_functions::MID__STRING__DINT as usize),
-        // ("MID__STRING__LINT", iec61131std::string_functions::MID__STRING__LINT as usize),
-        // ("MID__WSTRING__DINT", iec61131std::string_functions::MID__WSTRING__DINT as usize),
-        // ("MID__WSTRING__LINT", iec61131std::string_functions::MID__WSTRING__LINT as usize),
         (
             "INSERT_EXT__STRING",
             iec61131std::string_functions::INSERT_EXT__STRING as usize,
@@ -877,10 +864,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "INSERT_EXT__WSTRING",
             iec61131std::string_functions::INSERT_EXT__WSTRING as usize,
         ),
-        // ("INSERT__STRING__DINT", iec61131std::string_functions::INSERT__STRING__DINT as usize),
-        // ("INSERT__STRING__LINT", iec61131std::string_functions::INSERT__STRING__LINT as usize),
-        // ("INSERT__WSTRING__DINT", iec61131std::string_functions::INSERT__WSTRING__DINT as usize),
-        // ("INSERT__WSTRING__LINT", iec61131std::string_functions::INSERT__WSTRING__LINT as usize),
         (
             "DELETE_EXT__STRING",
             iec61131std::string_functions::DELETE_EXT__STRING as usize,
@@ -889,10 +872,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "DELETE_EXT__WSTRING",
             iec61131std::string_functions::DELETE_EXT__WSTRING as usize,
         ),
-        // ("DELETE__STRING__DINT", iec61131std::string_functions::DELETE__STRING__DINT as usize),
-        // ("DELETE__STRING__LINT", iec61131std::string_functions::DELETE__STRING__LINT as usize),
-        // ("DELETE__WSTRING__DINT", iec61131std::string_functions::DELETE__WSTRING__DINT as usize),
-        // ("DELETE__WSTRING__LINT", iec61131std::string_functions::DELETE__WSTRING__LINT as usize),
         (
             "REPLACE_EXT__STRING",
             iec61131std::string_functions::REPLACE_EXT__STRING as usize,
@@ -901,10 +880,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "REPLACE_EXT__WSTRING",
             iec61131std::string_functions::REPLACE_EXT__WSTRING as usize,
         ),
-        // ("REPLACE__STRING__DINT", iec61131std::string_functions::REPLACE__STRING__DINT as usize),
-        // ("REPLACE__STRING__LINT", iec61131std::string_functions::REPLACE__STRING__LINT as usize),
-        // ("REPLACE__WSTRING__DINT", iec61131std::string_functions::REPLACE__WSTRING__DINT as usize),
-        // ("REPLACE__WSTRING__LINT", iec61131std::string_functions::REPLACE__WSTRING__LINT as usize),
         (
             "EXPT__DINT__UDINT",
             iec61131std::arithmetic_functions::EXPT__DINT__UDINT as usize,

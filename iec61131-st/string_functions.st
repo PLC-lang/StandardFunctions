@@ -4,6 +4,7 @@ Input:
     - IN:   A character string
 Return: String length
 ******************************************************************************)
+{external}
 FUNCTION LEN <T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN : T;
@@ -17,66 +18,72 @@ Input:
     - L:    The length of the substring
 Return: A substring consisting of the leftmost L characters of IN
 ******************************************************************************)
-FUNCTION LEFT <T: ANY_STRING, U: ANY_INT> : T
+FUNCTION LEFT <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
+    L  : DINT;
 END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION LEFT_EXT<T: ANY_STRING, U: ANY_INT> : DINT
+FUNCTION LEFT_EXT<T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
+    L  : DINT;
 END_VAR
 VAR_IN_OUT
     OUT: T;
 END_VAR
 END_FUNCTION
 
-FUNCTION LEFT__STRING__DINT : STRING 
+FUNCTION LEFT__STRING : STRING 
 VAR_INPUT {ref}
 	IN : STRING;
 END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT__STRING__DINT);
+    LEFT_EXT(IN, L, LEFT__STRING);
 END_FUNCTION
 
-FUNCTION LEFT__STRING__LINT : STRING 
-VAR_INPUT {ref}
-	IN : STRING;
-END_VAR
-VAR_INPUT
-    L  : LINT;
-END_VAR
-    LEFT_EXT(IN, L, LEFT__STRING__LINT);
-END_FUNCTION
-
-FUNCTION LEFT__WSTRING__DINT : WSTRING
+FUNCTION LEFT__WSTRING : WSTRING
 VAR_INPUT {ref}
 	IN : WSTRING;
 END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT__WSTRING__DINT);
+    LEFT_EXT(IN, L, LEFT__WSTRING);
 END_FUNCTION
 
-FUNCTION LEFT__WSTRING__LINT : WSTRING
+{external}
+FUNCTION LEFT_EXT__STRING : DINT
+VAR_INPUT {ref}
+	IN : STRING;
+END_VAR
+VAR_INPUT
+    L  : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT: STRING;
+END_VAR
+END_FUNCTION
+
+{external}
+FUNCTION LEFT_EXT__WSTRING : DINT
 VAR_INPUT {ref}
 	IN : WSTRING;
 END_VAR
 VAR_INPUT
-    L  : LINT;
+    L  : DINT;
 END_VAR
-    LEFT_EXT(IN, L, LEFT__WSTRING__LINT);
+VAR_IN_OUT
+    OUT: WSTRING;
+END_VAR
 END_FUNCTION
 
 (******************************************************************************
@@ -86,66 +93,72 @@ Input:
     - L:    The length of the substring
 Return: A substring consisting of the rightmost L characters of IN
 ******************************************************************************)
-FUNCTION RIGHT <T: ANY_STRING, U: ANY_INT> : T
+FUNCTION RIGHT <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
+    L  : DINT;
 END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION RIGHT_EXT<T: ANY_STRING, U: ANY_INT> : DINT
+FUNCTION RIGHT_EXT<T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
+    L  : DINT;
 END_VAR
 VAR_IN_OUT
-    OUT: T;
+    OUT: DINT;
 END_VAR
 END_FUNCTION
 
-FUNCTION RIGHT__STRING__DINT : STRING[1024] 
+FUNCTION RIGHT__STRING : STRING[1024] 
 VAR_INPUT {ref}
 	IN : STRING[1024];
 END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT__STRING__DINT);
+    RIGHT_EXT(IN, L, RIGHT__STRING);
 END_FUNCTION
 
-FUNCTION RIGHT__STRING__LINT : STRING[1024] 
-VAR_INPUT {ref}
-	IN : STRING[1024];
-END_VAR
-VAR_INPUT
-    L  : LINT;
-END_VAR
-    RIGHT_EXT(IN, L, RIGHT__STRING__LINT);
-END_FUNCTION
-
-FUNCTION RIGHT__WSTRING__DINT : WSTRING[1024] 
+FUNCTION RIGHT__WSTRING : WSTRING[1024] 
 VAR_INPUT {ref}
 	IN : WSTRING[1024];
 END_VAR
 VAR_INPUT
     L  : DINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT__WSTRING__DINT);
+    RIGHT_EXT(IN, L, RIGHT__WSTRING);
 END_FUNCTION
 
-FUNCTION RIGHT__WSTRING__LINT : WSTRING[1024] 
+{external}
+FUNCTION RIGHT_EXT__STRING : DINT
 VAR_INPUT {ref}
-	IN : WSTRING[1024];
+	IN : STRING;
 END_VAR
 VAR_INPUT
-    L  : LINT;
+    L  : DINT;
 END_VAR
-    RIGHT_EXT(IN, L, RIGHT__WSTRING__LINT);
+VAR_IN_OUT
+    OUT: STRING;
+END_VAR
+END_FUNCTION
+
+{external}
+FUNCTION RIGHT_EXT__WSTRING : DINT
+VAR_INPUT {ref}
+	IN : WSTRING;
+END_VAR
+VAR_INPUT
+    L  : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT: WSTRING;
+END_VAR
 END_FUNCTION
 
 (******************************************************************************
@@ -158,32 +171,31 @@ Return:
     A substring that contains L characters starting 
     from position P in a string.
 ******************************************************************************)
-{external}
-FUNCTION MID <T: ANY_STRING, U: ANY_INT> : T
+FUNCTION MID <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
-    P  : U;
+    L  : DINT;
+    P  : DINT;
 END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION MID_EXT<T: ANY_STRING, U: ANY_INT> : DINT
+FUNCTION MID_EXT<T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
-    P  : U;
+    L  : DINT;
+    P  : DINT;
 END_VAR
 VAR_IN_OUT
     OUT: T;
 END_VAR
 END_FUNCTION
 
-FUNCTION MID__STRING__DINT : STRING[1024] 
+FUNCTION MID__STRING : STRING[1024] 
 VAR_INPUT {ref}
 	IN : STRING[1024];
 END_VAR
@@ -191,21 +203,10 @@ VAR_INPUT
     L  : DINT;
     P  : DINT;
 END_VAR
-    MID_EXT(IN, L, MID);
+    MID_EXT(IN, L, P, MID__STRING);
 END_FUNCTION
 
-FUNCTION MID__STRING__LINT : STRING[1024] 
-VAR_INPUT {ref}
-	IN : STRING[1024];
-END_VAR
-VAR_INPUT
-    L  : LINT;
-    P  : LINT;
-END_VAR
-    MID_EXT(IN, L, MID);
-END_FUNCTION
-
-FUNCTION MID__WSTRING__DINT : WSTRING[1024] 
+FUNCTION MID__WSTRING : WSTRING[1024] 
 VAR_INPUT {ref}
 	IN : WSTRING[1024];
 END_VAR
@@ -213,19 +214,37 @@ VAR_INPUT
     L  : DINT;
     P  : DINT;
 END_VAR
-    MID_EXT(IN, L, MID);
+    MID_EXT(IN, L, P, MID__WSTRING);
 END_FUNCTION
 
-FUNCTION MID__WSTRING__LINT : WSTRING[1024] 
+{external}
+FUNCTION MID_EXT__STRING : DINT
 VAR_INPUT {ref}
-	IN : WSTRING[1024];
+	IN : STRING;
 END_VAR
 VAR_INPUT
-    L  : LINT;
-    P  : LINT;
+    L  : DINT;
+    P  : DINT;
 END_VAR
-    MID_EXT(IN, L, MID);
+VAR_IN_OUT
+    OUT: STRING;
+END_VAR
 END_FUNCTION
+
+{external}
+FUNCTION MID_EXT__WSTRING : DINT
+VAR_INPUT {ref}
+	IN : WSTRING;
+END_VAR
+VAR_INPUT
+    L  : DINT;
+    P  : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT: WSTRING;
+END_VAR
+END_FUNCTION
+
 
 (******************************************************************************
 Description: Extensible concatenation
@@ -235,12 +254,13 @@ Return:
     A string combining all given input strings in the same order
     as the given string parameters.
 ******************************************************************************)
-{external}
+(*
 FUNCTION CONCAT <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN : {sized} T...;
 END_VAR
 END_FUNCTION
+*)
 
 (******************************************************************************
 Description: Insert
@@ -251,32 +271,31 @@ Input:
 Return:
     A string consisting of IN2 inserted at position P into string IN1
 ******************************************************************************)
-{external}
-FUNCTION INSERT <T: ANY_STRING, U: ANY_INT> : T
+FUNCTION INSERT <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN1 : T;
     IN2 : T;
 END_VAR
 VAR_INPUT    
-    P   : U;
+    P   : DINT;
 END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION INSERT_EXT<T: ANY_STRING, U: ANY_INT> : DINT
+FUNCTION INSERT_EXT<T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN1 : T;
     IN2 : T;
 END_VAR
 VAR_INPUT    
-    P   : U;
+    P   : DINT;
 END_VAR
 VAR_IN_OUT
     OUT: T;
 END_VAR
 END_FUNCTION
 
-FUNCTION INSERT__STRING__DINT : STRING[1024] 
+FUNCTION INSERT__STRING : STRING[1024] 
 VAR_INPUT {ref}
 	IN1 : STRING[1024];
     IN2 : STRING[1024];
@@ -284,21 +303,10 @@ END_VAR
 VAR_INPUT    
     P   : DINT;
 END_VAR
-    INSERT_EXT(IN1, IN2, P, INSERT);
+    INSERT_EXT(IN1, IN2, P, INSERT__STRING);
 END_FUNCTION
 
-FUNCTION INSERT__STRING__LINT : STRING[1024] 
-VAR_INPUT {ref}
-	IN1 : STRING[1024];
-    IN2 : STRING[1024];
-END_VAR
-VAR_INPUT    
-    P   : LINT;
-END_VAR
-    INSERT_EXT(IN1, IN2, P, INSERT);
-END_FUNCTION
-
-FUNCTION INSERT__WSTRING__DINT : WSTRING[1024] 
+FUNCTION INSERT__WSTRING : WSTRING[1024] 
 VAR_INPUT {ref}
 	IN1 : WSTRING[1024];
     IN2 : WSTRING[1024];
@@ -306,18 +314,35 @@ END_VAR
 VAR_INPUT    
     P   : DINT;
 END_VAR
-    INSERT_EXT(IN1, IN2, P, INSERT);
+    INSERT_EXT(IN1, IN2, P, INSERT__WSTRING);
 END_FUNCTION
 
-FUNCTION INSERT__WSTRING__LINT : WSTRING[1024] 
+{external}
+FUNCTION INSERT_EXT__STRING : DINT
 VAR_INPUT {ref}
-	IN1 : WSTRING[1024];
-    IN2 : WSTRING[1024];
+	IN1 : STRING;
+    IN2 : STRING;
 END_VAR
 VAR_INPUT    
-    P   : LINT;
+    P   : DINT;
 END_VAR
-    INSERT_EXT(IN1, IN2, P, INSERT);
+VAR_IN_OUT
+    OUT: STRING;
+END_VAR
+END_FUNCTION
+
+{external}
+FUNCTION INSERT_EXT__WSTRING : DINT
+VAR_INPUT {ref}
+	IN1 : WSTRING;
+    IN2 : WSTRING;
+END_VAR
+VAR_INPUT    
+    P   : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT: WSTRING;
+END_VAR
 END_FUNCTION
 
 (******************************************************************************
@@ -325,32 +350,31 @@ Description: Delete
 Input:
 Return:
 ******************************************************************************)
-{external}
-FUNCTION DELETE <T: ANY_STRING, U: ANY_INT> : T
+FUNCTION DELETE <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
-    P  : U;
+    L  : DINT;
+    P  : DINT;
 END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION DELETE_EXT<T: ANY_STRING, U: ANY_INT> : DINT
+FUNCTION DELETE_EXT<T: ANY_STRING> : DINT
 VAR_INPUT {ref}
 	IN : T;
 END_VAR
 VAR_INPUT
-    L  : U;
-    P  : U;
+    L  : DINT;
+    P  : DINT;
 END_VAR
 VAR_IN_OUT
     OUT: T;
 END_VAR
 END_FUNCTION
 
-FUNCTION DELETE__STRING__DINT : STRING[1024] 
+FUNCTION DELETE__STRING : STRING[1024] 
 VAR_INPUT {ref}
 	IN : STRING[1024];
 END_VAR
@@ -358,21 +382,10 @@ VAR_INPUT
     L  : DINT;
     P  : DINT;
 END_VAR
-    DELETE_EXT(IN, L, P, DELETE);
+    DELETE_EXT(IN, L, P, DELETE__STRING);
 END_FUNCTION
 
-FUNCTION DELETE__STRING__LINT : STRING[1024] 
-VAR_INPUT {ref}
-	IN : STRING[1024];
-END_VAR
-VAR_INPUT
-    L  : LINT;
-    P  : LINT;
-END_VAR
-    DELETE_EXT(IN, L, P, DELETE);
-END_FUNCTION
-
-FUNCTION DELETE__WSTRING__DINT : WSTRING[1024] 
+FUNCTION DELETE__WSTRING : WSTRING[1024] 
 VAR_INPUT {ref}
 	IN : WSTRING[1024];
 END_VAR
@@ -380,54 +393,68 @@ VAR_INPUT
     L  : DINT;
     P  : DINT;
 END_VAR
-    DELETE_EXT(IN, L, P, DELETE);
+    DELETE_EXT(IN, L, P, DELETE__WSTRING);
 END_FUNCTION
 
-FUNCTION DELETE__WSTRING__LINT : WSTRING[1024] 
+{external}
+FUNCTION DELETE_EXT__STRING : DINT
 VAR_INPUT {ref}
-	IN : WSTRING[1024];
+	IN : STRING;
 END_VAR
 VAR_INPUT
-    L  : LINT;
-    P  : LINT;
+    L  : DINT;
+    P  : DINT;
 END_VAR
-    DELETE_EXT(IN, L, P, DELETE);
+VAR_IN_OUT
+    OUT: STRING;
+END_VAR
 END_FUNCTION
 
+{external}
+FUNCTION DELETE_EXT__WSTRING : DINT
+VAR_INPUT {ref}
+	IN : WSTRING;
+END_VAR
+VAR_INPUT
+    L  : DINT;
+    P  : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT: WSTRING;
+END_VAR
+END_FUNCTION
 (******************************************************************************
 Description: Replace
 Input:
 Return:
 ******************************************************************************)
-{external}
-FUNCTION REPLACE <T: ANY_STRING, U: ANY_INT> : T
+FUNCTION REPLACE <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	IN1 : T;
     IN2 : T;
 END_VAR
 VAR_INPUT
-    L  : U;
-    P  : U;
+    L  : DINT;
+    P  : DINT;
 END_VAR
 END_FUNCTION
 
 {external}
-FUNCTION REPLACE_EXT <T: ANY_STRING, U: ANY_INT> : DINT
+FUNCTION REPLACE_EXT <T: ANY_STRING> : DINT
 VAR_INPUT {ref}
     IN1 : T;
     IN2 : T;
 END_VAR
 VAR_INPUT 
-    L   : U;
-    P   : U;
+    L   : DINT;
+    P   : DINT;
 END_VAR
 VAR_IN_OUT
     OUT : T;
 END_VAR    
 END_FUNCTION
 
-{external}
-FUNCTION REPLACE__STRING__DINT : STRING[1024]
+FUNCTION REPLACE__STRING : STRING[1024]
 VAR_INPUT {ref}
 	IN1 : STRING[1024];
     IN2 : STRING[1024];
@@ -436,24 +463,10 @@ VAR_INPUT
     L  : DINT;
     P  : DINT;
 END_VAR
-    REPLACE_EXT(IN1, IN2, L, P, REPLACE);
+    REPLACE_EXT(IN1, IN2, L, P, REPLACE__STRING);
 END_FUNCTION
 
-{external}
-FUNCTION REPLACE__STRING__LINT : STRING[1024]
-VAR_INPUT {ref}
-    IN1 : STRING[1024];
-    IN2 : STRING[1024];
-END_VAR
-VAR_INPUT
-    L   : LINT;
-    P   : LINT;
-END_VAR
-    REPLACE_EXT(IN1, IN2, L, P, REPLACE);
-END_FUNCTION
-
-{external}
-FUNCTION REPLACE__WSTRING__DINT : WSTRING[1024]
+FUNCTION REPLACE__WSTRING : WSTRING[1024]
 VAR_INPUT {ref}
     IN1 : WSTRING[1024];
     IN2 : WSTRING[1024];
@@ -462,21 +475,39 @@ VAR_INPUT
     L   : DINT;
     P   : DINT;
 END_VAR
-    REPLACE_EXT(IN1, IN2, L, P, REPLACE);
+    REPLACE_EXT(IN1, IN2, L, P, REPLACE__WSTRING);
 END_FUNCTION
 
 {external}
-FUNCTION REPLACE__WSTRING__LINT : WSTRING[1024]
+FUNCTION REPLACE_EXT__STRING : DINT
 VAR_INPUT {ref}
-    IN1 : WSTRING[1024];
-    IN2 : WSTRING[1024];
-END_VAR    
-VAR_INPUT 
-    L   : LINT;
-    P   : LINT;
+    IN1 : STRING;
+    IN2 : STRING;
 END_VAR
-    REPLACE_EXT(IN1, IN2, L, P, REPLACE);
+VAR_INPUT 
+    L   : DINT;
+    P   : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT : STRING;
+END_VAR    
 END_FUNCTION
+
+{external}
+FUNCTION REPLACE_EXT__WSTRING : DINT
+VAR_INPUT {ref}
+    IN1 : WSTRING;
+    IN2 : WSTRING;
+END_VAR
+VAR_INPUT 
+    L   : DINT;
+    P   : DINT;
+END_VAR
+VAR_IN_OUT
+    OUT : WSTRING;
+END_VAR    
+END_FUNCTION
+
 
 (******************************************************************************
 Description: Find

@@ -7,12 +7,14 @@
 /// Works on raw pointers, inherently unsafe.
 /// May return a false value if passed an
 /// array filled with (non-zero) garbage values.
-unsafe fn get_null_terminated_len_utf8(src: *const u8) -> usize {
-    if src.is_null() {
-        return 0;
-    }
+fn get_null_terminated_len_utf8(src: *const u8) -> usize {
+    unsafe {
+        if src.is_null() {
+            return 0;
+        }
 
-    (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
+        (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
+    }
 }
 
 /// Helper function
@@ -24,12 +26,14 @@ unsafe fn get_null_terminated_len_utf8(src: *const u8) -> usize {
 /// Works on raw pointers, inherently unsafe.
 /// May return a false value if passed an
 /// array filled with (non-zero) garbage values.
-unsafe fn get_null_terminated_len_utf16(src: *const u16) -> usize {
-    if src.is_null() {
-        return 0;
-    }
+fn get_null_terminated_len_utf16(src: *const u16) -> usize {
+    unsafe {
+        if src.is_null() {
+            return 0;
+        }
 
-    (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
+        (0..).take_while(|&i| *src.offset(i) != 0).count() as usize
+    }
 }
 
 /// Gets length of the given character string.
@@ -37,8 +41,8 @@ unsafe fn get_null_terminated_len_utf16(src: *const u16) -> usize {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn LEN__STRING(src: &str) -> i32 {
-    src.len() as i32
+pub extern "C" fn LEN__STRING(src: *const u8) -> i32 {
+    get_null_terminated_len_utf8(src) as i32
 }
 
 /// Gets length of the given string.
@@ -737,7 +741,7 @@ mod test {
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src = s.as_ptr();
         let raw_dest = dest.as_mut_ptr();
-        unsafe { MID_EXT__STRING(raw_src, len, start_index, raw_dest) }
+        unsafe { MID_EXT__STRING(raw_src, len, start_index, raw_dest) };
     }
 
     #[test]
