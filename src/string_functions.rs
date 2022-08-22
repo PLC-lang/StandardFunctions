@@ -368,7 +368,7 @@ pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest
     }
 
     // null-terminator
-    *dest.add(byte_offset + 1) = 0;
+    *dest.add(byte_offset) = 0;
 
     0
 }
