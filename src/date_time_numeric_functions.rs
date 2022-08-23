@@ -7,10 +7,11 @@ use chrono::TimeZone;
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn ADD_TIME(in1: i64, in2: i64) -> i64 {
-    chrono::Duration::milliseconds(in1)
-        .checked_add(&chrono::Duration::milliseconds(in2))
+    chrono::Duration::nanoseconds(in1)
+        .checked_add(&chrono::Duration::nanoseconds(in2))
         .unwrap()
-        .num_milliseconds()
+        .num_nanoseconds()
+        .unwrap()
 }
 
 /// .
@@ -35,10 +36,10 @@ pub extern "C" fn ADD_DT_TIME(in1: i64, in2: i64) -> i64 {
 
 fn add_datetime_time(in1: i64, in2: i64) -> i64 {
     chrono::Utc
-        .timestamp_millis(in1)
+        .timestamp_nanos(in1)
         .checked_add_signed(chrono::Duration::nanoseconds(in2))
         .unwrap()
-        .timestamp_millis()
+        .timestamp_nanos()
 }
 
 /// .
@@ -48,10 +49,11 @@ fn add_datetime_time(in1: i64, in2: i64) -> i64 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn SUB_TIME(in1: i64, in2: i64) -> i64 {
-    chrono::Duration::milliseconds(in1)
-        .checked_sub(&chrono::Duration::milliseconds(in2))
+    chrono::Duration::nanoseconds(in1)
+        .checked_sub(&chrono::Duration::nanoseconds(in2))
         .unwrap()
-        .num_milliseconds()
+        .num_nanoseconds()
+        .unwrap()
 }
 
 /// .
@@ -86,8 +88,8 @@ pub extern "C" fn SUB_TOD_TOD(in1: i64, in2: i64) -> i64 {
 
 fn sub_datetimes(in1: i64, in2: i64) -> i64 {
     chrono::Utc
-        .timestamp_millis(in1)
-        .signed_duration_since(chrono::Utc.timestamp_millis(in2))
+        .timestamp_nanos(in1)
+        .signed_duration_since(chrono::Utc.timestamp_nanos(in2))
         .num_nanoseconds()
         .unwrap()
 }
@@ -104,10 +106,10 @@ pub extern "C" fn SUB_DT_TIME(in1: i64, in2: i64) -> i64 {
 
 fn sub_datetime_duration(in1: i64, in2: i64) -> i64 {
     chrono::Utc
-        .timestamp_millis(in1)
+        .timestamp_nanos(in1)
         .checked_sub_signed(chrono::Duration::nanoseconds(in2))
         .unwrap()
-        .timestamp_millis()
+        .timestamp_nanos()
 }
 
 /// .

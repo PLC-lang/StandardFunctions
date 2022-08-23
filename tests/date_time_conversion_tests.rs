@@ -1,3 +1,4 @@
+use chrono::TimeZone;
 use common::compile_and_run;
 
 // Import common functionality into the integration tests
@@ -50,7 +51,13 @@ fn ldt_to_dt_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 1618957994000);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(2021, 4, 20)
+            .and_hms(22, 33, 14)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -62,7 +69,13 @@ fn ldt_to_date_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 946684800000);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(2000, 1, 1)
+            .and_hms(0, 0, 0)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -74,19 +87,31 @@ fn ldt_to_ltod_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 56190123);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(1970, 1, 1)
+            .and_hms_milli(15, 36, 30, 123)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
 fn ldt_to_tod_conversion() {
     let src = "
 	FUNCTION main : TOD
-		main := LDT_TO_TOD(LDT#3120-02-12-20:15:11.543);
+		main := LDT_TO_TOD(LDT#2120-02-12-20:15:11.543);
 	END_FUNCTION";
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 72911543);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(1970, 1, 1)
+            .and_hms_milli(20, 15, 11, 543)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -98,7 +123,13 @@ fn dt_to_ldt_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 1618957994000);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(2021, 4, 20)
+            .and_hms(22, 33, 14)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -110,7 +141,13 @@ fn dt_to_date_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 946684800000);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(2000, 1, 1)
+            .and_hms(0, 0, 0)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -122,19 +159,31 @@ fn dt_to_ltod_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 56190123);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(1970, 1, 1)
+            .and_hms_milli(15, 36, 30, 123)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
 fn dt_to_tod_conversion() {
     let src = "
 	FUNCTION main : TOD
-		main := DT_TO_TOD(DT#3120-02-12-20:15:11.543);
+		main := DT_TO_TOD(DT#2120-02-12-20:15:11.543);
 	END_FUNCTION";
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 72911543);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(1970, 1, 1)
+            .and_hms_milli(20, 15, 11, 543)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -146,7 +195,13 @@ fn ltod_to_tod_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 37230000);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(1970, 1, 1)
+            .and_hms(10, 20, 30)
+            .timestamp_nanos()
+    );
 }
 
 #[test]
@@ -158,5 +213,11 @@ fn tod_to_ltod_conversion() {
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(res, 37230000);
+    assert_eq!(
+        res,
+        chrono::Utc
+            .ymd(1970, 1, 1)
+            .and_hms(10, 20, 30)
+            .timestamp_nanos()
+    );
 }
