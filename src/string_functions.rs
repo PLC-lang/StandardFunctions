@@ -1,143 +1,4 @@
-/// Helper function
-/// Gets the amount of continuous characters in u8 array before
-/// the first null-terminator.
-///
-/// # Safety
-///
-/// Works on raw pointers, inherently unsafe.
-/// May return an incorrect value if passed an
-/// array filled with (non-zero) garbage values.
-fn get_null_terminated_len_utf8(src: *const u8) -> usize {
-    unsafe {
-        if src.is_null() {
-            return 0;
-        }
-
-        (0..).take_while(|&i| *src.add(i) != 0).count() as usize
-    }
-}
-
-/// Helper function
-/// Gets the amount of continuous characters in u16 array before
-/// the first null-terminator.
-///
-/// # Safety
-///
-/// Works on raw pointers, inherently unsafe.
-/// May return an incorrect value if passed an
-/// array filled with (non-zero) garbage values.
-fn get_null_terminated_len_utf16(src: *const u16) -> usize {
-    unsafe {
-        if src.is_null() {
-            return 0;
-        }
-
-        (0..).take_while(|&i| *src.add(i) != 0).count() as usize
-    }
-}
-
-/// Helper function
-/// Gets the amount of utf8-encoded characters in u8 array before
-/// the first null-terminator.
-///
-/// # Safety
-///
-/// Works on raw pointers, inherently unsafe.
-/// May return an incorrect value if passed an
-/// array filled with (non-zero) garbage values.
-fn get_utf8_char_count(src: *const u8, nbytes: usize) -> usize {
-    // count amount of utf8 characters in array
-    let mut nchars = 0;
-    for offset in 0..nbytes {
-        // skip continuation-bytes
-        unsafe {
-            if is_continuation_byte(*src.add(offset)) {
-                continue;
-            }
-        }      
-        nchars += 1;  
-    }
-
-    nchars
-}
-
-/// Helper function
-/// Gets the amount of utf16-encoded characters in u16 array before
-/// the first null-terminator.
-///
-/// # Safety
-///
-/// Works on raw pointers, inherently unsafe.
-/// May return an incorrect value if passed an
-/// array filled with (non-zero) garbage values.
-fn get_utf16_char_count(src: *const u16, nwords: usize) -> usize {
-    // count amount of utf8 characters in array
-    let mut nchars = 0;
-    for offset in 0..nwords {
-        // skip low surrogates for chars outside of BMP
-        unsafe {
-            if is_low_surrogate(*src.add(offset)) {
-                continue;
-            }
-        }        
-
-        nchars += 1;
-    }
-
-    nchars
-}
-
-/// Helper function
-/// Checks if byte is a utf8 continuation byte
-/// (part of a multi-byte character)
-fn is_continuation_byte(byte: u8) -> bool{
-    byte & 0xC0 == 0x80   
-}
-
-/// Helper function
-/// Checks if word is a utf16 low surrogate
-/// (part of a multi-word character)
-fn is_low_surrogate(word: u16) -> bool{
-    word & 0b110111<<10 == 0b110111<<10   
-}
-
-/// Helper function
-/// Counts the amount of bytes in n amount of UTF8 characters in
-/// given source array
-fn count_bytes_in_n_utf8_chars(src: *const u8, nchars: usize) -> usize {
-    let mut chars = 0;
-    let mut byte_offset = 0;
-    while chars < nchars {
-        unsafe {            
-            if !is_continuation_byte(*src.add(byte_offset)) {
-                chars += 1;
-            }
-        }
-
-        byte_offset +=1;
-    }
-
-    byte_offset
-}
-
-/// Helper function
-/// Counts the amount of bytes in n amount of UTF8 characters in
-/// given source array
-fn count_words_in_n_utf16_chars(src: *const u16, nchars: usize) -> usize {
-    let mut chars = 0;
-    let mut word_offset = 0;
-    while chars < nchars {
-        unsafe {
-            if !is_low_surrogate(*src.add(word_offset)) {
-                chars += 1;
-            }
-        }
-
-        word_offset +=1;
-    }
-
-    word_offset
-}
+use std::char::decode_utf16;
 
 /// Gets length of the given character string.
 /// UTF8
@@ -151,9 +12,10 @@ fn count_words_in_n_utf16_chars(src: *const u16, nchars: usize) -> usize {
 /// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LEN__STRING(src: *const u8) -> i32 {
-    let nbytes = get_null_terminated_len_utf8(src);
-    get_utf8_char_count(src, nbytes) as i32
+pub unsafe extern "C" fn LEN__STRING(src: *const u8) -> i32 {
+    u8_ptr_to_str(src, None)
+    .chars()
+    .count() as i32
 }
 
 /// Gets length of the given string.
@@ -162,11 +24,14 @@ pub extern "C" fn LEN__STRING(src: *const u8) -> i32 {
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
 /// array filled with (non-zero) garbage values.
+/// 
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn LEN__WSTRING(src: *const u16) -> i32 {
-    let nwords = get_null_terminated_len_utf16(src);
-    get_utf16_char_count(src, nwords) as i32
+pub unsafe extern "C" fn LEN__WSTRING(src: *const u16) -> i32 {
+    u16_ptr_to_utf16_iter(src, None).count() as i32
 }
 
 /// Finds the first occurance of the second string (in2)
@@ -179,30 +44,21 @@ pub extern "C" fn LEN__WSTRING(src: *const u16) -> i32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn FIND__STRING(src1: *const u8, src2: *const u8) -> i32 {
-    let nbytes1 = get_null_terminated_len_utf8(src1);
-    let nbytes2 = get_null_terminated_len_utf8(src2);
+    let haystack = u8_ptr_to_str(src1, None);
+    let needle = u8_ptr_to_str(src2, None);
 
-    if nbytes2 > nbytes1 || nbytes1 == 0 || nbytes2 == 0 {
+    if needle.len() > haystack.len() || haystack.len() == 0 || needle.len() == 0 {
         return 0;
     }
 
-    for i in 0..=(nbytes1 - nbytes2) {
-        let mut consecutive_matches = 0;
+    if let Some(byte_idx) = haystack.find(needle) {
+        // match found. get utf8 char len until byte index
+        let pos = u8_ptr_to_str(src1, Some(byte_idx)).chars().count() as i32;
 
-        for j in 0..nbytes2 {
-            if *src1.add(i + j) == *src2.add(j) {
-                consecutive_matches += 1;
-            } else {
-                break;
-            }            
-        }
-
-        if consecutive_matches == nbytes2 {            
-            return get_utf8_char_count(src1, i) as i32 + 1 
-        }
-    }
-
-    0
+        pos + 1 
+    } else {
+        0
+    }    
 }
 
 /// Finds the first occurance of the second string (src2)
@@ -215,30 +71,26 @@ pub unsafe extern "C" fn FIND__STRING(src1: *const u8, src2: *const u8) -> i32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i32 {
-    let nwords1 = get_null_terminated_len_utf16(src1);
-    let nwords2 = get_null_terminated_len_utf16(src2);
+    let nchars1 = u16_ptr_to_utf16_iter(src1, None).count();
+    let nchars2 = u16_ptr_to_utf16_iter(src1, None).count();
 
-    if nwords2 > nwords1 || nwords1 == 0 || nwords2 == 0 {
+    if nchars2 > nchars1 || nchars1 == 0 || nchars2 == 0 {
         return 0;
     }
 
-    for i in 0..=(nwords1 - nwords2) {
-        let mut consecutive_matches = 0;
+    let haystack = u16_ptr_to_slice(src1, None);
+    let needle = u16_ptr_to_slice(src2, None);
+    
+    if let Some(pos) = haystack.windows(needle.len()).position(|window| window == needle) {
+        // match found. count utf16 chars to window position
+        let n_chars_before_pos = 
+            u16_ptr_to_utf16_iter(src1, Some(pos)).count();
 
-        for j in 0..nwords2 {
-            if *src1.add(i + j) == *src2.add(j) {
-                consecutive_matches += 1;
-            } else {
-                break;
-            }            
-        }
-
-        if consecutive_matches == nwords2 {            
-            return get_utf16_char_count(src1, i) as i32 + 1 
-        }
+        // correct indexing for ST
+        n_chars_before_pos as i32 + 1
+    } else {
+        0
     }
-
-    0
 }
 
 /// Writes a substring of a specified length from the given string,
@@ -256,29 +108,12 @@ pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest:
     if substr_len < 0 {
         panic!("Length parameter cannot be negative.");
     }
-
-    let nbytes = get_null_terminated_len_utf8(src);
-    let nchars = get_utf8_char_count(src, nbytes);
-
-    if nchars < substr_len as usize {
-        panic!("Substring length exceeds string length");
-    }
-
-    let mut len = 0;
-    let mut byte_offset = 0;
-
-    while len < substr_len {
-        *dest.add(byte_offset) = *src.add(byte_offset);
-        
-        if !is_continuation_byte(*dest.add(byte_offset)) {            
-            len += 1;
-        }
-
-        byte_offset += 1;
-    }
-
-    // null-terminator
-    *dest.add(byte_offset) = 0;
+    let mut dest = dest;
+    let substr_len = substr_len as usize;
+    let res =  u8_ptr_to_str(src, None).split_at(substr_len).0;
+    
+    dest = write_str_to_pointer(res, dest);
+    *dest = 0;
 
     0
 }
@@ -299,34 +134,19 @@ pub unsafe extern "C" fn LEFT_EXT__WSTRING(
     substr_len: i32,
     dest: *mut u16,
 ) -> i32 {
+    let mut dest = dest;
     if substr_len < 0 {
         panic!("Length parameter cannot be negative.");
     }
 
-    let nwords = get_null_terminated_len_utf16(src);
-    let nchars = get_utf16_char_count(src, nwords);
+    let iter = u16_ptr_to_utf16_iter(src, None);
 
-    if nchars < substr_len as usize {
-        panic!("Substring length exceeds string length");
+    for c in iter.take(substr_len as usize) {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-
-    let mut len = 0;
-    let mut word_offset = 0;
-
-    while len < substr_len {
-        *dest.add(word_offset) = *src.add(word_offset);
+    *dest = 0;
         
-        if !is_low_surrogate(*dest.add(word_offset)) {            
-            len += 1;
-        }
-
-        word_offset += 1;
-    }
-
-    // null-terminator
-    *dest.add(word_offset) = 0;
-
     0
 }
 
@@ -342,33 +162,12 @@ pub unsafe extern "C" fn LEFT_EXT__WSTRING(
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest: *mut u8) -> i32 {
-    if substr_len < 0 {
-        panic!("Length parameter cannot be negative.");
-    }
+    let substr_len = substr_len as usize;
+    let res = u8_ptr_to_str(src, None).split_at(substr_len).1;
+    let mut dest = dest;
 
-    let nbytes = get_null_terminated_len_utf8(src);
-    let nchars = get_utf8_char_count(src, nbytes);
-
-    if nchars < substr_len as usize {
-        panic!("Substring length exceeds string length");
-    }
-
-    let mut len = 0;
-    let mut byte_offset = 0;    
-    let substr_bytes = nchars - substr_len as usize;
-
-    while len < substr_len {
-        *dest.add(byte_offset) = *src.add(byte_offset);
-        
-        if !is_continuation_byte(*dest.add(byte_offset)) {            
-            len += 1;
-        }
-
-        byte_offset += 1;
-    }
-
-    // null-terminator
-    *dest.add(byte_offset) = 0;
+    dest = write_str_to_pointer(res, dest);
+    *dest = 0;
 
     0
 }
@@ -393,20 +192,16 @@ pub unsafe extern "C" fn RIGHT_EXT__WSTRING(
         panic!("Length parameter cannot be negative.");
     }
 
-    let len = get_null_terminated_len_utf16(src);
+    let mut dest = dest;    
+    let count = u16_ptr_to_utf16_iter(src, None).count();
+    let iter = u16_ptr_to_utf16_iter(src, None);
 
-    if len < substr_len as usize {
-        panic!("Substring length exceeds string length");
+    for c in iter.skip(count - substr_len as usize) {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    let offset = len - substr_len as usize;
-    for i in 0..substr_len as usize {
-        *dest.add(i) = *src.add(i + offset);
-    }
-
-    // null-terminate created string
-    *dest.add(len) = 0;
-
+    *dest = 0;
+        
     0
 }
 
@@ -428,28 +223,14 @@ pub unsafe extern "C" fn MID_EXT__STRING(
     start_index: i32,
     dest: *mut u8,
 ) -> i32 {
-    if substr_len < 0 || start_index < 0 {
-        panic!("Length/Position parameters cannot be negative.");
-    }
-    let len = get_null_terminated_len_utf8(src);
+    let mut dest = dest;
+    let substr_len = substr_len as usize;
+    let res = u8_ptr_to_str(src, None)
+        .split_at(start_index as usize).1;
+    let res = &res[..substr_len];
 
-    if len < substr_len as usize {
-        panic!("Substring length exceeds string length");
-    }
-
-    // correct for 0-indexing
-    let start_index: i32 = start_index as i32 - 1;
-
-    if start_index < 0 || (start_index + substr_len as i32) > len as i32 {
-        panic!("Index out of range. Check Length and Position parameters.");
-    }
-
-    for i in 0..substr_len as usize {
-        *dest.add(i) = *src.add(i + start_index as usize);
-    }
-
-    // null-terminate created string
-    *dest.add(len) = b'\0';
+    dest = write_str_to_pointer(res, dest);
+    *dest = 0;
 
     0
 }
@@ -471,30 +252,22 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
     substr_len: i32,
     start_index: i32,
     dest: *mut u16,
-) -> i32 {
-    if substr_len < 0 || start_index < 0 {
-        panic!("Length/Position parameters cannot be negative.");
-    }
-    let len = get_null_terminated_len_utf16(src);
-
-    if len < substr_len as usize {
-        panic!("Substring length exceeds string length");
+) -> i32 {    
+    if substr_len < 0 {
+        panic!("Length parameter cannot be negative.");
     }
 
-    // correct for 0-indexing
-    let start_index: i32 = start_index as i32 - 1;
+    let mut dest = dest;
+    let iter = u16_ptr_to_utf16_iter(src, None)
+        .skip(start_index as usize)
+        .take(substr_len as usize);
 
-    if start_index < 0 || (start_index + substr_len as i32) > len as i32 {
-        panic!("Index out of range. Check Length and Position parameters.");
+    for c in iter {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    for i in 0..substr_len as usize {
-        *dest.add(i) = *src.add(i + start_index as usize);
-    }
-
-    // null-terminate created string
-    *dest.add(len) = 0;
-
+    *dest = 0;
+        
     0
 }
 
@@ -520,31 +293,17 @@ pub unsafe extern "C" fn INSERT_EXT__STRING(
         panic!("Positional parameter cannot be negative.");
     }
 
-    let len1 = get_null_terminated_len_utf8(src_base);
-    let len2 = get_null_terminated_len_utf8(src_to_insert);
-    let pos = pos as usize;
+    let mut dest = dest;
+    let (first, second) = u8_ptr_to_str(src_base, None)
+        .split_at(pos as usize);
+    
+    let to_insert = u8_ptr_to_str(src_to_insert, None);
+    
+    dest = write_str_to_pointer(first, dest);
+    dest = write_str_to_pointer(to_insert, dest);
+    dest = write_str_to_pointer(second, dest);
 
-    if pos > len1 {
-        panic!("Positional parameter cannot exceed base string length.")
-    }
-
-    // copy characters until point of insertion
-    for i in 0..pos {
-        *dest.add(i) = *src_base.add(i);
-    }
-
-    // add to-insert characters
-    for i in 0..len2 {
-        *dest.add(i + pos) = *src_to_insert.add(i);
-    }
-
-    // copy remaining characters from original string
-    for i in (len2 + pos)..(len1 + len2) {
-        *dest.add(i) = *src_base.add(i - len2);
-    }
-
-    // null-terminate created string
-    *dest.add(len1 + len2) = b'\0';
+    *dest = 0;
 
     0
 }
@@ -571,34 +330,32 @@ pub unsafe extern "C" fn INSERT_EXT__WSTRING(
         panic!("Positional parameter cannot be negative.");
     }
 
-    let len1 = get_null_terminated_len_utf16(src_base);
-    let len2 = get_null_terminated_len_utf16(src_to_insert);
-    let pos = pos as usize;
+    let mut dest = dest;
+    let iter_first = u16_ptr_to_utf16_iter(src_base, None)
+        .take(pos as usize);
+    let iter_to_insert = u16_ptr_to_utf16_iter(src_to_insert, None);
+    let n_to_insert = u16_ptr_to_utf16_iter(src_to_insert, None).count();
+    let iter_second = u16_ptr_to_utf16_iter(src_base, None)
+        .skip(pos as usize + n_to_insert);
 
-    if pos > len1 {
-        panic!("Positional parameter cannot exceed base string length.")
+    for c in iter_first {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // copy characters until point of insertion
-    for i in 0..pos {
-        *dest.add(i) = *src_base.add(i);
+    for c in iter_to_insert {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // add to-insert characters
-    for i in 0..len2 {
-        *dest.add(i + pos) = *src_to_insert.add(i);
+    for c in iter_second {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // copy remaining characters from original string
-    for i in (len2 + pos)..(len1 + len2) {
-        *dest.add(i) = *src_base.add(i - len2);
-    }
-
-    // null-terminate created string
-    *dest.add(len1 + len2) = 0;
-
+    *dest = 0;
+        
     0
+
 }
+
 
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
@@ -618,16 +375,18 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
     pos: i32,
     dest: *mut u8,
 ) -> i32 {
-    let len = get_null_terminated_len_utf8(src);
-
-    if pos < 1 || pos > len as i32 {
+    let res = u8_ptr_to_str(src, None);
+    let nchars = res.chars().count();
+    
+    if pos < 1 || pos > nchars as i32 {
         panic!("Index out of bounds.")
     }
+
     // correct for 0-indexing
-    let pos = (pos - 1) as usize;
+    let pos = pos as usize - 1;
     let ndel = num_chars_to_delete as usize;
 
-    if ndel + pos > len {
+    if ndel + pos > nchars {
         panic!(
             r#"Cannot delete {} characters starting from index {}.
             Index out of bounds.            
@@ -637,22 +396,18 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
         )
     }
 
-    // copy characters until point of deletion
-    for i in 0..pos {
-        *dest.add(i) = *src.add(i)
-    }
+    let mut dest = dest;
+    let first_half = &res[..pos];
+    let second_half = &res[(pos + ndel)..];
 
-    // skip the amount of characters to be deleted and
-    // add the remaining characters
-    for i in pos..(len - ndel) {
-        *dest.add(i) = *src.add(i + ndel)
-    }
+    dest = write_str_to_pointer(first_half, dest);
+    dest = write_str_to_pointer(second_half, dest);
 
-    // null-terminate created string
-    *dest.add(len - ndel) = b'\0';
+    *dest = 0;
 
     0
 }
+
 
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
@@ -672,16 +427,18 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
     pos: i32,
     dest: *mut u16,
 ) -> i32 {
-    let len = get_null_terminated_len_utf16(src);
+    let mut dest = dest;
+    let nchars = u16_ptr_to_utf16_iter(src, None).count();
 
-    if pos < 1 || pos > len as i32 {
+    if pos < 1 || pos > nchars as i32{
         panic!("Index out of bounds.")
     }
-    // correct for 0-indexing
-    let pos = (pos - 1) as usize;
-    let ndel = num_chars_to_delete as usize;
 
-    if ndel + pos > len {
+    let ndel = num_chars_to_delete as usize;
+    // correct for 0-indexing
+    let pos = pos as usize - 1;
+
+    if ndel + pos > nchars {
         panic!(
             r#"Cannot delete {} characters starting from index {}.
             Index out of bounds.            
@@ -691,19 +448,18 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
         )
     }
 
-    // copy characters until point of deletion
-    for i in 0..pos {
-        *dest.add(i) = *src.add(i)
+    let first_half = u16_ptr_to_utf16_iter(src, None).take(pos);
+    let second_half = u16_ptr_to_utf16_iter(src, None).skip(pos + ndel);
+
+    for c in first_half {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // skip the amount of characters to be deleted and
-    // add the remaining characters
-    for i in pos..(len - ndel) {
-        *dest.add(i) = *src.add(i + ndel)
+    for c in second_half {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // null-terminate created string
-    *dest.add(len - ndel) = 0;
+    *dest = 0;
 
     0
 }
@@ -727,19 +483,18 @@ pub unsafe extern "C" fn REPLACE_EXT__STRING(
     pos: i32,
     dest: *mut u8,
 ) -> i32 {
-    let len1 = get_null_terminated_len_utf8(src_base);
-    let len2 = get_null_terminated_len_utf8(src_replacement);
+    let base = u8_ptr_to_str(src_base, None);
+    let nbase = base.chars().count();
 
-    if pos < 1 || pos > len1 as i32 {
+    if pos < 1 || pos > nbase as i32 {
         panic!("Index out of bounds.")
     }
 
     // correct for 0-indexing
     let pos = (pos - 1) as usize;
     let nreplace = num_chars_to_replace as usize;
-    let resulting_len = len1 + len2 - nreplace;
 
-    if nreplace + pos > len1 {
+    if nreplace + pos > nbase {
         panic!(
             r#"Cannot replace {} characters starting from index {}.
             Index out of bounds.            
@@ -749,23 +504,16 @@ pub unsafe extern "C" fn REPLACE_EXT__STRING(
         )
     }
 
-    // copy characters until point of replacement
-    for i in 0..pos {
-        *dest.add(i) = *src_base.add(i)
-    }
+    let replacement = u8_ptr_to_str(src_replacement, None);
+    let first = &base[..pos];
+    let second = &base[(pos + nreplace)..];
 
-    // add replacement characters
-    for i in 0..len2 {
-        *dest.add(i + pos) = *src_replacement.add(i)
-    }
-
-    // skip over the characters to be replaced and add the remainder
-    for i in pos..(len1 - nreplace) {
-        *dest.add(i + len2) = *src_base.add(i + nreplace)
-    }
-
-    // null-terminate created string
-    *dest.add(resulting_len) = b'\0';
+    let mut dest = dest;
+    dest = write_str_to_pointer(first, dest);
+    dest = write_str_to_pointer(replacement, dest);
+    dest = write_str_to_pointer(second, dest);
+    
+    *dest = 0;
 
     0
 }
@@ -789,19 +537,17 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
     pos: i32,
     dest: *mut u16,
 ) -> i32 {
-    let len1 = get_null_terminated_len_utf16(src_base);
-    let len2 = get_null_terminated_len_utf16(src_replacement);
+    let nchars1 = u16_ptr_to_utf16_iter(src_base, None).count();
 
-    if pos < 1 || pos > len1 as i32 {
+    if pos < 1 || pos > nchars1 as i32 {
         panic!("Index out of bounds.")
     }
 
     // correct for 0-indexing
     let pos = (pos - 1) as usize;
     let nreplace = num_chars_to_replace as usize;
-    let resulting_len = len1 + len2 - nreplace;
 
-    if nreplace + pos > len1 {
+    if nreplace + pos > nchars1 {
         panic!(
             r#"Cannot replace {} characters starting from index {}.
             Index out of bounds.            
@@ -810,27 +556,169 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
             pos + 1
         )
     }
+    
+    let first = u16_ptr_to_utf16_iter(src_base, None).take(pos);
+    let replacement = u16_ptr_to_utf16_iter(src_replacement, None);
+    let second = u16_ptr_to_utf16_iter(src_base, None).skip(pos + nreplace);
+    let mut dest = dest;
 
-    // copy characters until point of replacement
-    for i in 0..pos {
-        *dest.add(i) = *src_base.add(i)
+    for c in first {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // add replacement characters
-    for i in 0..len2 {
-        *dest.add(i + pos) = *src_replacement.add(i)
+    for c in replacement {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // skip over the characters to be replaced and add the remainder
-    for i in pos..(len1 - nreplace) {
-        *dest.add(i + len2) = *src_base.add(i + nreplace)
+    for c in second {
+        dest = write_utf16_to_pointer(c, dest);
     }
 
-    // null-terminate created string
-    *dest.add(resulting_len) = 0;
+    *dest = 0;
 
     0
 }
+
+/// # Helper function
+/// 
+/// Gets the amount of continuous characters in u8 array before
+/// the first null-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// May return an incorrect value if passed an
+/// array filled with (non-zero) garbage values.
+fn get_null_terminated_len_utf8(src: *const u8) -> usize {
+    unsafe {
+        if src.is_null() {
+            return 0;
+        }
+
+        (0..).take_while(|&i| *src.add(i) != 0).count() as usize
+    }
+}
+
+/// # Helper function
+/// 
+/// Gets the amount of continuous characters in u16 array before
+/// the first null-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// May return an incorrect value if passed an
+/// array filled with (non-zero) garbage values.
+fn get_null_terminated_len_utf16(src: *const u16) -> usize {
+    unsafe {
+        if src.is_null() {
+            return 0;
+        }
+
+        (0..).take_while(|&i| *src.add(i) != 0).count() as usize
+    }
+}
+
+/// # Helper function
+/// 
+/// Get slice from null-terminated u8 pointer.
+/// If no number of bytes is given, nbytes will be determined
+/// by finding the nul-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+unsafe fn u8_ptr_to_slice<'a>(src: *const u8, nbytes: Option<usize>) -> &'a [u8] {
+    if let Some(n) = nbytes {
+        std::slice::from_raw_parts(src, n)        
+    } else {        
+        let nbytes = get_null_terminated_len_utf8(src);
+        std::slice::from_raw_parts(src, nbytes)   
+    }
+}
+
+/// # Helper function
+/// 
+/// Get str from null-terminated u8 pointer.
+/// If no number of bytes is given, nbytes will be determined
+/// by finding the nul-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+unsafe fn u8_ptr_to_str<'a>(src: *const u8, nbytes: Option<usize>) -> &'a str {
+    let src = u8_ptr_to_slice(src, nbytes);
+    std::str::from_utf8(src).unwrap()
+}
+/// # Helper function
+/// 
+/// Get slice from null-terminated u16 pointer.
+/// If no number of words is given, nwords will be determined
+/// by finding the nul-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+unsafe fn u16_ptr_to_slice<'a>(src: *const u16, nwords: Option<usize>) -> &'a [u16] {
+    if let Some(n) = nwords {
+        std::slice::from_raw_parts(src, n)
+    } else {
+        let nwords = get_null_terminated_len_utf16(src);
+        std::slice::from_raw_parts(src, nwords)
+    }
+}
+
+type Utf16Iterator<'a> = std::char::DecodeUtf16<std::iter::Copied<std::slice::Iter<'a, u16>>>;
+
+/// # Helper function
+/// 
+/// Get string slice from null-terminated u16 pointer.
+/// If no number of words is given, nwords will be determined
+/// by finding the nul-terminator.
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+unsafe fn u16_ptr_to_utf16_iter<'a>(src: *const u16, nwords: Option<usize>) -> Utf16Iterator<'a> {
+    let src = u16_ptr_to_slice(src, nwords);
+    decode_utf16(src.iter().copied())
+}
+
+/// # Helper function
+/// 
+/// Encodes character to UTF16, writes it into pre-allocated out-buffer and increments the pointer.
+/// 
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+unsafe fn write_utf16_to_pointer(c: Result<char, std::char::DecodeUtf16Error>, dest: *mut u16) -> *mut u16{
+    let mut dest = dest;
+    let mut temp = [0; 2];
+    let slice = c.unwrap().encode_utf16(&mut temp);
+    for word in slice {
+        *dest = *word;
+        dest = dest.add(1);
+    }
+
+    dest
+}
+
+/// # Helper function
+/// 
+/// Writes str slice into pre-allocated out-buffer and increments the pointer.
+/// 
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+unsafe fn write_str_to_pointer(src: &str, dest: &mut *mut u8) -> *mut u8 {
+    for byte in src.as_bytes() {
+        **dest = *byte;
+        *dest = dest.add(1);
+    }
+
+    *dest
+}
+
 
 // -------------------------------------------------unit tests-----------------------------------------
 #[cfg(test)]
@@ -844,31 +732,33 @@ mod test {
     {
         let s = "ϕϚϡϗabcd\0";
         let raw_src = s.as_ptr();
-        let res = LEN__STRING(raw_src);
-        assert_eq!(res, 8)        
+        unsafe {
+            let res = LEN__STRING(raw_src);
+            assert_eq!(res.to_bytes().len(), 12) 
+        }
     }
 
     #[test]
     fn test_find_index_correct() {
-        let s1 = "hello world\0";
-        let s2 = "worl\0";
+        let s1 = "hϗllo wϕrld\0";
+        let s2 = "llo\0";
         let raw_src1 = s1.as_ptr();
         let raw_src2 = s2.as_ptr();
         unsafe {
             let res = FIND__STRING(raw_src1, raw_src2);
-            assert_eq!(res, 7) 
+            assert_eq!(res, 3) 
         }
     }
 
     #[test]
     fn test_find_index_correct_edge_case() {
-        let s1 = "hello world\0";
-        let s2 = "orld\0";
+        let s1 = "hello wϕrld\0";
+        let s2 = "h\0";
         let raw_src1 = s1.as_ptr();
         let raw_src2 = s2.as_ptr();
         unsafe {
             let res = FIND__STRING(raw_src1, raw_src2);
-            assert_eq!(res, 8) 
+            assert_eq!(res, 1) 
         }
     }
 
@@ -942,8 +832,8 @@ mod test {
 
     #[test]
     fn test_right_ext_str() {
-        let s = "hello world\0";
-        let len = 6;
+        let s = "ϕϚϡϗ hello\0";
+        let len = 5;
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src = s.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -952,14 +842,30 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!(" world", str_slice)
+            assert_eq!("hello", str_slice)
+        }
+    }
+
+    #[test]
+    fn test_right_ext_str_multi_byte() {
+        let s = "ϕϚϡxϗ wϕrld\0";
+        let len = 8;
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let raw_src = s.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            RIGHT_EXT__STRING(raw_src, len, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("xϗ wϕrld", str_slice)
         }
     }
 
     #[test]
     fn test_mid_ext_str() {
-        let s = "hello world\0";
-        let len = 5;
+        let s = "ϕϚϡxϗ wϕrld\0";
+        let len = 6;
         let start_index = 3;
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src = s.as_ptr();
@@ -969,7 +875,24 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("llo w", str_slice)
+            assert_eq!("ϡxϗ wϕ", str_slice)
+        }
+    }
+
+    #[test]
+    fn test_mid_ext_str_edge_case() {
+        let s = "ϕϚϡxϗ wϕrld\0";
+        let len = 11;
+        let start_index = 1;
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let raw_src = s.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            MID_EXT__STRING(raw_src, len, start_index, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("ϕϚϡxϗ wϕrld", str_slice)
         }
     }
 
@@ -987,7 +910,7 @@ mod test {
 
     #[test]
     fn test_insert_ext_str() {
-        let base = "hello world\0";
+        let base = "ϕϚϡxϗ wϕrld\0";
         let s = "brave new \0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
@@ -998,14 +921,14 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("hello brave new world", str_slice)
+            assert_eq!("ϕϚϡxϗ brave new wϕrld", str_slice)
         }
     }
 
     #[test]
     fn test_insert_ext_str_insert_at_zero() {
         let base = "hello world\0";
-        let s = "brave new \0";
+        let s = "ϕϚϡxϗ new \0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
         let raw_src2 = s.as_ptr();
@@ -1015,14 +938,14 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("brave new hello world", str_slice)
+            assert_eq!("ϕϚϡxϗ new hello world", str_slice)
         }
     }
 
     #[test]
     fn test_insert_ext_str_insert_at_end() {
         let base = "hello world\0";
-        let s = "brave new \0";
+        let s = "ϕϚϡxϗ new \0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
         let raw_src2 = s.as_ptr();
@@ -1032,7 +955,7 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("hello worldbrave new ", str_slice)
+            assert_eq!("hello worldϕϚϡxϗ new ", str_slice)
         }
     }
 
@@ -1066,22 +989,22 @@ mod test {
 
     #[test]
     fn test_delete_ext_str() {
-        let base = "hello world\0";
+        let base = "ϕϚϡxϗ wϕrld\0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src = base.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
-            DELETE_EXT__STRING(raw_src, 6, 3, raw_dest);
+            DELETE_EXT__STRING(raw_src, 9, 3, raw_dest);
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("herld", str_slice)
+            assert_eq!("ϕϚ", str_slice)
         }
     }
 
     #[test]
     fn test_delete_ext_str_delete_all() {
-        let base = "hello world\0";
+        let base = "ϕϚϡxϗ wϕrld\0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src = base.as_ptr();
         let raw_dest = dest.as_mut_ptr();
@@ -1091,6 +1014,36 @@ mod test {
             let str_slice: &str = c_str.to_str().unwrap();
 
             assert_eq!("", str_slice)
+        }
+    }
+
+    #[test]
+    fn test_delete_ext_str_delete_last() {
+        let base = "ϕϚϡxϗ wϕrld\0";
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let raw_src = base.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            DELETE_EXT__STRING(raw_src, 1, 11, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("ϕϚϡxϗ wϕrl", str_slice)
+        }
+    }
+
+    #[test]
+    fn test_delete_ext_str_delete_first() {
+        let base = "ϕϚϡxϗ wϕrld\0";
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let raw_src = base.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            DELETE_EXT__STRING(raw_src, 1, 1, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("Ϛϡxϗ wϕrld", str_slice)
         }
     }
 
@@ -1132,8 +1085,8 @@ mod test {
 
     #[test]
     fn test_replace_ext_str_replace_at_beginning() {
-        let base = "hello world\0";
-        let s = "brave new \0";
+        let base = "ϕϚϡxϗ wϕrld\0";
+        let s = "brϡxϗ new \0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
         let raw_src2 = s.as_ptr();
@@ -1143,24 +1096,24 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("brave new world", str_slice)
+            assert_eq!("brϡxϗ new wϕrld", str_slice)
         }
     }
 
     #[test]
     fn test_replace_ext_str_replace_at_middle() {
-        let base = "hello world\0";
-        let s = " is out of this \0";
+        let base = "hellϕ wϕrld\0";
+        let s = "brϡxϗ new\0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
         let raw_src2 = s.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
-            REPLACE_EXT__STRING(raw_src1, raw_src2, 2, 5, raw_dest);
+            REPLACE_EXT__STRING(raw_src1, raw_src2, 3, 5, raw_dest);
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("hell is out of this world", str_slice)
+            assert_eq!("hellbrϡxϗ newϕrld", str_slice)
         }
     }
 
@@ -1168,7 +1121,7 @@ mod test {
     fn test_replace_ext_str_replace_at_end() {
         // 
         let base = "hællø wørlÞ\0";
-        let s = "aldo, how are you😀\0";
+        let s = "aldø, how are you😀\0";
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let raw_src1 = base.as_ptr();
         let raw_src2 = s.as_ptr();
@@ -1178,7 +1131,7 @@ mod test {
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
             let str_slice: &str = c_str.to_str().unwrap();
 
-            assert_eq!("hællo waldo, how are you😀", str_slice)
+            assert_eq!("hællø waldø, how are you😀", str_slice)
         }
     }
 
@@ -1228,25 +1181,27 @@ mod test {
     #[test]
     fn test_len_correct_utf16_character_count()
     {
-        let v1: Vec<u16> = "😀123ϕϚϡϗ😀\0".encode_utf16().collect();
+        let v1: Vec<u16> = "𝄞music𝄞 😀𝄞ϕϚϡϗ😀\0".encode_utf16().collect();
         let s = &v1[..];
         let raw_src = s.as_ptr();
-        let res = LEN__WSTRING(raw_src);
-        assert_eq!(res, 9)
+        unsafe {
+            let res = LEN__WSTRING(raw_src);
+            assert_eq!(res, 15)
+        }
         
     }
 
     #[test]
     fn test_find_wstring() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let v2: Vec<u16> = "lo\0".encode_utf16().collect();
+        let v1: Vec<u16> = "𝄞music𝄞 world\0".encode_utf16().collect();
+        let v2: Vec<u16> = "c𝄞\0".encode_utf16().collect();
         let base = &v1[..];
         let find = &v2[..];
         let raw_src1 = base.as_ptr();
         let raw_src2 = find.as_ptr();
         unsafe {
             let res = FIND__WSTRING(raw_src1, raw_src2);
-            assert_eq!(4, res)
+            assert_eq!(6, res)
         }
     }
 
@@ -1280,19 +1235,19 @@ mod test {
 
     #[test]
     fn test_left_ext_wstring() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "𝄞musϗ😀ic world\0".encode_utf16().collect();
         let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
         unsafe {
-            LEFT_EXT__WSTRING(raw_src, 4, raw_dest);
+            LEFT_EXT__WSTRING(raw_src, 7, raw_dest);
             let slice =
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("hell", res)
+            assert_eq!("𝄞musϗ😀i", res)
         }
     }
 
@@ -1312,19 +1267,19 @@ mod test {
 
     #[test]
     fn test_right_ext_wstring() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "hello 𝄞musϗ😀".encode_utf16().collect();
         let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
         unsafe {
-            RIGHT_EXT__WSTRING(raw_src, 7, raw_dest);
+            RIGHT_EXT__WSTRING(raw_src, 8, raw_dest);
             let slice =
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("o world", res)
+            assert_eq!("o 𝄞musϗ😀", res)
         }
     }
 
@@ -1348,19 +1303,19 @@ mod test {
 
     #[test]
     fn test_mid_ext_wstring() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "𝄞muϗ😀 world\0".encode_utf16().collect();
         let arr = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
         let raw_src = arr.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
         unsafe {
-            MID_EXT__WSTRING(raw_src, 4, 6, raw_dest);
+            MID_EXT__WSTRING(raw_src, 5, 5, raw_dest);
             let slice =
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!(" wor", res)
+            assert_eq!("😀 wor", res)
         }
     }
 
@@ -1380,8 +1335,8 @@ mod test {
 
     #[test]
     fn test_insert_ext_wstring() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
+        let v1: Vec<u16> = "𝄞muϗ😀 world\0".encode_utf16().collect();
+        let v2: Vec<u16> = "brave 𝄞muϗ😀 \0".encode_utf16().collect();
         let arr1 = &v1[..];
         let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
@@ -1395,14 +1350,14 @@ mod test {
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("hello brave new world", res)
+            assert_eq!("𝄞muϗ😀 brave 𝄞muϗ😀 world", res)
         }
     }
 
     #[test]
     fn test_insert_ext_wstring_insert_at_zero() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
+        let v1: Vec<u16> = "hello 𝄞muϗ😀\0".encode_utf16().collect();
+        let v2: Vec<u16> = "𝄞muϗ😀 new \0".encode_utf16().collect();
         let arr1 = &v1[..];
         let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
@@ -1416,14 +1371,14 @@ mod test {
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("brave new hello world", res)
+            assert_eq!("𝄞muϗ😀 new hello 𝄞muϗ😀", res)
         }
     }
 
     #[test]
     fn test_insert_ext_wstring_insert_at_end() {
         let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
+        let v2: Vec<u16> = "brave 𝄞muϗ😀 \0".encode_utf16().collect();
         let arr1 = &v1[..];
         let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
@@ -1437,7 +1392,7 @@ mod test {
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("hello worldbrave new ", res)
+            assert_eq!("hello worldbrave 𝄞muϗ😀 ", res)
         }
     }
 
@@ -1460,25 +1415,25 @@ mod test {
 
     #[test]
     fn test_delete_ext_wstring() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "h𝄞muϗ w😀rld\0".encode_utf16().collect();
         let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
         let raw_src = arr1.as_ptr();
         let raw_dest = dest.as_mut_ptr();
 
         unsafe {
-            DELETE_EXT__WSTRING(raw_src, 6, 3, raw_dest);
+            DELETE_EXT__WSTRING(raw_src, 5, 3, raw_dest);
             let slice =
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("herld", res)
+            assert_eq!("h𝄞😀rld", res)
         }
     }
 
     #[test]
     fn test_delete_ext_wstring_delete_all() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "h𝄞muϗ w😀rld\0".encode_utf16().collect();
         let arr1 = &v1[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
         let raw_src = arr1.as_ptr();
@@ -1534,7 +1489,7 @@ mod test {
 
     #[test]
     fn test_replace_ext_wstring_replace_at_beginning() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "h𝄞muϗ w😀rld\0".encode_utf16().collect();
         let v2: Vec<u16> = "brave new \0".encode_utf16().collect();
         let arr1 = &v1[..];
         let arr2 = &v2[..];
@@ -1548,13 +1503,13 @@ mod test {
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("brave new world", res)
+            assert_eq!("brave new w😀rld", res)
         }
     }
 
     #[test]
     fn test_replace_ext_wstring_replace_at_middle() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
+        let v1: Vec<u16> = "hello w😀rld𝄞\0".encode_utf16().collect();
         let v2: Vec<u16> = " is out of this \0".encode_utf16().collect();
         let arr1 = &v1[..];
         let arr2 = &v2[..];
@@ -1568,14 +1523,14 @@ mod test {
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);
 
-            assert_eq!("hell is out of this world", res)
+            assert_eq!("hell is out of this w😀rld𝄞", res)
         }
     }
 
     #[test]
     fn test_replace_ext_wstring_replace_at_end() {
-        let v1: Vec<u16> = "hello world\0".encode_utf16().collect();
-        let v2: Vec<u16> = "aldo, how are you?\0".encode_utf16().collect();
+        let v1: Vec<u16> = "hello w😀rld𝄞\0".encode_utf16().collect();
+        let v2: Vec<u16> = "aldo, how are you? 😀\0".encode_utf16().collect();
         let arr1 = &v1[..];
         let arr2 = &v2[..];
         let dest: &mut [u16; 1024] = &mut [0; 1024];
@@ -1583,7 +1538,7 @@ mod test {
         let raw_src2 = arr2.as_ptr();
         let raw_dest = dest.as_mut_ptr();
         unsafe {
-            REPLACE_EXT__WSTRING(raw_src1, raw_src2, 4, 8, raw_dest);
+            REPLACE_EXT__WSTRING(raw_src1, raw_src2, 5, 8, raw_dest);
             let slice =
                 std::slice::from_raw_parts(raw_dest, get_null_terminated_len_utf16(raw_dest));
             let res = String::from_utf16_lossy(slice);

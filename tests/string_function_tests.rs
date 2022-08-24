@@ -596,28 +596,28 @@ fn len_wstring() {
     let src = r#"
 	FUNCTION main : DINT
     VAR_TEMP
-        in : WSTRING[6];
+        in : WSTRING;
     END_VAR
-        //in := "Hèßlo😀"; // works with "
-        in := 'Hèßlo😀';
+        //in := 'Hèßlo😀𝄞'; // works with "
+        in := "Hèßlo😀𝄞";
 		main := LEN(in);
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
     let res : i32 = compile_and_run_no_params(sources); 
-    assert_eq!(6, res);
+    assert_eq!(7, res);
 }
 
 #[test]
 fn len_wstring_no_variable() {
     let src = r#"
 	FUNCTION main : DINT
-        main := LEN(WSTRING#'hello'); 
+        main := LEN(WSTRING#'Hèßlo😀𝄞"'); 
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
     let res : i32 = compile_and_run_no_params(sources); 
-    assert_eq!(5, res);
+    assert_eq!(7, res);
 }
 
 #[test]
@@ -649,7 +649,7 @@ fn left_wstring() {
         "#;
 
     let sources = add_std!(src, "string_functions.st"); 
-    let res: [u16; 81] = compile_and_run_no_params(sources);   
+    let res: [u16; 10] = compile_and_run_no_params(sources);   
     assert_eq!(
         String::from_utf16(&res).unwrap(),
         "𝄞m".to_owned()
