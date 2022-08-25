@@ -1,7 +1,9 @@
 // Import common functionality into the integration tests
 mod common;
-use common::add_std;
+use std::string::FromUtf16Error;
+
 use crate::common::compile_and_run_no_params;
+use common::add_std;
 
 // helper function to convert null-terminated utf8 byte array to string slice
 fn str_from_u8_utf8(src: &[u8]) -> Result<&str, std::str::Utf8Error> {
@@ -10,6 +12,15 @@ fn str_from_u8_utf8(src: &[u8]) -> Result<&str, std::str::Utf8Error> {
         .position(|&c| c == 0)
         .unwrap_or_else(|| panic!("No null-terminating character found!"));
     std::str::from_utf8(&src[0..null_pos])
+}
+
+// helper function to convert null-terminated utf16 byte array to string slice
+fn string_from_utf16(src: &[u16]) -> Result<String, FromUtf16Error> {
+    let null_pos = src
+        .iter()
+        .position(|&c| c == 0)
+        .unwrap_or_else(|| panic!("No null-terminating character found!"));
+    String::from_utf16(&src[0..null_pos])
 }
 
 // utf8 tests
@@ -25,7 +36,7 @@ fn len_string() {
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
-    let res : i32 = compile_and_run_no_params(sources); 
+    let res: i32 = compile_and_run_no_params(sources);
     assert_eq!(5, res);
 }
 
@@ -37,7 +48,7 @@ fn len_string_no_variable() {
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
-    let res : i32 = compile_and_run_no_params(sources); 
+    let res: i32 = compile_and_run_no_params(sources);
     assert_eq!(5, res);
 }
 
@@ -53,7 +64,7 @@ fn len_string_empty() {
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
-    let res : i32 = compile_and_run_no_params(sources); 
+    let res: i32 = compile_and_run_no_params(sources);
     assert_eq!(0, res);
 }
 
@@ -69,13 +80,10 @@ fn left_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 81] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 81] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "hel"
-        );
+        assert_eq!(res, "hel");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -95,13 +103,10 @@ fn left_string_lint() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 81] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 81] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "lets see if long int is handled"
-        );
+        assert_eq!(res, "lets see if long int is handled");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -123,13 +128,10 @@ fn left_ext_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "extend"
-        );
+        assert_eq!(res, "extend");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -147,13 +149,10 @@ fn right_string_usint() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 81] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 81] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "le text"
-        );
+        assert_eq!(res, "le text");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -172,8 +171,8 @@ fn right_string_substring_too_long() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let _: [u8; 81] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let _: [u8; 81] = compile_and_run_no_params(sources);
 }
 
 #[test]
@@ -190,13 +189,10 @@ fn right_ext_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ded"
-        );
+        assert_eq!(res, "ded");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -217,7 +213,7 @@ fn right_string_long_string() {
         "#;
 
     // let src = r#"
-	// FUNCTION main : STRING
+    // FUNCTION main : STRING
     // VAR
     //     in : STRING[128];
     //     l : DINT;
@@ -225,13 +221,13 @@ fn right_string_long_string() {
     // END_VAR
     //     in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
     //     l := 99;
-	// 	    out := RIGHT(in, l);
+    // 	    out := RIGHT(in, l);
     //     main := out;
     // END_FUNCTION
     //     "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -258,8 +254,8 @@ fn right_ext_string_long_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -286,13 +282,10 @@ fn mid_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ample t"
-        );
+        assert_eq!(res, "ample t");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -316,13 +309,10 @@ fn mid_ext_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ample t"
-        );
+        assert_eq!(res, "ample t");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -344,8 +334,8 @@ fn mid_string_long_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -374,8 +364,8 @@ fn mid_ext_string_long_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -385,7 +375,6 @@ fn mid_ext_string_long_string() {
         panic!("Given string is not UTF8-encoded")
     }
 }
-
 
 #[test]
 fn insert_string() {
@@ -403,13 +392,10 @@ fn insert_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "stuck in the middle with you"
-        );
+        assert_eq!(res, "stuck in the middle with you");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -434,20 +420,17 @@ fn insert_ext_string_at_start_and_end() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "123"
-        );
+        assert_eq!(res, "123");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
 }
 
 #[test]
-fn delete_string() {
+fn delete_string_with_escape_sequence() {
     let src = r#"
 	FUNCTION main : STRING
     VAR_TEMP
@@ -455,20 +438,17 @@ fn delete_string() {
         l : UINT;
         p : ULINT;
     END_VAR
-        in := 'this will be deleted';
-        l := 13;
-        p := 1;
+        in := 'this $"𝄞$" will be deleted';
+        l := 4;
+        p := 5;
 		main := DELETE(in, l, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "deleted"
-        );
+        assert_eq!(res, "this will be deleted");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -484,26 +464,22 @@ fn delete_ext_string() {
         l : LINT;
         p : USINT;
     END_VAR
-        in := 'typoasdf';
+        in := '𝄞typoasdf';
         l := 4;
-        p := 5;
+        p := 6;
 		DELETE_EXT(in, l, p, out);
         main := out;
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "typo"
-        );
+        assert_eq!(res, "𝄞typo");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
 }
-
 
 #[test]
 fn replace_string() {
@@ -516,20 +492,17 @@ fn replace_string() {
         p : USINT;
     END_VAR
         in1 := 'replace me';
-        in2 := 'gret';
+        in2 := 'gret𝄞';
         l := 8;
         p := 3;
 		main := REPLACE(in1, in2, l, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "regret"
-        );
+        assert_eq!(res, "regret𝄞");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -547,7 +520,7 @@ fn replace_ext_string() {
         p : USINT;
     END_VAR
         in1 := 'replace me';
-        in2 := 'stored';
+        in2 := 'st𝄞red';
         l := 8;
         p := 3;
 		REPLACE_EXT(in1, in2, l, p, out);
@@ -555,20 +528,17 @@ fn replace_ext_string() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "restored"
-        );
+        assert_eq!(res, "rest𝄞red");
     } else {
         panic!("Given string is not UTF8-encoded")
     }
 }
 
 #[test]
-fn find_string(){
+fn find_string() {
     let src = r#"
     FUNCTION main : DINT
     VAR_TEMP
@@ -581,16 +551,32 @@ fn find_string(){
     END_FUNCTION
     "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: usize = compile_and_run_no_params(sources);   
-    assert_eq!(
-        res,
-        10
-    );
+    let sources = add_std!(src, "string_functions.st");
+    let res: usize = compile_and_run_no_params(sources);
+    assert_eq!(res, 10);
 }
 
+#[test]
+#[should_panic]
+fn test_single_and_double_quotes_string() {
+    let src = r#"
+    FUNCTION main : DINT
+    VAR_TEMP
+        in1: STRING;
+        in2: STRING;
+    END_VAR
+        in1 := "Where is Waldo?";
+        in2 := "Waldo";
+        main := FIND(in1, in2);        
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(src, "string_functions.st");
+    let _: i32 = compile_and_run_no_params(sources);
+}
 
 // utf16 tests
+
 #[test]
 fn len_wstring() {
     let src = r#"
@@ -604,7 +590,7 @@ fn len_wstring() {
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
-    let res : i32 = compile_and_run_no_params(sources); 
+    let res: i32 = compile_and_run_no_params(sources);
     assert_eq!(7, res);
 }
 
@@ -612,11 +598,11 @@ fn len_wstring() {
 fn len_wstring_no_variable() {
     let src = r#"
 	FUNCTION main : DINT
-        main := LEN(WSTRING#'Hèßlo😀𝄞"'); 
+        main := LEN(WSTRING#'Hèßlo😀𝄞'); 
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
-    let res : i32 = compile_and_run_no_params(sources); 
+    let res: i32 = compile_and_run_no_params(sources);
     assert_eq!(7, res);
 }
 
@@ -632,7 +618,7 @@ fn len_wstring_empty() {
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
-    let res : i32 = compile_and_run_no_params(sources); 
+    let res: i32 = compile_and_run_no_params(sources);
     assert_eq!(0, res);
 }
 
@@ -648,89 +634,81 @@ fn left_wstring() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u16; 10] = compile_and_run_no_params(sources);   
-    assert_eq!(
-        String::from_utf16(&res).unwrap(),
-        "𝄞m".to_owned()
-    );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 10] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "𝄞m");
+    } else {
+        panic!("Given string is not UTF16-encoded")
+    }
 }
 
 #[test]
 fn left_wstring_lint() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
+        in : WSTRING;
         l : LINT;
     END_VAR
-        in := 'lets see if long int is handled correctly';
+        in := "lets see 𝄞f long 𝄞nt is handled correctly";
         l := 31;
 		main := LEFT(in, l);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 81] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "lets see if long int is handled"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "lets see 𝄞f long 𝄞nt is handled");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn left_ext_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
-        out : STRING;
+        in : WSTRING;
+        out : WSTRING;
         l : UDINT;
     END_VAR
-        in := 'extended';
+        in := "e𝄞tended";
         l := 6;
         LEFT_EXT(in, l, out);
 		main := out;
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "extend"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "e𝄞tend");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn right_wstring_usint() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
+        in : WSTRING;
     END_VAR
-        in := 'sample text';
+        in := "samp𝄞e text";
 		main := RIGHT(in, USINT#7);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 81] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "le text"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "𝄞e text");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
@@ -738,138 +716,126 @@ fn right_wstring_usint() {
 #[should_panic]
 fn right_wstring_substring_too_long() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
+        in : WSTRING;
     END_VAR
-        in := 'sample text';
+        in := "sa𝄞ple text";
 		main := RIGHT(in, 12);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let _: [u8; 81] = compile_and_run_no_params(sources);   
+    let sources = add_std!(src, "string_functions.st");
+    let _: [u16; 81] = compile_and_run_no_params(sources);
 }
 
 #[test]
 fn right_ext_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
-        out : STRING;
+        in : WSTRING;
+        out : WSTRING;
     END_VAR
-        in := 'extended';
-        RIGHT_EXT(in, 3, out);
+        in := "exten𝄞ed𝄞";
+        RIGHT_EXT(in, 4, out);
 		main := out;
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ded"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 128] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "𝄞ed𝄞");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn right_string_long_wstring() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : WSTRING[128]
     VAR_TEMP
-        in : STRING[128];
+        in : WSTRING[128];
         l : DINT;
     END_VAR
-        in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
+        in := "7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhp𝄞𝄞;
         l := 99;
         main := RIGHT(in, l);
     END_FUNCTION
         "#;
 
-        let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 128] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "ika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhp𝄞𝄞");
     } else {
-        panic!("Given string is not UTF8-encoded")
-    }
+        panic!("Given string is not UTF16-encoded")
+    } 
 }
 
 #[test]
 fn right_ext_string_long_wstring() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : WSTRING[128]
     VAR_TEMP
-        in : STRING[128];
-        out : STRING[128];
+        in : WSTRING[128];
+        out : WSTRING[128];
         l : DINT;
     END_VAR 
-        in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
+        in := "7gAN5pmmSXqHJ3zZCXnBwi𝄞𝄞9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW";
         l := 99;
         RIGHT_EXT(in, l, out);
 		main := out;
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 128] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "i𝄞𝄞9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn mid_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
+        in : WSTRING;
         l : DINT;
         p : DINT;
     END_VAR
-        in := 'sample text';
+        in := "sample 𝄞muϗ😀 text";
         l := 7;
         p := 2;
 		main := MID(in, l, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ample t"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "ample 𝄞");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn mid_ext_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
-        out : STRING;
+        in : WSTRING;
+        out : WSTRING;
         l : DINT;
         p : DINT;
     END_VAR
-        in := 'sample text';
+        in := "𝄞muϗ😀 sample text";
         l := 7;
         p := 2;
         MID_EXT(in, l, p, out);
@@ -877,57 +843,51 @@ fn mid_ext_wstring() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "ample t"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "muϗ😀 sa");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn mid_string_long_wstring() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : WSTRING[128]
     VAR_TEMP
-        in : STRING[128];
+        in : WSTRING[128];
         l : DINT;
         p : DINT;
     END_VAR
-        in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
+        in := "𝄞muϗ😀pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW";
         l := 99;
         p := 10;
 		main := MID(in, l, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "XqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQc"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 128] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "XqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQc");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn mid_ext_string_long_wstring() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : WSTRING[128]
     VAR_TEMP
-        in : STRING[128];
-        out : STRING[128];
+        in : WSTRING[128];
+        out : WSTRING[128];
         l : DINT;
         p : DINT;
     END_VAR 
-        in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
+        in := "𝄞muϗ😀pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW";
         l := 99;
         p := 10;
         MID_EXT(in, l, p, out);
@@ -935,117 +895,105 @@ fn mid_ext_string_long_wstring() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "XqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQc"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 128] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "XqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQc");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
-
 
 #[test]
 fn insert_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in1 : STRING;
-        in2 : STRING;
+        in1 : WSTRING;
+        in2 : WSTRING;
         p : SINT;
     END_VAR
-        in1 := 'stuck with you';
-        in2 := 'in the middle ';
+        in1 := "stuck with you";
+        in2 := "in the middle ";
         p := 6;
 		main := INSERT(in1, in2, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "stuck in the middle with you"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "stuck in the middle with you");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not 
+        -encoded")
     }
 }
 
 #[test]
 fn insert_ext_wstring_at_start_and_end() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in1 : STRING;
-        in2 : STRING;
-        out : STRING;
+        in1 : WSTRING;
+        in2 : WSTRING;
+        out : WSTRING;
     END_VAR
-        in1 := '2';
-        in2 := '1';
+        in1 := "2";
+        in2 := "1";
 		INSERT_EXT(in1, in2, 0, out);
         in1 := out;
-        in2 := '3';
+        in2 := "3";
 		INSERT_EXT(in1, in2, 2, out);
         main := out;
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "123"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "123");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn delete_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
+        in : WSTRING;
         l : UINT;
         p : ULINT;
     END_VAR
-        in := 'this will be deleted';
+        in := "this will be deleted";
         l := 13;
         p := 1;
 		main := DELETE(in, l, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "deleted"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "deleted");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn delete_ext_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in : STRING;
-        out : STRING;
+        in : WSTRING;
+        out : WSTRING;
         l : LINT;
         p : USINT;
     END_VAR
-        in := 'typoasdf';
+        in := "typoasdf";
         l := 4;
         p := 5;
 		DELETE_EXT(in, l, p, out);
@@ -1053,62 +1001,59 @@ fn delete_ext_wstring() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "typo"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "typo");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
+    assert_eq!(
+        String::from_utf16(&res).unwrap().trim_end_matches('\0'),
+        "typo".to_owned()
+    );
 }
-
 
 #[test]
 fn replace_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in1 : STRING;
-        in2 : STRING;
+        in1 : WSTRING;
+        in2 : WSTRING;
         l : LINT;
         p : USINT;
     END_VAR
-        in1 := 'replace me';
-        in2 := 'gret';
+        in1 := "replace me";
+        in2 := "gret";
         l := 8;
         p := 3;
 		main := REPLACE(in1, in2, l, p);
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "regret"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "regret");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
 fn replace_ext_wstring() {
     let src = r#"
-	FUNCTION main : STRING
+	FUNCTION main : WSTRING
     VAR_TEMP
-        in1 : STRING;
-        in2 : STRING;
-        out : STRING;
+        in1 : WSTRING;
+        in2 : WSTRING;
+        out : WSTRING;
         l : LINT;
         p : USINT;
     END_VAR
-        in1 := 'replace me';
-        in2 := 'stored';
+        in1 := "replace me";
+        in2 := "stored";
         l := 8;
         p := 3;
 		REPLACE_EXT(in1, in2, l, p, out);
@@ -1116,25 +1061,45 @@ fn replace_ext_wstring() {
     END_FUNCTION
         "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: [u8; 128] = compile_and_run_no_params(sources);   
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(
-            res,
-            "restored"
-        );
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "restored");
     } else {
-        panic!("Given string is not UTF8-encoded")
+        panic!("Given string is not UTF16-encoded")
     }
 }
 
 #[test]
-fn find_wstring(){
+fn find_wstring() {
     let src = r#"
     FUNCTION main : DINT
     VAR_TEMP
-        in1: STRING;
-        in2: STRING;
+        in1: WSTRING;
+        in2: WSTRING;
+    END_VAR
+        in1 := "Where is Waldo?";
+        in2 := "Waldo";
+        main := FIND(in1, in2);        
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(src, "string_functions.st");
+    let res: i32 = compile_and_run_no_params(sources);
+    assert_eq!(
+        res,
+        10
+    );
+}
+
+#[test]
+#[should_panic]
+fn test_single_and_double_quotes_wstring() {
+    let src = r#"
+    FUNCTION main : DINT
+    VAR_TEMP
+        in1: WSTRING;
+        in2: WSTRING;
     END_VAR
         in1 := 'Where is Waldo?';
         in2 := 'Waldo';
@@ -1142,11 +1107,6 @@ fn find_wstring(){
     END_FUNCTION
     "#;
 
-    let sources = add_std!(src, "string_functions.st"); 
-    let res: usize = compile_and_run_no_params(sources);   
-    assert_eq!(
-        res,
-        10
-    );
+    let sources = add_std!(src, "string_functions.st");
+    let _: i32 = compile_and_run_no_params(sources);
 }
-
