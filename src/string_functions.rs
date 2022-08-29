@@ -110,26 +110,12 @@ impl<'a> CharsDecoder<u16> for EncodedCharsIter<Utf16Iterator<'a>> {
     }
 }
 
-// impl<T, U> CharsDecoder<T> for EncodedCharsIter<U> {}
-
-// unsafe extern "C" fn left<T>(src: *const T, substr_len: i32, dest: *mut T) -> i32 
-//     where T: CharsDecoder<u8> + CharsDecoder<u16> + CharsEncoder<u8> + CharsEncoder<u16> + PrimInt
-// {
-//     if substr_len < 0 {
-//         panic!("Length parameter cannot be negative.");
-//     }
-//     let mut dest = dest;
-//     let substr_len = substr_len as usize;
-//     let nchars = EncodedCharsIter::decode(src).count();
-//     if nchars < substr_len {
-//         panic!("Requested substring length exceeds string length.")
-//     }
-//     let chars = EncodedCharsIter::decode(src).take(substr_len);
-//     chars.encode(&mut dest);
-
-//     0
+// enum EitherIter<CharsEncoder, CharsDecoder>{
+//     U8Decoder(CharsDecoder),
+//     U8Encoder(CharsEncoder),
+//     U16Decoder(CharsDecoder),
+//     U16Encoder(CharsEncoder),
 // }
-
 
 /// Gets length of the given character string.
 /// UTF8
@@ -684,11 +670,66 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
     0
 }
 
+/// Concatenates all given strings in the order in which they are given.
+/// Strings are passed as pointer of pointer to u8, where each pointer represents
+/// the starting address of each string. The amount of strings must be passed as
+/// argument.
+/// UTF8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// Will panic if trying to index outside of the array or trying
+/// to replace more characters than remaining.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CONCAT_EXT__STRING(argc: usize, argv: *const *const u8, dest: *mut u8) -> i32
+{
+    if argv.is_null() || dest.is_null() {
+        panic!("Received null-pointer.")
+    }    
+    let mut dest = dest;
+    let mut argv = argv;
+    for _ in 0..argc {
+        EncodedCharsIter::decode(*argv).encode(&mut dest);
+        argv = argv.add(1);
+    }
+
+    0 
+}
+
+/// Concatenates all given strings in the order in which they are given.
+/// Strings are passed as pointer of pointer to u8, where each pointer represents
+/// the starting address of each string. The amount of strings must be passed as
+/// argument.
+/// UTF16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// Will panic if trying to index outside of the array or trying
+/// to replace more characters than remaining.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CONCAT_EXT__WSTRING(argc: usize, argv: *const *const u16, dest: *mut u16) -> i32
+{
+    if argv.is_null() || dest.is_null() {
+        panic!("Received null-pointer.")
+    }    
+    let mut dest = dest;
+    let mut argv = argv;
+    for _ in 0..argc {
+        EncodedCharsIter::decode(*argv).encode(&mut dest);
+        argv = argv.add(1);
+    }
+
+    0 
+}
 // -------------------------------------------------unit tests-----------------------------------------
 #[cfg(test)]
 mod test {
     use super::*;
-    use std::ffi::CStr;
+    use std::ffi::{CStr};
     // -----------------------------------UTF8
     #[test]
     fn test_len_correct_utf8_character_count() {
@@ -1156,6 +1197,48 @@ mod test {
         }
     }
 
+    #[test]
+    fn test_concat_ext_str() {
+        // let argv = [
+        //     CString::new("hællø wørlÞ").unwrap().as_c_str().as_ptr(), 
+        //     CString::new("hello world").unwrap().as_c_str().as_ptr(), 
+        //     CString::new("𝄞music").unwrap().as_c_str().as_ptr(),
+        // ];
+        let argv = [
+            "hællø wørlÞ\0".as_ptr(), 
+            "hello world\0".as_ptr(), 
+            "𝄞music\0".as_ptr(),
+        ];
+        let argc = argv.len();
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let argv = argv.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        
+        unsafe {
+            CONCAT_EXT__STRING(argc, argv, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("hællø wørlÞhello world𝄞music", str_slice)
+        }
+    }
+
+    #[test]
+    fn test_concat_no_args() {
+        let argv = [];
+        let argc = argv.len();
+        let dest: &mut [u8; 1024] = &mut [0; 1024];
+        let argv = argv.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            CONCAT_EXT__STRING(argc, argv, raw_dest);
+            let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
+            let str_slice: &str = c_str.to_str().unwrap();
+
+            assert_eq!("", str_slice)
+        }
+    }
+
     // -----------------------------------UTF16
     #[test]
     fn test_len_correct_utf16_character_count() {
@@ -1557,6 +1640,29 @@ mod test {
         let raw_dest = dest.as_mut_ptr();
         unsafe {
             REPLACE_EXT__WSTRING(raw_src1, raw_src2, 8, 12, raw_dest);
+        }
+    }
+
+    #[test]
+    fn test_concat_ext_wstring() {
+        let argvec: [Vec<u16>; 3] = [
+            "hællø wørlÞ\0".encode_utf16().collect(), 
+            "hello world\0".encode_utf16().collect(), 
+            "𝄞music\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        let argc = argv.len();
+        let dest: &mut [u16; 1024] = &mut [0; 1024];
+        let argv = argv.as_ptr();
+        let raw_dest = dest.as_mut_ptr();
+        unsafe {
+            CONCAT_EXT__WSTRING(argc, argv, raw_dest);
+            let slice = std::slice::from_raw_parts(raw_dest, get_null_terminated_len(raw_dest));
+            let res = String::from_utf16_lossy(slice);
+            assert_eq!("hællø wørlÞhello world𝄞music", res)
         }
     }
 }

@@ -4,6 +4,7 @@ use std::string::FromUtf16Error;
 
 use crate::common::compile_and_run_no_params;
 use common::add_std;
+use rusty::runner::compile_and_run;
 
 // helper function to convert null-terminated utf8 byte array to string slice
 fn str_from_u8_utf8(src: &[u8]) -> Result<&str, std::str::Utf8Error> {
@@ -438,20 +439,19 @@ fn delete_string_with_escape_sequence() {
         l : UINT;
         p : ULINT;
     END_VAR
-        in := 'this $"𝄞$" will be deleted';
-        l := 4;
-        p := 5;
+        in := 'the$$e are escape sequences $"𝄞$"';
+        l := 21;
+        p := 6;
 		main := DELETE(in, l, p);
     END_FUNCTION
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 128] = compile_and_run_no_params(sources);
-    if let Ok(res) = str_from_u8_utf8(&res) {
-        assert_eq!(res, "this will be deleted");
-    } else {
-        panic!("Given string is not UTF8-encoded")
-    }
+    let res: [u8; 15] = compile_and_run_no_params(sources);
+    assert_eq!(
+        format!("{:?}", "the$e \"𝄞\"\0".as_bytes()),
+        format!("{:?}", res)
+    );
 }
 
 #[test]
