@@ -24,8 +24,7 @@ pub extern "C" fn DATE_AND_TIME_TO_TIME_OF_DAY(input: i64) -> i64 {
     let sec = date_time.second();
     let nano = date_time.timestamp_subsec_nanos();
 
-    let new_date_time =
-        chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_nano(hour, min, sec, nano);
+    let new_date_time = chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_nano(hour, min, sec, nano);
 
     new_date_time.timestamp_nanos()
 }
