@@ -71,7 +71,7 @@ impl<'a> CharsDecoder<u8> for EncodedCharsIter<Utf8Iterator<'a>> {
     }
 }
 
-impl<'a, I: Iterator<Item = char>> CharsEncoder<u8> for I {
+impl<I: Iterator<Item = char>> CharsEncoder<u8> for I {
     unsafe fn encode(self, dest: &mut *mut u8) {
         for char in self {
             let mut temp = [0; 4];
@@ -86,7 +86,7 @@ impl<'a, I: Iterator<Item = char>> CharsEncoder<u8> for I {
     }
 }
 
-impl<'a, I: Iterator<Item = Result<char, DecodeUtf16Error>>> CharsEncoder<u16> for I {
+impl<I: Iterator<Item = Result<char, DecodeUtf16Error>>> CharsEncoder<u16> for I {
     unsafe fn encode(self, dest: &mut *mut u16) {
         for c in self {
             let mut temp = [0_u16; 2];
@@ -110,13 +110,6 @@ impl<'a> CharsDecoder<u16> for EncodedCharsIter<Utf16Iterator<'a>> {
         }
     }
 }
-
-// enum EitherIter<CharsEncoder, CharsDecoder>{
-//     U8Decoder(CharsDecoder),
-//     U8Encoder(CharsEncoder),
-//     U16Decoder(CharsDecoder),
-//     U16Encoder(CharsEncoder),
-// }
 
 /// Gets length of the given character string.
 /// UTF8
@@ -745,186 +738,170 @@ mod test {
     // -----------------------------------UTF8
     #[test]
     fn test_len_correct_utf8_character_count() {
-        let s = "ϕϚϡϗabcd\0";
+        let src = "ϕϚϡϗabcd\0";
         unsafe {
-            let res = LEN__STRING(s.as_ptr());
+            let res = LEN__STRING(src.as_ptr());
             assert_eq!(res, 8)
         }
     }
 
     #[test]
     fn test_find_index_correct() {
-        let s1 = "hϗllo wϕrld\0";
-        let s2 = "llo\0";
+        let haystack = "hϗllo wϕrld\0";
+        let needle = "llo\0";
         unsafe {
-            let res = FIND__STRING(s1.as_ptr(), s2.as_ptr());
+            let res = FIND__STRING(haystack.as_ptr(), needle.as_ptr());
             assert_eq!(res, 3)
         }
     }
 
     #[test]
     fn test_find_index_correct_edge_case() {
-        let s1 = "hello wϕrld\0";
-        let s2 = "h\0";
+        let haystack = "hello wϕrld\0";
+        let needle = "h\0";
         unsafe {
-            let res = FIND__STRING(s1.as_ptr(), s2.as_ptr());
+            let res = FIND__STRING(haystack.as_ptr(), needle.as_ptr());
             assert_eq!(res, 1)
         }
     }
 
     #[test]
     fn test_find_index_correct_edge_case2() {
-        let s1 = "hello world\0";
-        let s2 = "d\0";
+        let haystack = "hello world\0";
+        let needle = "d\0";
         unsafe {
-            let res = FIND__STRING(s1.as_ptr(), s2.as_ptr());
+            let res = FIND__STRING(haystack.as_ptr(), needle.as_ptr());
             assert_eq!(res, 11)
         }
     }
 
     #[test]
     fn test_find_index_correct_multibyte() {
-        let s1 = "hello ϕϚϡϗ\0";
-        let s2 = "ϗ\0";
+        let haystack = "hello ϕϚϡϗ\0";
+        let needle = "ϗ\0";
         unsafe {
-            let res = FIND__STRING(s1.as_ptr(), s2.as_ptr());
+            let res = FIND__STRING(haystack.as_ptr(), needle.as_ptr());
             assert_eq!(res, 10)
         }
     }
 
     #[test]
     fn test_left_ext_str() {
-        let s = "ϕϚϡϗ hello\0";
+        let src = "ϕϚϡϗ hello\0";
         let len = 7;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
-            let c_str = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚϡϗ he", str_slice)
+            LEFT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚϡϗ he", string)
         }
     }
 
     #[test]
     fn test_left_ext_long_str() {
-        let s = "     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.\0";
+        let src = "     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.\0";
         let len = 85;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("     this is   a  very   long           sentence   with plenty  of    characters and ", str_slice)
+            LEFT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("     this is   a  very   long           sentence   with plenty  of    characters and ", string)
         }
     }
 
     #[test]
     fn test_left_ext_str_w_escape_sequence() {
-        let s = "ϕ\"Ϛ\"ϡϗ hello\0";
+        let src = "ϕ\"Ϛ\"ϡϗ hello\0";
         let len = 6;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕ\"Ϛ\"ϡϗ", str_slice)
+            LEFT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕ\"Ϛ\"ϡϗ", string)
         }
     }
 
     #[test]
     fn test_left_ext_str_edge_case() {
-        let s = "ϕϚϡϗ hello\0";
+        let src = "ϕϚϡϗ hello\0";
         let len = 10;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚϡϗ hello", str_slice)
+            LEFT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚϡϗ hello", string)
         }
     }
 
     #[test]
     #[should_panic]
     fn test_left_ext_str_len_out_of_range() {
-        let s = "hello\0 world";
+        let src = "hello\0 world";
         let len = 7;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
+            LEFT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
         }
     }
 
     #[test]
     fn test_right_ext_str() {
-        let s = "ϕϚϡϗ hello\0";
+        let src = "ϕϚϡϗ hello\0";
         let len = 5;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            RIGHT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("hello", str_slice)
+            RIGHT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("hello", string)
         }
     }
 
     #[test]
     fn test_right_ext_str_multi_byte() {
-        let s = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let len = 8;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            RIGHT_EXT__STRING(s.as_ptr(), len, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("xϗ wϕrld", str_slice)
+            RIGHT_EXT__STRING(src.as_ptr(), len, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("xϗ wϕrld", string)
         }
     }
 
     #[test]
     fn test_mid_ext_str() {
-        let s = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let len = 6;
         let start_index = 3;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            MID_EXT__STRING(s.as_ptr(), len, start_index, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϡxϗ wϕ", str_slice)
+            MID_EXT__STRING(src.as_ptr(), len, start_index, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϡxϗ wϕ", string)
         }
     }
 
     #[test]
     fn test_mid_ext_str_edge_case() {
-        let s = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let len = 11;
         let start_index = 1;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            MID_EXT__STRING(s.as_ptr(), len, start_index, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚϡxϗ wϕrld", str_slice)
+            MID_EXT__STRING(src.as_ptr(), len, start_index, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚϡxϗ wϕrld", string)
         }
     }
 
     #[test]
     #[should_panic]
     fn test_mid_ext_str_start_index_out_of_range() {
-        let s = "hello world\0";
+        let src = "hello world\0";
         let len = 5;
         let start_index = 12;
         let mut dest: [u8; 1024] = [0; 1024];
-        unsafe { MID_EXT__STRING(s.as_ptr(), len, start_index, dest.as_mut_ptr()) };
+        unsafe { MID_EXT__STRING(src.as_ptr(), len, start_index, dest.as_mut_ptr()) };
     }
 
     #[test]
@@ -934,10 +911,8 @@ mod test {
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
             INSERT_EXT__STRING(base.as_ptr(), insert.as_ptr(), 6, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚϡxϗ brave new wϕrld", str_slice)
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚϡxϗ brave new wϕrld", string)
         }
     }
 
@@ -948,10 +923,8 @@ mod test {
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
             INSERT_EXT__STRING(base.as_ptr(), insert.as_ptr(), 0, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚϡxϗ new hello world", str_slice)
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚϡxϗ new hello world", string)
         }
     }
 
@@ -967,10 +940,8 @@ mod test {
                 (base.len() - 1) as i32,
                 dest.as_mut_ptr(),
             );
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("hello worldϕϚϡxϗ new ", str_slice)
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("hello worldϕϚϡxϗ new ", string)
         }
     }
 
@@ -1003,127 +974,112 @@ mod test {
 
     #[test]
     fn test_delete_ext_str() {
-        let base = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__STRING(base.as_ptr(), 9, 3, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚ", str_slice)
+            DELETE_EXT__STRING(src.as_ptr(), 9, 3, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚ", string)
         }
     }
 
     #[test]
     fn test_delete_ext_str_delete_all() {
-        let base = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__STRING(base.as_ptr(), 11, 1, dest.as_mut_ptr());
+            DELETE_EXT__STRING(src.as_ptr(), 11, 1, dest.as_mut_ptr());
             let c_str: &CStr = CStr::from_ptr(dest.as_mut_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("", str_slice)
+            let string: &str = c_str.to_str().unwrap();
+            assert_eq!("", string)
         }
     }
 
     #[test]
     fn test_delete_ext_str_delete_last() {
-        let base = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__STRING(base.as_ptr(), 1, 11, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("ϕϚϡxϗ wϕrl", str_slice)
+            DELETE_EXT__STRING(src.as_ptr(), 1, 11, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("ϕϚϡxϗ wϕrl", string)
         }
     }
 
     #[test]
     fn test_delete_ext_str_delete_first() {
-        let base = "ϕϚϡxϗ wϕrld\0";
+        let src = "ϕϚϡxϗ wϕrld\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__STRING(base.as_ptr(), 1, 1, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("Ϛϡxϗ wϕrld", str_slice)
+            DELETE_EXT__STRING(src.as_ptr(), 1, 1, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("Ϛϡxϗ wϕrld", string)
         }
     }
 
     #[test]
     #[should_panic]
     fn test_delete_ext_str_too_many_del_chars() {
-        let base = "hello world\0";
+        let src = "hello world\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__STRING(base.as_ptr(), 12, 1, dest.as_mut_ptr());
+            DELETE_EXT__STRING(src.as_ptr(), 12, 1, dest.as_mut_ptr());
         }
     }
 
     #[test]
     #[should_panic]
     fn test_delete_ext_str_pos_out_of_range_lower() {
-        let base = "hello world\0";
+        let src = "hello world\0";
         let mut dest: [u8; 1024] = [0; 1024];
-        let raw_src = base.as_ptr();
-        let raw_dest = dest.as_mut_ptr();
         unsafe {
-            DELETE_EXT__STRING(raw_src, 11, 0, raw_dest);
+            DELETE_EXT__STRING(src.as_ptr(), 11, 0, dest.as_mut_ptr());
         }
     }
 
     #[test]
     #[should_panic]
     fn test_delete_ext_str_pos_out_of_range_upper() {
-        let base = "hello world\0";
+        let src = "hello world\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__STRING(base.as_ptr(), 11, 12, dest.as_mut_ptr());
+            DELETE_EXT__STRING(src.as_ptr(), 11, 12, dest.as_mut_ptr());
         }
     }
 
     #[test]
     fn test_replace_ext_str_replace_at_beginning() {
         let base = "ϕϚϡxϗ wϕrld\0";
-        let to_replace = "brϡxϗ new \0";
+        let replacement = "brϡxϗ new \0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__STRING(base.as_ptr(), to_replace.as_ptr(), 6, 1, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("brϡxϗ new wϕrld", str_slice)
+            REPLACE_EXT__STRING(base.as_ptr(), replacement.as_ptr(), 6, 1, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("brϡxϗ new wϕrld", string)
         }
     }
 
     #[test]
     fn test_replace_ext_str_replace_at_middle() {
         let base = "hellϕ wϕrld\0";
-        let to_replace = "brϡxϗ new\0";
+        let replacement = "brϡxϗ new\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__STRING(base.as_ptr(), to_replace.as_ptr(), 3, 5, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("hellbrϡxϗ newϕrld", str_slice)
+            REPLACE_EXT__STRING(base.as_ptr(), replacement.as_ptr(), 3, 5, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("hellbrϡxϗ newϕrld", string)
         }
     }
 
     #[test]
     fn test_replace_ext_str_replace_at_end() {
         let base = "hællø wørlÞ\0";
-        let to_replace = "aldø, how are you😀\0";
+        let replacement = "aldø, how are you😀\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__STRING(base.as_ptr(), to_replace.as_ptr(), 4, 8, dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("hællø waldø, how are you😀", str_slice)
+            REPLACE_EXT__STRING(base.as_ptr(), replacement.as_ptr(), 4, 8, dest.as_mut_ptr());
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("hællø waldø, how are you😀", string)
         }
     }
 
@@ -1131,10 +1087,16 @@ mod test {
     #[should_panic]
     fn test_replace_ext_str_replace_too_many_chars() {
         let base = "hello world\0";
-        let to_replace = "aldo, how are you\0";
+        let replacement = "aldo, how are you\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__STRING(base.as_ptr(), to_replace.as_ptr(), 12, 1, dest.as_mut_ptr());
+            REPLACE_EXT__STRING(
+                base.as_ptr(),
+                replacement.as_ptr(),
+                12,
+                1,
+                dest.as_mut_ptr(),
+            );
         }
     }
 
@@ -1142,10 +1104,10 @@ mod test {
     #[should_panic]
     fn test_replace_ext_str_pos_out_of_bounds_lower() {
         let base = "hello world\0";
-        let to_replace = "aldo, how are you\0";
+        let replacement = "aldo, how are you\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__STRING(base.as_ptr(), to_replace.as_ptr(), 8, 0, dest.as_mut_ptr());
+            REPLACE_EXT__STRING(base.as_ptr(), replacement.as_ptr(), 8, 0, dest.as_mut_ptr());
         }
     }
 
@@ -1153,10 +1115,16 @@ mod test {
     #[should_panic]
     fn test_replace_ext_str_pos_out_of_bounds_upper() {
         let base = "hello world\0";
-        let to_replace = "aldo, how are you\0";
+        let replacement = "aldo, how are you\0";
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__STRING(base.as_ptr(), to_replace.as_ptr(), 8, 12, dest.as_mut_ptr());
+            REPLACE_EXT__STRING(
+                base.as_ptr(),
+                replacement.as_ptr(),
+                8,
+                12,
+                dest.as_mut_ptr(),
+            );
         }
     }
 
@@ -1169,13 +1137,10 @@ mod test {
         ];
         let argc = argv.len();
         let mut dest: [u8; 1024] = [0; 1024];
-
         unsafe {
             CONCAT_EXT__STRING(argc, argv.as_ptr(), dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("hællø wørlÞhello world𝄞music", str_slice)
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("hællø wørlÞhello world𝄞music", string)
         }
     }
 
@@ -1186,99 +1151,67 @@ mod test {
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
             CONCAT_EXT__STRING(argc, argv.as_ptr(), dest.as_mut_ptr());
-            let c_str: &CStr = CStr::from_ptr(dest.as_ptr() as *const i8);
-            let str_slice: &str = c_str.to_str().unwrap();
-
-            assert_eq!("", str_slice)
+            let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
+            assert_eq!("", string)
         }
     }
 
     // -----------------------------------UTF16
     #[test]
     fn test_len_correct_utf16_character_count() {
-        let src = "𝄞music𝄞 😀𝄞ϕϚϡϗ😀\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "𝄞music𝄞 😀𝄞ϕϚϡϗ😀\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         unsafe {
-            let res = LEN__WSTRING(src);
+            let res = LEN__WSTRING(src_ptr);
             assert_eq!(res, 15)
         }
     }
 
     #[test]
     fn test_find_wstring() {
-        let base = "𝄞music𝄞 world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let find = "c𝄞\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let find = find
-            .as_slice()
-            .as_ptr();
+        let base = "𝄞music𝄞 world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let find = "c𝄞\0".encode_utf16().collect::<Vec<u16>>();
+        let find_ptr = find.as_slice().as_ptr();
         unsafe {
-            let res = FIND__WSTRING(base, find);
+            let res = FIND__WSTRING(base_ptr, find_ptr);
             assert_eq!(6, res)
         }
     }
 
     #[test]
     fn test_find_wstring_no_match() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let find = "zzzzzz\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let find = find
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let find = "zzzzzz\0".encode_utf16().collect::<Vec<u16>>();
+        let find_ptr = find.as_slice().as_ptr();
         unsafe {
-            let res = FIND__WSTRING(base, find);
+            let res = FIND__WSTRING(base_ptr, find_ptr);
             assert_eq!(0, res)
         }
     }
 
     #[test]
     fn test_find_wstring_base_string_too_short() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
         let find = "hello world oachkatzlschwoaf\0"
             .encode_utf16()
             .collect::<Vec<u16>>();
-        let find = find
-            .as_slice()
-            .as_ptr();
+        let find_ptr = find.as_slice().as_ptr();
         unsafe {
-            let res = FIND__WSTRING(base, find);
+            let res = FIND__WSTRING(base_ptr, find_ptr);
             assert_eq!(0, res)
         }
     }
 
     #[test]
     fn test_left_ext_wstring() {
-        let src = "𝄞musϗ😀ic world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "𝄞musϗ😀ic world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__WSTRING(src, 7, dest.as_mut_ptr());
+            LEFT_EXT__WSTRING(src_ptr, 7, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1290,29 +1223,21 @@ mod test {
     #[test]
     #[should_panic]
     fn test_left_ext_wstring_len_out_of_range() {
-        let src = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            LEFT_EXT__WSTRING(src, 14, dest.as_mut_ptr());
+            LEFT_EXT__WSTRING(src_ptr, 14, dest.as_mut_ptr());
         }
     }
 
     #[test]
     fn test_right_ext_wstring() {
-        let src = "hello 𝄞musϗ😀"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "hello 𝄞musϗ😀\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            RIGHT_EXT__WSTRING(src, 8, dest.as_mut_ptr());
+            RIGHT_EXT__WSTRING(src_ptr, 8, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1324,15 +1249,11 @@ mod test {
 
     #[test]
     fn test_right_ext_wstring_zero_length_strings() {
-        let src = "\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            RIGHT_EXT__WSTRING(src, 0, dest.as_mut_ptr());
+            RIGHT_EXT__WSTRING(src_ptr, 0, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1344,15 +1265,11 @@ mod test {
 
     #[test]
     fn test_mid_ext_wstring() {
-        let src = "𝄞muϗ😀 world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "𝄞muϗ😀 world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            MID_EXT__WSTRING(src, 5, 5, dest.as_mut_ptr());
+            MID_EXT__WSTRING(src_ptr, 5, 5, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1364,35 +1281,23 @@ mod test {
     #[test]
     #[should_panic]
     fn test_mid_ext_wstring_index_out_of_range() {
-        let src = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            MID_EXT__WSTRING(src, 4, 12, dest.as_mut_ptr());
+            MID_EXT__WSTRING(src_ptr, 4, 12, dest.as_mut_ptr());
         }
     }
 
     #[test]
     fn test_insert_ext_wstring() {
-        let base = "𝄞muϗ😀 world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_insert = "brave 𝄞muϗ😀 \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_insert = to_insert
-            .as_slice()
-            .as_ptr();
+        let base = "𝄞muϗ😀 world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let to_insert = "brave 𝄞muϗ😀 \0".encode_utf16().collect::<Vec<u16>>();
+        let to_insert_ptr = to_insert.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            INSERT_EXT__WSTRING(base, to_insert, 6, dest.as_mut_ptr());
+            INSERT_EXT__WSTRING(base_ptr, to_insert_ptr, 6, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1403,21 +1308,13 @@ mod test {
 
     #[test]
     fn test_insert_ext_wstring_insert_at_zero() {
-        let base = "hello 𝄞muϗ😀\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_insert = "𝄞muϗ😀 new \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_insert = to_insert
-            .as_slice()
-            .as_ptr();
+        let base = "hello 𝄞muϗ😀\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let to_insert = "𝄞muϗ😀 new \0".encode_utf16().collect::<Vec<u16>>();
+        let to_insert_ptr = to_insert.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            INSERT_EXT__WSTRING(base, to_insert, 0, dest.as_mut_ptr());
+            INSERT_EXT__WSTRING(base_ptr, to_insert_ptr, 0, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1428,20 +1325,13 @@ mod test {
 
     #[test]
     fn test_insert_ext_wstring_insert_at_end() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_ptr();
-        let to_insert = "brave 𝄞muϗ😀 \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_insert = to_insert
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_ptr();
+        let to_insert = "brave 𝄞muϗ😀 \0".encode_utf16().collect::<Vec<u16>>();
+        let to_insert_ptr = to_insert.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            INSERT_EXT__WSTRING(base, to_insert, 11, dest.as_mut_ptr());
+            INSERT_EXT__WSTRING(base_ptr, to_insert_ptr, 11, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1453,35 +1343,23 @@ mod test {
     #[test]
     #[should_panic]
     fn test_insert_ext_wstring_pos_out_of_range() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_insert = "brave new \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_insert = to_insert
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let to_insert = "brave new \0".encode_utf16().collect::<Vec<u16>>();
+        let to_insert_ptr = to_insert.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            INSERT_EXT__WSTRING(base, to_insert, 12, dest.as_mut_ptr());
+            INSERT_EXT__WSTRING(base_ptr, to_insert_ptr, 12, dest.as_mut_ptr());
         }
     }
 
     #[test]
     fn test_delete_ext_wstring() {
-        let src = "h𝄞muϗ w😀rld\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "h𝄞muϗ w😀rld\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__WSTRING(src, 5, 3, dest.as_mut_ptr());
+            DELETE_EXT__WSTRING(src_ptr, 5, 3, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1492,15 +1370,11 @@ mod test {
 
     #[test]
     fn test_delete_ext_wstring_delete_all() {
-        let src = "h𝄞muϗ w😀rld\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "h𝄞muϗ w😀rld\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__WSTRING(src, 11, 1, dest.as_mut_ptr());
+            DELETE_EXT__WSTRING(src_ptr, 11, 1, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1513,65 +1387,45 @@ mod test {
     #[test]
     #[should_panic]
     fn test_delete_ext_wstring_too_many_del_chars() {
-        let src = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__WSTRING(src, 10, 3, dest.as_mut_ptr());
+            DELETE_EXT__WSTRING(src_ptr, 10, 3, dest.as_mut_ptr());
         }
     }
 
     #[test]
     #[should_panic]
     fn test_delete_ext_wstring_pos_out_of_range_lower() {
-        let src = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__WSTRING(src, 9, 0, dest.as_mut_ptr());
+            DELETE_EXT__WSTRING(src_ptr, 9, 0, dest.as_mut_ptr());
         }
     }
 
     #[test]
     #[should_panic]
     fn test_delete_ext_wstring_pos_out_of_range_upper() {
-        let src = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let src = src
-            .as_slice()
-            .as_ptr();
+        let src = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let src_ptr = src.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            DELETE_EXT__WSTRING(src, 9, 12, dest.as_mut_ptr());
+            DELETE_EXT__WSTRING(src_ptr, 9, 12, dest.as_mut_ptr());
         }
     }
 
     #[test]
     fn test_replace_ext_wstring_replace_at_beginning() {
-        let base = "h𝄞muϗ w😀rld\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_replace = "brave new \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_replace = to_replace
-            .as_slice()
-            .as_ptr();
+        let base = "h𝄞muϗ w😀rld\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let replacement = "brave new \0".encode_utf16().collect::<Vec<u16>>();
+        let replacement_ptr = replacement.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__WSTRING(base, to_replace, 6, 1, dest.as_mut_ptr());
+            REPLACE_EXT__WSTRING(base_ptr, replacement_ptr, 6, 1, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1583,21 +1437,13 @@ mod test {
 
     #[test]
     fn test_replace_ext_wstring_replace_at_middle() {
-        let base = "hello w😀rld𝄞\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_replace = " is out of this \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_replace = to_replace
-            .as_slice()
-            .as_ptr();
+        let base = "hello w😀rld𝄞\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let replacement = " is out of this \0".encode_utf16().collect::<Vec<u16>>();
+        let replacement_ptr = replacement.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__WSTRING(base, to_replace, 2, 5, dest.as_mut_ptr());
+            REPLACE_EXT__WSTRING(base_ptr, replacement_ptr, 2, 5, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1608,21 +1454,15 @@ mod test {
 
     #[test]
     fn test_replace_ext_wstring_replace_at_end() {
-        let base = "hello w😀rld𝄞\0"
+        let base = "hello w😀rld𝄞\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let replacement = "aldo, how are you? 😀\0"
             .encode_utf16()
             .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_replace = "aldo, how are you? 😀\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_replace = to_replace
-            .as_slice()
-            .as_ptr();
+        let replacement_ptr = replacement.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__WSTRING(base, to_replace, 5, 8, dest.as_mut_ptr());
+            REPLACE_EXT__WSTRING(base_ptr, replacement_ptr, 5, 8, dest.as_mut_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
@@ -1635,63 +1475,39 @@ mod test {
     #[test]
     #[should_panic]
     fn test_replace_ext_wstring_replace_too_many_chars() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_replace = " is out of this \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_replace = to_replace
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let replacement = " is out of this \0".encode_utf16().collect::<Vec<u16>>();
+        let replacement_ptr = replacement.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__WSTRING(base, to_replace, 12, 1, dest.as_mut_ptr());
+            REPLACE_EXT__WSTRING(base_ptr, replacement_ptr, 12, 1, dest.as_mut_ptr());
         }
     }
 
     #[test]
     #[should_panic]
     fn test_replace_ext_wstring_pos_out_of_bounds_lower() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_replace = " is out of this \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_replace = to_replace
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let replacement = " is out of this \0".encode_utf16().collect::<Vec<u16>>();
+        let replacement_ptr = replacement.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__WSTRING(base, to_replace, 8, 0, dest.as_mut_ptr());
+            REPLACE_EXT__WSTRING(base_ptr, replacement_ptr, 8, 0, dest.as_mut_ptr());
         }
     }
 
     #[test]
     #[should_panic]
     fn test_replace_ext_wstring_pos_out_of_bounds_upper() {
-        let base = "hello world\0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let base = base
-            .as_slice()
-            .as_ptr();
-        let to_replace = " is out of this \0"
-            .encode_utf16()
-            .collect::<Vec<u16>>();
-        let to_replace = to_replace
-            .as_slice()
-            .as_ptr();
+        let base = "hello world\0".encode_utf16().collect::<Vec<u16>>();
+        let base_ptr = base.as_slice().as_ptr();
+        let replacement = " is out of this \0".encode_utf16().collect::<Vec<u16>>();
+        let replacement_ptr = replacement.as_slice().as_ptr();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            REPLACE_EXT__WSTRING(base, to_replace, 8, 12, dest.as_mut_ptr());
+            REPLACE_EXT__WSTRING(base_ptr, replacement_ptr, 8, 12, dest.as_mut_ptr());
         }
     }
 
