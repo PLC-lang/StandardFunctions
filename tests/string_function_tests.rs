@@ -4,7 +4,6 @@ use std::string::FromUtf16Error;
 
 use crate::common::compile_and_run_no_params;
 use common::add_std;
-use rusty::runner::compile_and_run;
 
 // helper function to convert null-terminated utf8 byte array to string slice
 fn str_from_u8_utf8(src: &[u8]) -> Result<&str, std::str::Utf8Error> {
@@ -760,7 +759,7 @@ fn right_string_long_wstring() {
         in : WSTRING[128];
         l : DINT;
     END_VAR
-        in := "7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhp𝄞𝄞;
+        in := "7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhp𝄞𝄞";
         l := 99;
         main := RIGHT(in, l);
     END_FUNCTION

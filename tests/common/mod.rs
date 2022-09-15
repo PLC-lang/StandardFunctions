@@ -884,10 +884,10 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "CONCAT_EXT__STRING",
             iec61131std::string_functions::CONCAT_EXT__STRING as usize,
         ),
-        // (
-        //     "CONCAT_EXT__WSTRING",
-        //     iec61131std::string_functions::CONCAT_EXT__WSTRING as usize,
-        // ),
+        (
+            "CONCAT_EXT__WSTRING",
+            iec61131std::string_functions::CONCAT_EXT__WSTRING as usize,
+        ),
         (
             "EXPT__DINT__UDINT",
             iec61131std::arithmetic_functions::EXPT__DINT__UDINT as usize,

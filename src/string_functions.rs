@@ -48,6 +48,7 @@ trait CharsEncoder<T: PrimInt>: Iterator {
     unsafe fn encode(self, dest: &mut *mut T);
 }
 
+#[derive(Debug)]
 struct EncodedCharsIter<T: Iterator> {
     iter: T,
 }
@@ -87,9 +88,10 @@ impl<'a, I: Iterator<Item = char>> CharsEncoder<u8> for I {
 
 impl<'a, I: Iterator<Item = Result<char, DecodeUtf16Error>>> CharsEncoder<u16> for I {
     unsafe fn encode(self, dest: &mut *mut u16) {
+        dbg!(&dest);
         for c in self {
             let mut temp = [0_u16; 2];
-            let slice = c.unwrap().encode_utf16(&mut temp);
+            let slice = dbg!(c.unwrap().encode_utf16(&mut temp));
             for word in slice {
                 **dest = *word;
                 *dest = dest.add(1);
@@ -97,6 +99,7 @@ impl<'a, I: Iterator<Item = Result<char, DecodeUtf16Error>>> CharsEncoder<u16> f
         }
 
         **dest = 0;
+        dbg!(dest);
     }
 }
 
@@ -319,17 +322,17 @@ pub unsafe extern "C" fn RIGHT_EXT__WSTRING(
     substr_len: i32,
     dest: *mut u16,
 ) -> i32 {
-    if substr_len < 0 {
+    if dbg!(substr_len) < 0 {
         panic!("Length parameter cannot be negative.");
     }
-    let mut dest = dest;
+    let mut dest = dbg!(dest);
     let substr_len = substr_len as usize;
-    let nchars = EncodedCharsIter::decode(src).count();
+    let nchars = dbg!(EncodedCharsIter::decode(src)).count();
     if nchars < substr_len {
         panic!("Requested substring length exceeds string length.")
     }
     let chars = EncodedCharsIter::decode(src).skip(nchars - substr_len);
-    chars.encode(&mut dest);
+    dbg!(chars).encode(&mut dest);
 
     0
 }
@@ -683,11 +686,14 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn CONCAT_EXT__STRING(argc: usize, argv: *const *const u8, dest: *mut u8) -> i32
-{
+pub unsafe extern "C" fn CONCAT_EXT__STRING(
+    argc: usize,
+    argv: *const *const u8,
+    dest: *mut u8,
+) -> i32 {
     if argv.is_null() || dest.is_null() {
         panic!("Received null-pointer.")
-    }    
+    }
     let mut dest = dest;
     let mut argv = argv;
     for _ in 0..argc {
@@ -695,7 +701,7 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(argc: usize, argv: *const *const u8,
         argv = argv.add(1);
     }
 
-    0 
+    0
 }
 
 /// Concatenates all given strings in the order in which they are given.
@@ -711,11 +717,14 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(argc: usize, argv: *const *const u8,
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn CONCAT_EXT__WSTRING(argc: usize, argv: *const *const u16, dest: *mut u16) -> i32
-{
+pub unsafe extern "C" fn CONCAT_EXT__WSTRING(
+    argc: usize,
+    argv: *const *const u16,
+    dest: *mut u16,
+) -> i32 {
     if argv.is_null() || dest.is_null() {
         panic!("Received null-pointer.")
-    }    
+    }
     let mut dest = dest;
     let mut argv = argv;
     for _ in 0..argc {
@@ -723,13 +732,13 @@ pub unsafe extern "C" fn CONCAT_EXT__WSTRING(argc: usize, argv: *const *const u1
         argv = argv.add(1);
     }
 
-    0 
+    0
 }
 // -------------------------------------------------unit tests-----------------------------------------
 #[cfg(test)]
 mod test {
     use super::*;
-    use std::ffi::{CStr};
+    use std::ffi::CStr;
     // -----------------------------------UTF8
     #[test]
     fn test_len_correct_utf8_character_count() {
@@ -1200,20 +1209,20 @@ mod test {
     #[test]
     fn test_concat_ext_str() {
         // let argv = [
-        //     CString::new("hællø wørlÞ").unwrap().as_c_str().as_ptr(), 
-        //     CString::new("hello world").unwrap().as_c_str().as_ptr(), 
+        //     CString::new("hællø wørlÞ").unwrap().as_c_str().as_ptr(),
+        //     CString::new("hello world").unwrap().as_c_str().as_ptr(),
         //     CString::new("𝄞music").unwrap().as_c_str().as_ptr(),
         // ];
         let argv = [
-            "hællø wørlÞ\0".as_ptr(), 
-            "hello world\0".as_ptr(), 
+            "hællø wørlÞ\0".as_ptr(),
+            "hello world\0".as_ptr(),
             "𝄞music\0".as_ptr(),
         ];
         let argc = argv.len();
         let dest: &mut [u8; 1024] = &mut [0; 1024];
         let argv = argv.as_ptr();
         let raw_dest = dest.as_mut_ptr();
-        
+
         unsafe {
             CONCAT_EXT__STRING(argc, argv, raw_dest);
             let c_str: &CStr = CStr::from_ptr(raw_dest as *const i8);
@@ -1335,7 +1344,7 @@ mod test {
         unsafe {
             RIGHT_EXT__WSTRING(raw_src, 8, raw_dest);
             let slice = std::slice::from_raw_parts(raw_dest, get_null_terminated_len(raw_dest));
-            let res = String::from_utf16_lossy(slice);
+            let res = String::from_utf16(slice).unwrap();
 
             assert_eq!("o 𝄞musϗ😀", res)
         }
@@ -1646,8 +1655,8 @@ mod test {
     #[test]
     fn test_concat_ext_wstring() {
         let argvec: [Vec<u16>; 3] = [
-            "hællø wørlÞ\0".encode_utf16().collect(), 
-            "hello world\0".encode_utf16().collect(), 
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
             "𝄞music\0".encode_utf16().collect(),
         ];
         let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
