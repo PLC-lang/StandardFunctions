@@ -28,16 +28,28 @@ fn string_from_utf16(src: &[u16]) -> Result<String, FromUtf16Error> {
 fn len_string() {
     let src = r#"
 	FUNCTION main : DINT
-    VAR_TEMP
-        in : STRING[6];
+    VAR
+        variable: STRING;
     END_VAR
-        in := 'hello';
-		main := LEN(in);
+        variable := '     this is   a  very   long          sentence   with plenty  of    characters.';
+		main := LEN(variable);
     END_FUNCTION
         "#;
     let sources = add_std!(src, "string_functions.st");
     let res: i32 = compile_and_run_no_params(sources);
-    assert_eq!(5, res);
+    assert_eq!(80, res);
+}
+
+#[test]
+fn len_string_long_string() {
+    let src = r#"
+	FUNCTION main : DINT
+		main := LEN('     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.');
+    END_FUNCTION
+        "#;
+    let sources = add_std!(src, "string_functions.st");
+    let res: i32 = compile_and_run_no_params(sources);
+    assert_eq!(100, res);
 }
 
 #[test]
@@ -84,6 +96,30 @@ fn left_string() {
     let res: [u8; 81] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(res, "hel");
+    } else {
+        panic!("Given string is not UTF8-encoded")
+    }
+}
+
+#[test]
+fn left_string_long_string() {
+    let src = r#"
+	FUNCTION main : STRING[100]
+    VAR_TEMP
+        in : STRING[100];
+    END_VAR
+        in := '     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.';
+		main := LEFT(in, DINT#85);
+    END_FUNCTION
+        "#;
+
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 101] = compile_and_run_no_params(sources);
+    if let Ok(res) = str_from_u8_utf8(&res) {
+        assert_eq!(
+            res,
+            "     this is   a  very   long           sentence   with plenty  of    characters and "
+        );
     } else {
         panic!("Given string is not UTF8-encoded")
     }
@@ -201,37 +237,23 @@ fn right_ext_string() {
 #[test]
 fn right_string_long_string() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : STRING[100]
     VAR_TEMP
-        in : STRING[128];
+        in : STRING[100];
         l : DINT;
     END_VAR
-        in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
-        l := 99;
+        in := '     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.';
+        l := 85;
         main := RIGHT(in, l);
     END_FUNCTION
         "#;
 
-    // let src = r#"
-    // FUNCTION main : STRING
-    // VAR
-    //     in : STRING[128];
-    //     l : DINT;
-    //     out : STRING[128];
-    // END_VAR
-    //     in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
-    //     l := 99;
-    // 	    out := RIGHT(in, l);
-    //     main := out;
-    // END_FUNCTION
-    //     "#;
-
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 128] = compile_and_run_no_params(sources);
+    let res: [u8; 101] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
-            "ika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW"
+            "a  very   long           sentence   with plenty  of    characters and weird  spacing."
         );
     } else {
         panic!("Given string is not UTF8-encoded")
@@ -438,7 +460,7 @@ fn delete_string_with_escape_sequence() {
         l : UINT;
         p : ULINT;
     END_VAR
-        in := 'the$$e are escape sequences $"𝄞$"';
+        in := 'the$$e are escape sequences $'𝄞$'';
         l := 21;
         p := 6;
 		main := DELETE(in, l, p);
@@ -446,9 +468,13 @@ fn delete_string_with_escape_sequence() {
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 15] = compile_and_run_no_params(sources);
+    let res: [u8; 20] = compile_and_run_no_params(sources);
+    let res = std::str::from_utf8(&res)
+        .unwrap()
+        .trim_end_matches('\0')
+        .as_bytes();
     assert_eq!(
-        format!("{:?}", "the$e \"𝄞\"\0".as_bytes()),
+        format!("{:?}", "the$e '𝄞'".as_bytes()),
         format!("{:?}", res)
     );
 }
@@ -478,6 +504,36 @@ fn delete_ext_string() {
     } else {
         panic!("Given string is not UTF8-encoded")
     }
+}
+
+#[test]
+fn delete_ext_string_with_escape_sequence() {
+    let src = r#"
+	FUNCTION main : STRING
+    VAR_TEMP
+        in : STRING;
+        out : STRING;
+        l : LINT;
+        p : USINT;
+    END_VAR
+        in := 'the$$e are escape sequences $'𝄞$'';
+        l := 21;
+        p := 6;
+		DELETE_EXT(in, l, p, out);
+        main := out;
+    END_FUNCTION
+        "#;
+
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 20] = compile_and_run_no_params(sources);
+    let res = std::str::from_utf8(&res)
+        .unwrap()
+        .trim_end_matches('\0')
+        .as_bytes();
+    assert_eq!(
+        format!("{:?}", "the$e '𝄞'".as_bytes()),
+        format!("{:?}", res)
+    );
 }
 
 #[test]
@@ -771,7 +827,7 @@ fn right_string_long_wstring() {
         assert_eq!(res, "ika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhp𝄞𝄞");
     } else {
         panic!("Given string is not UTF16-encoded")
-    } 
+    }
 }
 
 #[test]
@@ -924,8 +980,10 @@ fn insert_wstring() {
     if let Ok(res) = string_from_utf16(&res) {
         assert_eq!(res, "stuck in the middle with you");
     } else {
-        panic!("Given string is not 
-        -encoded")
+        panic!(
+            "Given string is not 
+        -encoded"
+        )
     }
 }
 
@@ -1085,10 +1143,7 @@ fn find_wstring() {
 
     let sources = add_std!(src, "string_functions.st");
     let res: i32 = compile_and_run_no_params(sources);
-    assert_eq!(
-        res,
-        10
-    );
+    assert_eq!(res, 10);
 }
 
 #[test]
@@ -1108,4 +1163,29 @@ fn test_single_and_double_quotes_wstring() {
 
     let sources = add_std!(src, "string_functions.st");
     let _: i32 = compile_and_run_no_params(sources);
+}
+
+#[test]
+fn delete_wstring_with_escape_sequence() {
+    let src = r#"
+	FUNCTION main : WSTRING
+    VAR_TEMP
+        in : WSTRING;
+        l : UINT;
+        p : ULINT;
+    END_VAR
+        in := "the$$e are escape sequences $"𝄞$"";
+        l := 21;
+        p := 6;
+		main := DELETE(in, l, p);
+    END_FUNCTION
+        "#;
+
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u16; 81] = compile_and_run_no_params(sources);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "the$e \"𝄞\"");
+    } else {
+        panic!("Given string is not UTF16-encoded")
+    }
 }
