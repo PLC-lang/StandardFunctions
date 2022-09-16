@@ -177,12 +177,12 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::bit_num_conversion::REAL_TO_DWORD as usize,
         ),
         (
-            "WSTRING_TO_STRING",
-            iec61131std::string_conversion::WSTRING_TO_STRING as usize,
+            "WSTRING_TO_STRING_EXT",
+            iec61131std::string_conversion::WSTRING_TO_STRING_EXT as usize,
         ),
         (
-            "STRING_TO_WSTRING",
-            iec61131std::string_conversion::STRING_TO_WSTRING as usize,
+            "STRING_TO_WSTRING_EXT",
+            iec61131std::string_conversion::STRING_TO_WSTRING_EXT as usize,
         ),
         (
             "WCHAR_TO_CHAR",

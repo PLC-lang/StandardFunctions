@@ -39,17 +39,17 @@ unsafe fn ptr_to_slice<'a, T: num::PrimInt>(src: *const T) -> &'a [T] {
 type Utf16Iterator<'a> = std::char::DecodeUtf16<std::iter::Copied<std::slice::Iter<'a, u16>>>;
 type Utf8Iterator<'a> = core::str::Chars<'a>;
 
-trait CharsDecoder<T: PrimInt> {
+pub trait CharsDecoder<T: PrimInt> {
     type IteratorType: Iterator;
     unsafe fn decode(src: *const T) -> EncodedCharsIter<Self::IteratorType>;
 }
 
-trait CharsEncoder<T: PrimInt>: Iterator {
+pub trait CharsEncoder<T: PrimInt>: Iterator {
     unsafe fn encode(self, dest: &mut *mut T);
 }
 
 #[derive(Debug)]
-struct EncodedCharsIter<T: Iterator> {
+pub struct EncodedCharsIter<T: Iterator> {
     iter: T,
 }
 
