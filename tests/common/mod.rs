@@ -881,8 +881,16 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::string_functions::REPLACE_EXT__WSTRING as usize,
         ),
         (
+            "CONCAT__STRING",
+            iec61131std::string_functions::CONCAT__STRING as usize,
+        ),
+        (
             "CONCAT_EXT__STRING",
             iec61131std::string_functions::CONCAT_EXT__STRING as usize,
+        ),        
+        (
+            "CONCAT__WSTRING",
+            iec61131std::string_functions::CONCAT__WSTRING as usize,
         ),
         (
             "CONCAT_EXT__WSTRING",

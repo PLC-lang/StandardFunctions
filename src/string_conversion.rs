@@ -32,8 +32,7 @@ pub unsafe extern "C" fn WSTRING_TO_STRING_EXT(src: *const u16, dest: *mut u8) -
 pub unsafe extern "C" fn STRING_TO_WSTRING_EXT(src: *const u8, dest: *mut u16) -> i32 {
     let mut dest = dest;
     let mut buffer = [0_u16; 2];
-    let iter = EncodedCharsIter::decode(src);
-    for char in iter {
+    for char in EncodedCharsIter::decode(src) {
         let slice = char.encode_utf16(&mut buffer);
         for word in slice {
             *dest = *word;

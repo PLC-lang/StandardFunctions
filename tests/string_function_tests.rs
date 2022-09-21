@@ -613,7 +613,7 @@ fn find_string() {
 
 #[test]
 #[should_panic]
-fn test_single_and_double_quotes_string() {
+fn test_double_quotes_on_strings() {
     let src = r#"
     FUNCTION main : DINT
     VAR_TEMP
@@ -630,8 +630,75 @@ fn test_single_and_double_quotes_string() {
     let _: i32 = compile_and_run_no_params(sources);
 }
 
-// utf16 tests
+#[test]
+fn test_concat_string() {
+    let src = r#"
+    FUNCTION main : STRING[2048]
+    VAR_TEMP
+        a : STRING := 'Hello';
+        b : STRING := ', ';
+        c : STRING := 'World';
+        d : STRING := '!';
+    END_VAR    
+        main := CONCAT(a, b, c, d);
+    END_FUNCTION
+    "#;
 
+    let source = add_std!(src, "string_functions.st");    
+    let res: [u8; 2048] = compile_and_run_no_params(source); 
+
+    if let Ok(result) = str_from_u8_utf8(&res) {
+        assert_eq!(result, "Hello, World!");
+    } else {
+        panic!("Given string is not UTF8-encoded")
+    }
+}
+
+#[test]
+fn test_concat_ext_string() {
+    let src = r#"
+    FUNCTION main : STRING[2048]
+    VAR_TEMP
+        a : STRING := 'Hello';
+        b : STRING := ', ';
+        c : STRING := 'World';
+        d : STRING := '!';
+    END_VAR    
+        CONCAT_EXT(main, a, b, c, d);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: [u8; 2048] = compile_and_run_no_params(source);
+    if let Ok(result) = str_from_u8_utf8(&res) {
+        assert_eq!(result, "Hello, World!");
+    } else {
+        panic!("Given string is not UTF8-encoded")
+    }
+}
+
+// #[test]
+// fn test_concat_long_string_literals() {
+//     let src = r#"
+//     FUNCTION main : STRING[2048]
+//         main := CONCAT('     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.', '$N', 'the                same           is   true                    for             this                     string.');
+//     END_FUNCTION
+//     "#;
+
+//     let source = add_std!(src, "string_functions.st");    
+//     let res: [u8; 245] = compile_and_run_no_params(source); 
+
+//     if let Ok(result) = str_from_u8_utf8(&res) {
+//         assert_eq!(
+//             result, 
+//             r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.the                same           is   true                    for             this                     string."
+//             );
+//     } else {
+//         panic!("Given string is not UTF8-encoded")
+//     }
+// }
+
+// utf16 tests
 #[test]
 fn len_wstring() {
     let src = r#"
@@ -639,7 +706,6 @@ fn len_wstring() {
     VAR_TEMP
         in : WSTRING;
     END_VAR
-        //in := 'Hèßlo😀𝄞'; // works with "
         in := "Hèßlo😀𝄞";
 		main := LEN(in);
     END_FUNCTION
@@ -1147,25 +1213,6 @@ fn find_wstring() {
 }
 
 #[test]
-#[should_panic]
-fn test_single_and_double_quotes_wstring() {
-    let src = r#"
-    FUNCTION main : DINT
-    VAR_TEMP
-        in1: WSTRING;
-        in2: WSTRING;
-    END_VAR
-        in1 := 'Where is Waldo?';
-        in2 := 'Waldo';
-        main := FIND(in1, in2);        
-    END_FUNCTION
-    "#;
-
-    let sources = add_std!(src, "string_functions.st");
-    let _: i32 = compile_and_run_no_params(sources);
-}
-
-#[test]
 fn delete_wstring_with_escape_sequence() {
     let src = r#"
 	FUNCTION main : WSTRING
@@ -1185,6 +1232,52 @@ fn delete_wstring_with_escape_sequence() {
     let res: [u16; 81] = compile_and_run_no_params(sources);
     if let Ok(res) = string_from_utf16(&res) {
         assert_eq!(res, "the$e \"𝄞\"");
+    } else {
+        panic!("Given string is not UTF16-encoded")
+    }
+}
+
+#[test]
+fn test_concat_wstring() {
+    let src = r#"
+    FUNCTION main : WSTRING[2048]
+    VAR_TEMP
+        a : WSTRING := "Hello";
+        b : WSTRING := ", ";
+        c : WSTRING := "World";
+        d : WSTRING := "!";
+    END_VAR    
+        main := CONCAT(a, b, c, d);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");    
+    let res: [u16; 2048] = compile_and_run_no_params(source);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "Hello, World!");
+    } else {
+        panic!("Given string is not UTF16-encoded")
+    }
+}
+
+#[test]
+fn test_concat_ext_wstring() {
+    let src = r#"
+    FUNCTION main : WSTRING[2048]
+    VAR_TEMP
+        a : WSTRING := "Hello";
+        b : WSTRING := ", ";
+        c : WSTRING := "World";
+        d : WSTRING := "!";
+    END_VAR    
+        CONCAT_EXT(main, a, b, c, d);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: [u16; 2048] = compile_and_run_no_params(source);
+    if let Ok(res) = string_from_utf16(&res) {
+        assert_eq!(res, "Hello, World!");
     } else {
         panic!("Given string is not UTF16-encoded")
     }

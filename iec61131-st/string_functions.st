@@ -254,6 +254,7 @@ Return:
     A string combining all given input strings in the same order
     as the given string parameters.
 ******************************************************************************)
+{external}
 FUNCTION CONCAT <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	args : {sized} T...;
@@ -262,45 +263,11 @@ END_FUNCTION
 
 {external}
 FUNCTION CONCAT_EXT<T: ANY_STRING> : DINT
-VAR_INPUT {ref}
-    args: {sized} T...;
-END_VAR
 VAR_IN_OUT
     OUT: T;
 END_VAR
-END_FUNCTION
-
-FUNCTION CONCAT__STRING : STRING[2048]
 VAR_INPUT {ref}
-	args : {sized} STRING...;
-END_VAR
-    CONCAT_EXT__STRING(args, CONCAT__STRING);
-END_FUNCTION
-
-{external}
-FUNCTION CONCAT_EXT__STRING : DINT
-VAR_INPUT {ref}
-    args: {sized} STRING...;
-END_VAR
-VAR_IN_OUT
-    OUT: STRING[2048];
-END_VAR
-END_FUNCTION
-
-{external}
-FUNCTION CONCAT__WSTRING : WSTRING[2048]
-VAR_INPUT {ref}
-	IN : {sized} WSTRING...;
-END_VAR
-    CONCAT_EXT__WSTRING(IN, CONCAT__WSTRING);
-END_FUNCTION
-{external}
-FUNCTION CONCAT_EXT__WSTRING : DINT
-VAR_INPUT {ref}
-    IN: {sized} WSTRING...;
-END_VAR
-VAR_IN_OUT
-    OUT: WSTRING[2048];
+    args: {sized} T...;
 END_VAR
 END_FUNCTION
 

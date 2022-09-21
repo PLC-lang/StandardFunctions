@@ -2,6 +2,12 @@ use std::char::{decode_utf16, DecodeUtf16Error};
 
 use num::PrimInt;
 
+#[repr(C)]
+#[derive(Debug)]
+pub struct Wrapper<T> {
+    pub inner: T,
+}
+
 /// # Helper function
 ///
 /// Gets the amount of continuous characters in u8 array before
@@ -126,11 +132,6 @@ impl<'a> CharsDecoder<u16> for EncodedCharsIter<Utf16Iterator<'a>> {
 pub unsafe extern "C" fn LEN__STRING(src: *const u8) -> i32 {
     EncodedCharsIter::decode(src).count() as i32
 }
-
-// unsafe fn len<T: PrimInt>(src: *const T) -> i32 {
-//     EncodedCharsIter::decode(src)
-//         .count() as i32
-// }
 
 /// Gets length of the given string.
 /// UTF16
@@ -682,10 +683,42 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn CONCAT_EXT__STRING(
-    argc: usize,
+pub unsafe extern "C" fn CONCAT__STRING(
+    argc: i32,
     argv: *const *const u8,
+) -> Wrapper<[u8; 2048]> {
+    if argv.is_null() {
+        panic!("Received null-pointer.")
+    }
+    let mut dest = [0_u8; 2048];
+    let mut dest_ptr = dest.as_mut_ptr();
+    let mut argv = argv;
+    // what should happen if passed parameters exceed 2048 bytes? how to check without
+    // introducing too much overhead?
+    for _ in 0..argc {
+        EncodedCharsIter::decode(*argv).encode(&mut dest_ptr);
+        argv = argv.add(1);
+    }
+    Wrapper { inner: dest }
+}
+
+/// Concatenates all given strings in the order in which they are given.
+/// Strings are passed as pointer of pointer to u8, where each pointer represents
+/// the starting address of each string. The amount of strings must be passed as
+/// argument.
+/// UTF8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// Will panic if trying to index outside of the array or trying
+/// to replace more characters than remaining.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn CONCAT_EXT__STRING(
     dest: *mut u8,
+    argc: i32,
+    argv: *const *const u8,
 ) -> i32 {
     if argv.is_null() || dest.is_null() {
         panic!("Received null-pointer.")
@@ -713,10 +746,43 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
+pub unsafe extern "C" fn CONCAT__WSTRING(
+    argc: i32,
+    argv: *const *const u16,
+) -> Wrapper<[u16; 2048]>  {
+    if argv.is_null() {
+        panic!("Received null-pointer.")
+    }
+    let mut dest = [0_u16; 2048];
+    let mut dest_ptr = dest.as_mut_ptr();
+    let mut argv = argv;
+    // what should happen if passed parameters exceed 2048 bytes? how to check without
+    // introducing too much overhead?
+    for _ in 0..argc {
+        EncodedCharsIter::decode(*argv).encode(&mut dest_ptr);
+        argv = argv.add(1);
+    }
+
+    Wrapper {inner: dest}
+}
+
+/// Concatenates all given strings in the order in which they are given.
+/// Strings are passed as pointer of pointer to u8, where each pointer represents
+/// the starting address of each string. The amount of strings must be passed as
+/// argument.
+/// UTF16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+/// Will panic if trying to index outside of the array or trying
+/// to replace more characters than remaining.
+#[allow(non_snake_case)]
+#[no_mangle]
 pub unsafe extern "C" fn CONCAT_EXT__WSTRING(
+    dest: *mut u16,
     argc: usize,
     argv: *const *const u16,
-    dest: *mut u16,
 ) -> i32 {
     if argv.is_null() || dest.is_null() {
         panic!("Received null-pointer.")
@@ -742,6 +808,15 @@ mod test {
         unsafe {
             let res = LEN__STRING(src.as_ptr());
             assert_eq!(res, 8)
+        }
+    }
+
+    #[test]
+    fn test_len_with_precomposed_characters() {
+        let src = "éé\0";
+        unsafe {
+            let res = LEN__STRING(src.as_ptr());
+            assert_eq!(res, 2)
         }
     }
 
@@ -1129,28 +1204,43 @@ mod test {
     }
 
     #[test]
+    fn test_concat_str() {
+        let argv = [
+            "hællø wørlÞ\0".as_ptr(),
+            "hello world\0".as_ptr(),
+            "𝄞music\0".as_ptr(),
+        ];
+        unsafe {
+            let res = CONCAT__STRING(argv.len() as i32, argv.as_ptr());
+            let string = String::from_utf8_lossy(&res.inner);
+            let result = string.trim_end_matches('\0');
+            assert_eq!("hællø wørlÞhello world𝄞music", result)
+        }
+    }
+
+    #[test]
     fn test_concat_ext_str() {
         let argv = [
             "hællø wørlÞ\0".as_ptr(),
             "hello world\0".as_ptr(),
             "𝄞music\0".as_ptr(),
         ];
-        let argc = argv.len();
+        let argc = argv.len() as i32;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            CONCAT_EXT__STRING(argc, argv.as_ptr(), dest.as_mut_ptr());
+            CONCAT_EXT__STRING(dest.as_mut_ptr(), argc, argv.as_ptr());
             let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
             assert_eq!("hællø wørlÞhello world𝄞music", string)
         }
     }
 
     #[test]
-    fn test_concat_no_args() {
+    fn test_concat_ext_no_args() {
         let argv = [];
-        let argc = argv.len();
+        let argc = argv.len() as i32;
         let mut dest: [u8; 1024] = [0; 1024];
         unsafe {
-            CONCAT_EXT__STRING(argc, argv.as_ptr(), dest.as_mut_ptr());
+            CONCAT_EXT__STRING(dest.as_mut_ptr(), argc, argv.as_ptr());
             let string = CStr::from_ptr(dest.as_ptr() as *const i8).to_str().unwrap();
             assert_eq!("", string)
         }
@@ -1512,6 +1602,25 @@ mod test {
     }
 
     #[test]
+    fn test_concat_wstring() {
+        let argvec: [Vec<u16>; 3] = [
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
+            "𝄞music\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        unsafe {
+            let res = CONCAT__WSTRING(argv.len() as i32, argv.as_ptr());
+            let string = String::from_utf16_lossy(&res.inner);
+            let result = string.trim_end_matches('\0');
+            assert_eq!("hællø wørlÞhello world𝄞music", result)
+        }
+    }
+
+    #[test]
     fn test_concat_ext_wstring() {
         let argvec: [Vec<u16>; 3] = [
             "hællø wørlÞ\0".encode_utf16().collect(),
@@ -1525,7 +1634,7 @@ mod test {
         let argc = argv.len();
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
-            CONCAT_EXT__WSTRING(argc, argv.as_ptr(), dest.as_mut_ptr());
+            CONCAT_EXT__WSTRING(dest.as_mut_ptr(), argc, argv.as_ptr());
             let res = String::from_utf16_lossy(std::slice::from_raw_parts(
                 dest.as_ptr(),
                 get_null_terminated_len(dest.as_ptr()),
