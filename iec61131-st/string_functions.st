@@ -530,3 +530,76 @@ VAR_INPUT {ref}
     IN2 : T;
 END_VAR
 END_FUNCTION
+
+(******************************************************************************
+Description: Decreasing sequence
+Input:
+Return:
+******************************************************************************)
+{external}
+FUNCTION GT <T: ANY_STRING> : BOOL
+VAR_INPUT {ref}
+	IN1 : {sized} T...;
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+Description: Monotonic sequence
+Input:
+Return:
+******************************************************************************)
+{external}
+FUNCTION GE <T: ANY_STRING> : BOOL
+VAR_INPUT {ref}
+	IN1 : {sized} T...;
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+Description: Equality
+Input:
+Return:
+******************************************************************************)
+{external}
+FUNCTION EQ <T: ANY_STRING> : BOOL
+VAR_INPUT {ref}
+	IN1 : {sized} T...;
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+Description: Monotonic sequence
+Input:
+Return:
+******************************************************************************)
+{external}
+FUNCTION LE <T: ANY_STRING> : BOOL
+VAR_INPUT {ref}
+	IN1 : {sized} T...;
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+Description: Increasing sequence
+Input:
+Return:
+******************************************************************************)
+{external}
+FUNCTION LT <T: ANY_STRING> : BOOL
+VAR_INPUT {ref}
+	IN1 : {sized} T...;
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+Description: Inequality
+Input:
+Return:
+******************************************************************************)
+{external}
+FUNCTION NE <T: ANY_STRING> : BOOL
+VAR_INPUT {ref}
+	IN1 : T;
+    IN2 : T;
+END_VAR
+END_FUNCTION

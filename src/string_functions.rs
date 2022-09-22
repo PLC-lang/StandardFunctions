@@ -1,4 +1,4 @@
-use std::char::{decode_utf16, DecodeUtf16Error};
+use std::{char::{decode_utf16, DecodeUtf16Error}, cmp::Ordering};
 
 use num::PrimInt;
 
@@ -781,7 +781,7 @@ pub unsafe extern "C" fn CONCAT__WSTRING(
 #[no_mangle]
 pub unsafe extern "C" fn CONCAT_EXT__WSTRING(
     dest: *mut u16,
-    argc: usize,
+    argc: i32,
     argv: *const *const u16,
 ) -> i32 {
     if argv.is_null() || dest.is_null() {
@@ -796,6 +796,100 @@ pub unsafe extern "C" fn CONCAT_EXT__WSTRING(
 
     0
 }
+
+fn compare<T>(argc: i32, argv: *const *const T, predicate_func: fn(Ordering) -> bool) -> bool 
+where T: Ord + PrimInt {
+    if argc < 2 {
+        // what is the desired behaviour for this? panic? true or false?
+        return false;
+    }
+    let mut argv = argv;
+    unsafe {
+        let mut previous = ptr_to_slice(*argv);
+        for _ in 0..argc - 1 {
+            argv = argv.add(1);
+            let current = ptr_to_slice(*argv);
+            if !(predicate_func(previous.cmp(current))) {
+                return false
+            }
+            previous = current;
+        }
+    }
+    true
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn GT__STRING (argc: i32, argv: *const *const u8) -> bool {
+    compare(argc, argv, Ordering::is_gt)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn GT__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+    compare(argc, argv, Ordering::is_gt)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn GE__STRING (argc: i32, argv: *const *const u8) -> bool {
+    compare(argc, argv, Ordering::is_ge)    
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn GE__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+    compare(argc, argv, Ordering::is_ge)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn EQ__STRING (argc: i32, argv: *const *const u8) -> bool {
+    compare(argc, argv, Ordering::is_eq)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn EQ__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+    compare(argc, argv, Ordering::is_eq)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn LE__STRING (argc: i32, argv: *const *const u8) -> bool {
+    compare(argc, argv, Ordering::is_le)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn LE__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+    compare(argc, argv, Ordering::is_le)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn LT__STRING (argc: i32, argv: *const *const u8) -> bool {
+    compare(argc, argv, Ordering::is_lt)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn LT__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+    compare(argc, argv, Ordering::is_lt)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn NE__STRING (string1: *const u8, string2: *const u8) -> bool {
+    ptr_to_slice(string1).cmp(ptr_to_slice(string2)).is_ne()
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn NE__WSTRING (string1: *const u16, string2: *const u16) -> bool {
+    ptr_to_slice(string1).cmp(ptr_to_slice(string2)).is_ne()
+}
+
 // -------------------------------------------------unit tests-----------------------------------------
 #[cfg(test)]
 mod test {
@@ -811,8 +905,11 @@ mod test {
         }
     }
 
+    #[ignore = "The user is responsible for correctly counting composed characters if they choose to use them."]
     #[test]
     fn test_len_with_precomposed_characters() {
+        // these characters are not the same. one is precomposed (len 1)
+        // and the other is composed of two characters. they are merely rendered the same.
         let src = "éé\0";
         unsafe {
             let res = LEN__STRING(src.as_ptr());
@@ -1245,6 +1342,186 @@ mod test {
             assert_eq!("", string)
         }
     }
+#[test]
+fn test_greater_than_string_is_false_for_equal_strings() {
+    let argv = [
+        "hællø wørlÞ\0".as_ptr(),
+        "hællø wørlÞ\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(GT__STRING(argc, argv.as_ptr()) == false)
+    }
+}
+
+#[test]
+fn test_greater_than_string_is_true_for_decreasing_sequence() {
+    let argv = [
+        "zyxZabcdefghijklmn\0".as_ptr(),
+        "zyxA\0".as_ptr(),
+        "zyx\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(GT__STRING(argc, argv.as_ptr()))
+    }
+}
+
+#[test]
+fn test_greater_than_string_is_false_for_increasing_sequence() {
+    let argv = [
+        "abc\0".as_ptr(),
+        "bce\0".as_ptr(),
+        "xyz\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(GT__STRING(argc, argv.as_ptr()) == false)
+    }
+}
+
+#[test]
+fn test_greater_than_string_works_correctly_for_two_params () {
+    let argv = [
+        "zyxAabcdefghijklmn\0".as_ptr(),
+        "zyxZ".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(GT__STRING(argc, argv.as_ptr()) == false)
+    }
+}
+
+#[test]
+fn test_greater_or_equal_string() {
+    let argv = [
+        "xyz\0".as_ptr(),
+        "bcefghijkl\0".as_ptr(),
+        "abc\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;    
+    unsafe {
+        assert!(GE__STRING(argc, argv.as_ptr()))
+    }
+}
+
+#[test]
+fn test_greater_or_equal_string_is_true_for_equal_strings() {
+    let argv = [
+        "hællø wørlÞ\0".as_ptr(),
+        "hællø wørlÞ\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(GE__STRING(argc, argv.as_ptr()))
+    }
+}
+
+#[test]
+fn test_equal_string() {
+    let argv = [
+        "hællø wørlÞ\0".as_ptr(),
+        "hællø wørlÞ\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(EQ__STRING(argc, argv.as_ptr()))
+    }
+}
+
+#[test]
+fn test_equal_string_is_false_for_inequality() {
+    let argv = [
+        "hællø wørlÞabc\0".as_ptr(),
+        "hællø wørlÞabc\0".as_ptr(),
+        "hællø wørlÞabc\0".as_ptr(),
+        "hællø wørlÞZZc\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(EQ__STRING(argc, argv.as_ptr()) == false)
+    }
+}
+
+#[test]
+fn test_lesser_than_string() {
+    let argv = [
+        "hællø wørlÞabc\0".as_ptr(),
+        "hællø wørlÞz\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(LT__STRING(argc, argv.as_ptr()))
+    }
+}
+
+#[test]
+fn test_lesser_than_string_is_false() {
+    let argv = [
+        "z\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(LT__STRING(argc, argv.as_ptr()) == false)
+    }
+}
+
+#[test]
+fn test_lesser_or_equal_string_is_true_for_increasing_sequence() {
+    let argv = [
+        "a\0".as_ptr(),
+        "a\0".as_ptr(),
+        "b\0".as_ptr(),
+        "b\0".as_ptr(),
+        "b\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+        "q".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(LE__STRING(argc, argv.as_ptr()))
+    }
+}
+
+#[test]
+fn test_lesser_or_equal_string_is_false_if_last_string_doesnt_match() {
+    let argv = [
+        "a\0".as_ptr(),
+        "a\0".as_ptr(),
+        "b\0".as_ptr(),
+        "b\0".as_ptr(),
+        "b\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+        "hællø wørlÞzbc\0".as_ptr(),
+        "a".as_ptr(),
+    ];
+    let argc = argv.len() as i32;
+    unsafe {
+        assert!(LE__STRING(argc, argv.as_ptr()) == false)
+    }
+}
+
+#[test]
+fn test_not_equal_string_is_true_for_unequal_strings() {
+    let string1 = "these strings".as_ptr();
+    let string2 = "are not equal".as_ptr();
+    unsafe {
+        assert!(NE__STRING(string1, string2))
+    }
+}
+
+#[test]
+fn test_not_equal_string_is_false_for_equal_strings() {
+    let string1 = "these strings are  equal".as_ptr();
+    let string2 = "these strings are  equal".as_ptr();
+    unsafe {
+        assert!(NE__STRING(string1, string2) == false)
+    }
+}
 
     // -----------------------------------UTF16
     #[test]
@@ -1631,7 +1908,7 @@ mod test {
         for (i, arg) in argvec.iter().enumerate() {
             argv[i] = arg.as_ptr();
         }
-        let argc = argv.len();
+        let argc = argv.len() as i32;
         let mut dest: [u16; 1024] = [0; 1024];
         unsafe {
             CONCAT_EXT__WSTRING(dest.as_mut_ptr(), argc, argv.as_ptr());
@@ -1640,6 +1917,109 @@ mod test {
                 get_null_terminated_len(dest.as_ptr()),
             ));
             assert_eq!("hællø wørlÞhello world𝄞music", res)
+        }
+    }
+
+    #[test]
+    fn test_gt_wstring() {
+        let argvec: [Vec<u16>; 3] = [
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
+            "hel\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        let argc = argv.len() as i32;
+        unsafe {
+            assert!(GT__WSTRING(argc, argv.as_ptr()))
+        }
+    }
+
+    #[test]
+    fn test_ge_wstring() {
+        let argvec: [Vec<u16>; 3] = [
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        let argc = argv.len() as i32;
+        unsafe {
+            assert!(GE__WSTRING(argc, argv.as_ptr()))
+        }
+    }
+
+    #[test]
+    fn test_eq_wstring() {
+        let argvec: [Vec<u16>; 3] = [
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hællø wørlÞ\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        let argc = argv.len() as i32;
+        unsafe {
+            assert!(EQ__WSTRING(argc, argv.as_ptr()))
+        }
+    }
+
+    #[test]
+    fn test_lt_wstring() {
+        let argvec: [Vec<u16>; 3] = [
+            "hello world\0".encode_utf16().collect(),
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hællø wør𝄞Þ\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 3] = [std::ptr::null(); 3];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        let argc = argv.len() as i32;
+        unsafe {
+            assert!(LT__WSTRING(argc, argv.as_ptr()))
+        }
+    }
+
+    #[test]
+    fn test_le_wstring() {
+        let argvec: [Vec<u16>; 6] = [
+            "hello\0".encode_utf16().collect(),
+            "hello worlb\0".encode_utf16().collect(),
+            "hello worlc\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hællø wørlÞ\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 6] = [std::ptr::null(); 6];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        let argc = argv.len() as i32;
+        unsafe {
+            assert!(LE__WSTRING(argc, argv.as_ptr()))
+        }
+    }
+
+    #[test]
+    fn test_ne_wstring() {
+        let argvec: [Vec<u16>; 2] = [
+            "hællø wørlÞ\0".encode_utf16().collect(),
+            "hello world\0".encode_utf16().collect(),
+        ];
+        let mut argv: [*const u16; 2] = [std::ptr::null(); 2];
+        for (i, arg) in argvec.iter().enumerate() {
+            argv[i] = arg.as_ptr();
+        }
+        unsafe {
+            assert!(NE__WSTRING(argv[0], argv[1])) 
         }
     }
 }

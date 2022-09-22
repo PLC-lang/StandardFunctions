@@ -897,6 +897,54 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::string_functions::CONCAT_EXT__WSTRING as usize,
         ),
         (
+            "GT__STRING",
+            iec61131std::string_functions::GT__STRING as usize,
+        ),
+        (
+            "GT__WSTRING",
+            iec61131std::string_functions::GT__WSTRING as usize,
+        ),
+        (
+            "GE__STRING",
+            iec61131std::string_functions::GE__STRING as usize,
+        ),
+        (
+            "GE__WSTRING",
+            iec61131std::string_functions::GE__WSTRING as usize,
+        ),
+        (
+            "EQ__STRING",
+            iec61131std::string_functions::EQ__STRING as usize,
+        ),
+        (
+            "EQ__WSTRING",
+            iec61131std::string_functions::EQ__WSTRING as usize,
+        ),
+        (
+            "LE__STRING",
+            iec61131std::string_functions::LE__STRING as usize,
+        ),
+        (
+            "LE__WSTRING",
+            iec61131std::string_functions::LE__WSTRING as usize,
+        ),
+        (
+            "LT__STRING",
+            iec61131std::string_functions::LT__STRING as usize,
+        ),
+        (
+            "LT__WSTRING",
+            iec61131std::string_functions::LT__WSTRING as usize,
+        ),
+        (
+            "NE__STRING",
+            iec61131std::string_functions::NE__STRING as usize,
+        ),
+        (
+            "NE__WSTRING",
+            iec61131std::string_functions::NE__WSTRING as usize,
+        ),
+        (
             "EXPT__DINT__UDINT",
             iec61131std::arithmetic_functions::EXPT__DINT__UDINT as usize,
         ),

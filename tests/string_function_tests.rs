@@ -1282,3 +1282,21 @@ fn test_concat_ext_wstring() {
         panic!("Given string is not UTF16-encoded")
     }
 }
+
+#[test]
+fn test_gt_string() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'z';
+        b : STRING := 'y ';
+        c : STRING := 'x';
+    END_VAR    
+        main := GT(a, b, c);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");    
+    let res: bool = compile_and_run_no_params(source); 
+    assert!(res);
+}
