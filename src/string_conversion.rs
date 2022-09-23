@@ -1,4 +1,4 @@
-use crate::string_functions::{EncodedCharsIter, CharsDecoder, CharsEncoder};
+use crate::string_functions::{CharsDecoder, CharsEncoder, EncodedCharsIter};
 
 /// .
 /// Converts WSTRING to STRING
@@ -15,7 +15,7 @@ pub unsafe extern "C" fn WSTRING_TO_STRING_EXT(src: *const u16, dest: *mut u8) -
     EncodedCharsIter::decode(src)
         .map(|c| c.unwrap_or(char::REPLACEMENT_CHARACTER))
         .encode(&mut dest);
-    
+
     0
 }
 

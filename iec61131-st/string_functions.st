@@ -1,5 +1,5 @@
 (******************************************************************************
-Description: String length
+Description: String character length
 Input: 
     - IN:   A character string
 Return: String length
@@ -356,8 +356,11 @@ END_FUNCTION
 
 (******************************************************************************
 Description: Delete
-Input:
-Return:
+Input: 
+    IN: The string to delete characters from
+    L:  The amount of characters to delete
+    P:  The position at which to start deleting
+Return: A new string with L characters deleted from P onwards
 ******************************************************************************)
 FUNCTION DELETE <T: ANY_STRING> : T
 VAR_INPUT {ref}
@@ -435,7 +438,11 @@ END_FUNCTION
 (******************************************************************************
 Description: Replace
 Input:
-Return:
+    IN1:    The string to replace characters from
+    IN2:    The replacement string to be inserted
+    L:      The amount of characters to delete
+    P:      The position at which to start deleting
+Return: A new string which has L characters replaced by IN2 from position P onwards
 ******************************************************************************)
 FUNCTION REPLACE <T: ANY_STRING> : T
 VAR_INPUT {ref}
@@ -520,8 +527,10 @@ END_FUNCTION
 
 (******************************************************************************
 Description: Find
-Input:
-Return:
+Input: 
+    IN1:    The string in which to search in
+    IN2:    The substring to search for
+Return: The character index of the first match. 0 if there are no matches.
 ******************************************************************************)
 {external}
 FUNCTION FIND <T: ANY_STRING> : DINT
@@ -533,8 +542,10 @@ END_FUNCTION
 
 (******************************************************************************
 Description: Decreasing sequence
-Input:
-Return:
+Input:  The strings to compare, in order. ((IN1>IN2) & (IN2>IN3) & .. & (INn-1>INn))
+Return: 
+    TRUE if codepoints are in decreasing order (alphabetical order: ZYX > YXW > XWV ..)
+    FALSE otherwise
 ******************************************************************************)
 {external}
 FUNCTION GT <T: ANY_STRING> : BOOL
@@ -543,10 +554,26 @@ VAR_INPUT {ref}
 END_VAR
 END_FUNCTION
 
+// passing strings by ref causes an error/warning. code still compiles and works correctly
+FUNCTION STRING_GREATER : BOOL
+VAR_INPUT 
+    a, b : STRING;
+END_VAR
+    STRING_GREATER := GT(a, b);
+END_FUNCTION
+
+FUNCTION WSTRING_GREATER : BOOL
+VAR_INPUT
+    a, b : WSTRING;
+END_VAR
+    WSTRING_GREATER := GT(a, b);
+END_FUNCTION
 (******************************************************************************
 Description: Monotonic sequence
-Input:
-Return:
+Input:  The strings to compare, in order. ((IN1>=IN2) & (IN2>=IN3) & .. & (INn-1>=INn))
+Return: 
+    TRUE if codepoints are in decreasing order or are equal to adjacent codepoints (alphabetical order: ZYX >= ZYX >= YXW ..)
+    FALSE otherwise
 ******************************************************************************)
 {external}
 FUNCTION GE <T: ANY_STRING> : BOOL
@@ -557,8 +584,10 @@ END_FUNCTION
 
 (******************************************************************************
 Description: Equality
-Input:
-Return:
+Input: The strings to compare, in order. ((IN1=IN2) & (IN2=IN3) & .. & (INn-1=INn))
+Return: 
+    TRUE if codepoints are equal to each other
+    FALSE otherwise.
 ******************************************************************************)
 {external}
 FUNCTION EQ <T: ANY_STRING> : BOOL
@@ -567,10 +596,26 @@ VAR_INPUT {ref}
 END_VAR
 END_FUNCTION
 
+FUNCTION STRING_EQUAL : BOOL
+VAR_INPUT
+    a, b : STRING;
+END_VAR
+    STRING_EQUAL := EQ(a, b);
+END_FUNCTION
+
+FUNCTION WSTRING_EQUAL : BOOL
+VAR_INPUT
+    a, b : WSTRING;
+END_VAR
+    WSTRING_EQUAL := EQ(a, b);
+END_FUNCTION
+
 (******************************************************************************
 Description: Monotonic sequence
-Input:
-Return:
+Input:  The strings to compare, in order. ((IN1<=IN2) & (IN2<=IN3) & .. & (INn-1<=INn))
+Return: 
+    TRUE if codepoints are in increasing order or are equal to adjacent codepoints (alphabetical order: ABC <= ABC <= BCD ..)
+    FALSE otherwise
 ******************************************************************************)
 {external}
 FUNCTION LE <T: ANY_STRING> : BOOL
@@ -581,8 +626,10 @@ END_FUNCTION
 
 (******************************************************************************
 Description: Increasing sequence
-Input:
-Return:
+Input:  The strings to compare, in order. ((IN1<IN2) & (IN2<IN3) & .. & (INn-1<INn))
+Return: 
+    TRUE if codepoints are in increasing order (alphabetical order: ABC < BCD < CDE ..)
+    FALSE otherwise
 ******************************************************************************)
 {external}
 FUNCTION LT <T: ANY_STRING> : BOOL
@@ -591,10 +638,26 @@ VAR_INPUT {ref}
 END_VAR
 END_FUNCTION
 
+FUNCTION STRING_LESS : BOOL
+VAR_INPUT
+    a, b : STRING;
+END_VAR
+    STRING_LESS := LT(a, b);
+END_FUNCTION
+
+FUNCTION WSTRING_LESS : BOOL
+VAR_INPUT
+    a, b : WSTRING;
+END_VAR
+    WSTRING_LESS := LT(a, b);
+END_FUNCTION
+
 (******************************************************************************
 Description: Inequality
-Input:
+Input: The strings to compare. (IN1<>IN2)
 Return:
+    TRUE if strings do not match
+    FALSE otherwise
 ******************************************************************************)
 {external}
 FUNCTION NE <T: ANY_STRING> : BOOL

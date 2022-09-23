@@ -1,4 +1,7 @@
-use std::{char::{decode_utf16, DecodeUtf16Error}, cmp::Ordering};
+use std::{
+    char::{decode_utf16, DecodeUtf16Error},
+    cmp::Ordering,
+};
 
 use num::PrimInt;
 
@@ -47,10 +50,21 @@ type Utf8Iterator<'a> = core::str::Chars<'a>;
 
 pub trait CharsDecoder<T: PrimInt> {
     type IteratorType: Iterator;
+    /// Decodes raw utf8 or utf16 codepoints into a character iterator
+    /// # Safety
+    ///
+    /// Works on raw pointers, inherently unsafe.
     unsafe fn decode(src: *const T) -> EncodedCharsIter<Self::IteratorType>;
 }
 
 pub trait CharsEncoder<T: PrimInt>: Iterator {
+    /// Encodes utf8 or utf16 character iterator. Its raw codepoints are written
+    /// into given destination buffer address.
+    /// # Safety
+    ///
+    /// Works on raw pointers, inherently unsafe. Does not ensure that the buffer at the
+    /// given address large enough. It will continue to write unchecked until all characters
+    /// have been processed and can therefore result in UB.
     unsafe fn encode(self, dest: &mut *mut T);
 }
 
@@ -118,7 +132,7 @@ impl<'a> CharsDecoder<u16> for EncodedCharsIter<Utf16Iterator<'a>> {
 }
 
 /// Gets length of the given character string.
-/// UTF8
+/// Encoding: utf8
 ///
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
@@ -134,7 +148,7 @@ pub unsafe extern "C" fn LEN__STRING(src: *const u8) -> i32 {
 }
 
 /// Gets length of the given string.
-/// UTF16
+/// Encoding: utf16
 ///
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
@@ -151,7 +165,7 @@ pub unsafe extern "C" fn LEN__WSTRING(src: *const u16) -> i32 {
 
 /// Finds the first occurance of the second string (in2)
 /// within the first string (in1).
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -183,7 +197,7 @@ pub unsafe extern "C" fn FIND__STRING(src1: *const u8, src2: *const u8) -> i32 {
 }
 /// Finds the first occurance of the second string (src2)
 /// within the first string (src1).
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -215,7 +229,7 @@ pub unsafe extern "C" fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i3
 
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, beginning with the first (leftmost) character.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -242,7 +256,7 @@ pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest:
 
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, beginning with the first (leftmost) character.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -273,7 +287,7 @@ pub unsafe extern "C" fn LEFT_EXT__WSTRING(
 
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, ending with the last (rightmost) character.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -300,7 +314,7 @@ pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest
 
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, ending with the last (rightmost) character.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -330,7 +344,7 @@ pub unsafe extern "C" fn RIGHT_EXT__WSTRING(
 
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, beginning at the given index.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -374,7 +388,7 @@ pub unsafe extern "C" fn MID_EXT__STRING(
 
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, beginning at the given index.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -419,7 +433,7 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
 /// Inserts a string into another string at the
 /// specified position and writes the resulting string to
 /// the destination buffer.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -452,7 +466,7 @@ pub unsafe extern "C" fn INSERT_EXT__STRING(
 /// Inserts a string into another string at the
 /// specified position and writes the resulting string to
 /// the destination buffer.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -485,7 +499,7 @@ pub unsafe extern "C" fn INSERT_EXT__WSTRING(
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
 /// string into a destination buffer.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -534,7 +548,7 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
 /// string into a destination buffer.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -578,7 +592,7 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
 /// Replaces the given amount of characters in a string, starting
 /// from a specified location in the string, with another string and
 /// writes it to the destination buffer.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -626,7 +640,7 @@ pub unsafe extern "C" fn REPLACE_EXT__STRING(
 /// Replaces the given amount of characters in a string, starting
 /// from a specified location in the string, with another string and
 /// writes it to the destination buffer.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -674,7 +688,7 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -683,10 +697,7 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn CONCAT__STRING(
-    argc: i32,
-    argv: *const *const u8,
-) -> Wrapper<[u8; 2048]> {
+pub unsafe extern "C" fn CONCAT__STRING(argc: i32, argv: *const *const u8) -> Wrapper<[u8; 2048]> {
     if argv.is_null() {
         panic!("Received null-pointer.")
     }
@@ -706,7 +717,7 @@ pub unsafe extern "C" fn CONCAT__STRING(
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// UTF8
+/// Encoding: utf8
 ///
 /// # Safety
 ///
@@ -737,7 +748,7 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -749,7 +760,7 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(
 pub unsafe extern "C" fn CONCAT__WSTRING(
     argc: i32,
     argv: *const *const u16,
-) -> Wrapper<[u16; 2048]>  {
+) -> Wrapper<[u16; 2048]> {
     if argv.is_null() {
         panic!("Received null-pointer.")
     }
@@ -763,14 +774,14 @@ pub unsafe extern "C" fn CONCAT__WSTRING(
         argv = argv.add(1);
     }
 
-    Wrapper {inner: dest}
+    Wrapper { inner: dest }
 }
 
 /// Concatenates all given strings in the order in which they are given.
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// UTF16
+/// Encoding: utf16
 ///
 /// # Safety
 ///
@@ -797,8 +808,11 @@ pub unsafe extern "C" fn CONCAT_EXT__WSTRING(
     0
 }
 
-fn compare<T>(argc: i32, argv: *const *const T, predicate_func: fn(Ordering) -> bool) -> bool 
-where T: Ord + PrimInt {
+/// Helper function for generic, variadic string equality functions.
+fn compare<T>(argc: i32, argv: *const *const T, predicate_func: fn(Ordering) -> bool) -> bool
+where
+    T: Ord + PrimInt,
+{
     if argc < 2 {
         // what is the desired behaviour for this? panic? true or false?
         return false;
@@ -810,7 +824,7 @@ where T: Ord + PrimInt {
             argv = argv.add(1);
             let current = ptr_to_slice(*argv);
             if !(predicate_func(previous.cmp(current))) {
-                return false
+                return false;
             }
             previous = current;
         }
@@ -818,75 +832,147 @@ where T: Ord + PrimInt {
     true
 }
 
+/// Extensible "greater than" comparison function.
+/// Encoding: utf8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn GT__STRING (argc: i32, argv: *const *const u8) -> bool {
+pub unsafe extern "C" fn GT__STRING(argc: i32, argv: *const *const u8) -> bool {
     compare(argc, argv, Ordering::is_gt)
 }
 
+/// Extensible "greater than" comparison function.
+/// Encoding: utf16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn GT__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+pub unsafe extern "C" fn GT__WSTRING(argc: i32, argv: *const *const u16) -> bool {
     compare(argc, argv, Ordering::is_gt)
 }
 
+/// Extensible "greater or equal" comparison function.
+/// Encoding: utf8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn GE__STRING (argc: i32, argv: *const *const u8) -> bool {
-    compare(argc, argv, Ordering::is_ge)    
-}
-
-#[allow(non_snake_case)]
-#[no_mangle]
-pub unsafe extern "C" fn GE__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+pub unsafe extern "C" fn GE__STRING(argc: i32, argv: *const *const u8) -> bool {
     compare(argc, argv, Ordering::is_ge)
 }
 
+/// Extensible "greater or equal" comparison function.
+/// Encoding: utf16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn EQ__STRING (argc: i32, argv: *const *const u8) -> bool {
+pub unsafe extern "C" fn GE__WSTRING(argc: i32, argv: *const *const u16) -> bool {
+    compare(argc, argv, Ordering::is_ge)
+}
+
+/// Extensible "equal" comparison function.
+/// Encoding: utf8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn EQ__STRING(argc: i32, argv: *const *const u8) -> bool {
     compare(argc, argv, Ordering::is_eq)
 }
 
+/// Extensible "equal" comparison function.
+/// Encoding: utf16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn EQ__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+pub unsafe extern "C" fn EQ__WSTRING(argc: i32, argv: *const *const u16) -> bool {
     compare(argc, argv, Ordering::is_eq)
 }
 
+/// Extensible "less or equal" comparison function.
+/// Encoding: utf8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn LE__STRING (argc: i32, argv: *const *const u8) -> bool {
+pub unsafe extern "C" fn LE__STRING(argc: i32, argv: *const *const u8) -> bool {
     compare(argc, argv, Ordering::is_le)
 }
 
+/// Extensible "less or equal" comparison function.
+/// Encoding: utf16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn LE__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+pub unsafe extern "C" fn LE__WSTRING(argc: i32, argv: *const *const u16) -> bool {
     compare(argc, argv, Ordering::is_le)
 }
 
+/// Extensible "less than" comparison function.
+/// Encoding: utf8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn LT__STRING (argc: i32, argv: *const *const u8) -> bool {
+pub unsafe extern "C" fn LT__STRING(argc: i32, argv: *const *const u8) -> bool {
     compare(argc, argv, Ordering::is_lt)
 }
 
+/// Extensible "less than" comparison function.
+/// Encoding: utf16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn LT__WSTRING (argc: i32, argv: *const *const u16) -> bool {
+pub unsafe extern "C" fn LT__WSTRING(argc: i32, argv: *const *const u16) -> bool {
     compare(argc, argv, Ordering::is_lt)
 }
 
+/// "Not equal" comparison function.
+/// Encoding: utf8
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn NE__STRING (string1: *const u8, string2: *const u8) -> bool {
+pub unsafe extern "C" fn NE__STRING(string1: *const u8, string2: *const u8) -> bool {
     ptr_to_slice(string1).cmp(ptr_to_slice(string2)).is_ne()
 }
 
+/// "Not equal" comparison function.
+/// Encoding: utf16
+///
+/// # Safety
+///
+/// Works on raw pointers, inherently unsafe.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn NE__WSTRING (string1: *const u16, string2: *const u16) -> bool {
+pub unsafe extern "C" fn NE__WSTRING(string1: *const u16, string2: *const u16) -> bool {
     ptr_to_slice(string1).cmp(ptr_to_slice(string2)).is_ne()
 }
 
@@ -1342,186 +1428,132 @@ mod test {
             assert_eq!("", string)
         }
     }
-#[test]
-fn test_greater_than_string_is_false_for_equal_strings() {
-    let argv = [
-        "hællø wørlÞ\0".as_ptr(),
-        "hællø wørlÞ\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(GT__STRING(argc, argv.as_ptr()) == false)
+    #[test]
+    fn test_greater_than_string_is_false_for_equal_strings() {
+        let argv = ["hællø wørlÞ\0".as_ptr(), "hællø wørlÞ\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(GT__STRING(argc, argv.as_ptr()) == false) }
     }
-}
 
-#[test]
-fn test_greater_than_string_is_true_for_decreasing_sequence() {
-    let argv = [
-        "zyxZabcdefghijklmn\0".as_ptr(),
-        "zyxA\0".as_ptr(),
-        "zyx\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(GT__STRING(argc, argv.as_ptr()))
+    #[test]
+    fn test_greater_than_string_is_true_for_decreasing_sequence() {
+        let argv = [
+            "zyxZabcdefghijklmn\0".as_ptr(),
+            "zyxA\0".as_ptr(),
+            "zyx\0".as_ptr(),
+        ];
+        let argc = argv.len() as i32;
+        unsafe { assert!(GT__STRING(argc, argv.as_ptr())) }
     }
-}
 
-#[test]
-fn test_greater_than_string_is_false_for_increasing_sequence() {
-    let argv = [
-        "abc\0".as_ptr(),
-        "bce\0".as_ptr(),
-        "xyz\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(GT__STRING(argc, argv.as_ptr()) == false)
+    #[test]
+    fn test_greater_than_string_is_false_for_increasing_sequence() {
+        let argv = ["abc\0".as_ptr(), "bce\0".as_ptr(), "xyz\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(GT__STRING(argc, argv.as_ptr()) == false) }
     }
-}
 
-#[test]
-fn test_greater_than_string_works_correctly_for_two_params () {
-    let argv = [
-        "zyxAabcdefghijklmn\0".as_ptr(),
-        "zyxZ".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(GT__STRING(argc, argv.as_ptr()) == false)
+    #[test]
+    fn test_greater_than_string_works_correctly_for_two_params() {
+        let argv = ["zyxAabcdefghijklmn\0".as_ptr(), "zyxZ".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(GT__STRING(argc, argv.as_ptr()) == false) }
     }
-}
 
-#[test]
-fn test_greater_or_equal_string() {
-    let argv = [
-        "xyz\0".as_ptr(),
-        "bcefghijkl\0".as_ptr(),
-        "abc\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;    
-    unsafe {
-        assert!(GE__STRING(argc, argv.as_ptr()))
+    #[test]
+    fn test_greater_or_equal_string() {
+        let argv = ["xyz\0".as_ptr(), "bcefghijkl\0".as_ptr(), "abc\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(GE__STRING(argc, argv.as_ptr())) }
     }
-}
 
-#[test]
-fn test_greater_or_equal_string_is_true_for_equal_strings() {
-    let argv = [
-        "hællø wørlÞ\0".as_ptr(),
-        "hællø wørlÞ\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(GE__STRING(argc, argv.as_ptr()))
+    #[test]
+    fn test_greater_or_equal_string_is_true_for_equal_strings() {
+        let argv = ["hællø wørlÞ\0".as_ptr(), "hællø wørlÞ\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(GE__STRING(argc, argv.as_ptr())) }
     }
-}
 
-#[test]
-fn test_equal_string() {
-    let argv = [
-        "hællø wørlÞ\0".as_ptr(),
-        "hællø wørlÞ\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(EQ__STRING(argc, argv.as_ptr()))
+    #[test]
+    fn test_equal_string() {
+        let argv = ["hællø wørlÞ\0".as_ptr(), "hællø wørlÞ\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(EQ__STRING(argc, argv.as_ptr())) }
     }
-}
 
-#[test]
-fn test_equal_string_is_false_for_inequality() {
-    let argv = [
-        "hællø wørlÞabc\0".as_ptr(),
-        "hællø wørlÞabc\0".as_ptr(),
-        "hællø wørlÞabc\0".as_ptr(),
-        "hællø wørlÞZZc\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(EQ__STRING(argc, argv.as_ptr()) == false)
+    #[test]
+    fn test_equal_string_is_false_for_inequality() {
+        let argv = [
+            "hællø wørlÞabc\0".as_ptr(),
+            "hællø wørlÞabc\0".as_ptr(),
+            "hællø wørlÞabc\0".as_ptr(),
+            "hællø wørlÞZZc\0".as_ptr(),
+        ];
+        let argc = argv.len() as i32;
+        unsafe { assert!(EQ__STRING(argc, argv.as_ptr()) == false) }
     }
-}
 
-#[test]
-fn test_lesser_than_string() {
-    let argv = [
-        "hællø wørlÞabc\0".as_ptr(),
-        "hællø wørlÞz\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(LT__STRING(argc, argv.as_ptr()))
+    #[test]
+    fn test_lesser_than_string() {
+        let argv = ["hællø wørlÞabc\0".as_ptr(), "hællø wørlÞz\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(LT__STRING(argc, argv.as_ptr())) }
     }
-}
 
-#[test]
-fn test_lesser_than_string_is_false() {
-    let argv = [
-        "z\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(LT__STRING(argc, argv.as_ptr()) == false)
+    #[test]
+    fn test_lesser_than_string_is_false() {
+        let argv = ["z\0".as_ptr(), "hællø wørlÞzbc\0".as_ptr()];
+        let argc = argv.len() as i32;
+        unsafe { assert!(LT__STRING(argc, argv.as_ptr()) == false) }
     }
-}
 
-#[test]
-fn test_lesser_or_equal_string_is_true_for_increasing_sequence() {
-    let argv = [
-        "a\0".as_ptr(),
-        "a\0".as_ptr(),
-        "b\0".as_ptr(),
-        "b\0".as_ptr(),
-        "b\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-        "q".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(LE__STRING(argc, argv.as_ptr()))
+    #[test]
+    fn test_lesser_or_equal_string_is_true_for_increasing_sequence() {
+        let argv = [
+            "a\0".as_ptr(),
+            "a\0".as_ptr(),
+            "b\0".as_ptr(),
+            "b\0".as_ptr(),
+            "b\0".as_ptr(),
+            "hællø wørlÞzbc\0".as_ptr(),
+            "hællø wørlÞzbc\0".as_ptr(),
+            "hællø wørlÞzbc\0".as_ptr(),
+            "q".as_ptr(),
+        ];
+        let argc = argv.len() as i32;
+        unsafe { assert!(LE__STRING(argc, argv.as_ptr())) }
     }
-}
 
-#[test]
-fn test_lesser_or_equal_string_is_false_if_last_string_doesnt_match() {
-    let argv = [
-        "a\0".as_ptr(),
-        "a\0".as_ptr(),
-        "b\0".as_ptr(),
-        "b\0".as_ptr(),
-        "b\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-        "hællø wørlÞzbc\0".as_ptr(),
-        "a".as_ptr(),
-    ];
-    let argc = argv.len() as i32;
-    unsafe {
-        assert!(LE__STRING(argc, argv.as_ptr()) == false)
+    #[test]
+    fn test_lesser_or_equal_string_is_false_if_last_string_doesnt_match() {
+        let argv = [
+            "a\0".as_ptr(),
+            "a\0".as_ptr(),
+            "b\0".as_ptr(),
+            "b\0".as_ptr(),
+            "b\0".as_ptr(),
+            "hællø wørlÞzbc\0".as_ptr(),
+            "hællø wørlÞzbc\0".as_ptr(),
+            "hællø wørlÞzbc\0".as_ptr(),
+            "a".as_ptr(),
+        ];
+        let argc = argv.len() as i32;
+        unsafe { assert!(LE__STRING(argc, argv.as_ptr()) == false) }
     }
-}
 
-#[test]
-fn test_not_equal_string_is_true_for_unequal_strings() {
-    let string1 = "these strings".as_ptr();
-    let string2 = "are not equal".as_ptr();
-    unsafe {
-        assert!(NE__STRING(string1, string2))
+    #[test]
+    fn test_not_equal_string_is_true_for_unequal_strings() {
+        let string1 = "these strings".as_ptr();
+        let string2 = "are not equal".as_ptr();
+        unsafe { assert!(NE__STRING(string1, string2)) }
     }
-}
 
-#[test]
-fn test_not_equal_string_is_false_for_equal_strings() {
-    let string1 = "these strings are  equal".as_ptr();
-    let string2 = "these strings are  equal".as_ptr();
-    unsafe {
-        assert!(NE__STRING(string1, string2) == false)
+    #[test]
+    fn test_not_equal_string_is_false_for_equal_strings() {
+        let string1 = "these strings are  equal".as_ptr();
+        let string2 = "these strings are  equal".as_ptr();
+        unsafe { assert!(NE__STRING(string1, string2) == false) }
     }
-}
 
     // -----------------------------------UTF16
     #[test]
@@ -1932,9 +1964,7 @@ fn test_not_equal_string_is_false_for_equal_strings() {
             argv[i] = arg.as_ptr();
         }
         let argc = argv.len() as i32;
-        unsafe {
-            assert!(GT__WSTRING(argc, argv.as_ptr()))
-        }
+        unsafe { assert!(GT__WSTRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1949,9 +1979,7 @@ fn test_not_equal_string_is_false_for_equal_strings() {
             argv[i] = arg.as_ptr();
         }
         let argc = argv.len() as i32;
-        unsafe {
-            assert!(GE__WSTRING(argc, argv.as_ptr()))
-        }
+        unsafe { assert!(GE__WSTRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1966,9 +1994,7 @@ fn test_not_equal_string_is_false_for_equal_strings() {
             argv[i] = arg.as_ptr();
         }
         let argc = argv.len() as i32;
-        unsafe {
-            assert!(EQ__WSTRING(argc, argv.as_ptr()))
-        }
+        unsafe { assert!(EQ__WSTRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1983,9 +2009,7 @@ fn test_not_equal_string_is_false_for_equal_strings() {
             argv[i] = arg.as_ptr();
         }
         let argc = argv.len() as i32;
-        unsafe {
-            assert!(LT__WSTRING(argc, argv.as_ptr()))
-        }
+        unsafe { assert!(LT__WSTRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -2003,9 +2027,7 @@ fn test_not_equal_string_is_false_for_equal_strings() {
             argv[i] = arg.as_ptr();
         }
         let argc = argv.len() as i32;
-        unsafe {
-            assert!(LE__WSTRING(argc, argv.as_ptr()))
-        }
+        unsafe { assert!(LE__WSTRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -2018,8 +2040,6 @@ fn test_not_equal_string_is_false_for_equal_strings() {
         for (i, arg) in argvec.iter().enumerate() {
             argv[i] = arg.as_ptr();
         }
-        unsafe {
-            assert!(NE__WSTRING(argv[0], argv[1])) 
-        }
+        unsafe { assert!(NE__WSTRING(argv[0], argv[1])) }
     }
 }

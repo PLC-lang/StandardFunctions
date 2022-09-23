@@ -644,8 +644,8 @@ fn test_concat_string() {
     END_FUNCTION
     "#;
 
-    let source = add_std!(src, "string_functions.st");    
-    let res: [u8; 2048] = compile_and_run_no_params(source); 
+    let source = add_std!(src, "string_functions.st");
+    let res: [u8; 2048] = compile_and_run_no_params(source);
 
     if let Ok(result) = str_from_u8_utf8(&res) {
         assert_eq!(result, "Hello, World!");
@@ -685,12 +685,12 @@ fn test_concat_ext_string() {
 //     END_FUNCTION
 //     "#;
 
-//     let source = add_std!(src, "string_functions.st");    
-//     let res: [u8; 245] = compile_and_run_no_params(source); 
+//     let source = add_std!(src, "string_functions.st");
+//     let res: [u8; 245] = compile_and_run_no_params(source);
 
 //     if let Ok(result) = str_from_u8_utf8(&res) {
 //         assert_eq!(
-//             result, 
+//             result,
 //             r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.the                same           is   true                    for             this                     string."
 //             );
 //     } else {
@@ -1251,7 +1251,7 @@ fn test_concat_wstring() {
     END_FUNCTION
     "#;
 
-    let source = add_std!(src, "string_functions.st");    
+    let source = add_std!(src, "string_functions.st");
     let res: [u16; 2048] = compile_and_run_no_params(source);
     if let Ok(res) = string_from_utf16(&res) {
         assert_eq!(res, "Hello, World!");
@@ -1283,6 +1283,7 @@ fn test_concat_ext_wstring() {
     }
 }
 
+// string equality
 #[test]
 fn test_gt_string() {
     let src = r#"
@@ -1296,7 +1297,402 @@ fn test_gt_string() {
     END_FUNCTION
     "#;
 
-    let source = add_std!(src, "string_functions.st");    
-    let res: bool = compile_and_run_no_params(source); 
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_ge_string() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'z';
+        b : STRING := 'z';
+        c : STRING := 'y';
+        d : STRING := 'x';
+    END_VAR    
+        main := GE(a, b, c, d);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_eq_string() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'same';
+        b : STRING := 'same';
+        c : STRING := 'same';
+    END_VAR    
+        main := EQ(a, b, c);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_lt_string() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'z';
+        b : STRING := 'z';
+        c : STRING := 'y';
+        d : STRING := 'x';
+    END_VAR    
+        main := LT(d, c, b, a);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res == false);
+}
+
+#[test]
+fn test_le_string() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'z';
+        b : STRING := 'z';
+        c : STRING := 'y';
+        d : STRING := 'x';
+    END_VAR    
+        main := LE(d, c, b, a);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_ne_string() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'z';
+        b : STRING := 'y';
+    END_VAR    
+        main := NE(a, b);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_gt_wstring() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : WSTRING := "z";
+        b : WSTRING := "y";
+        c : WSTRING := "x";
+    END_VAR    
+        main := GT(a, b, c);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_ge_wstring() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : WSTRING := "z";
+        b : WSTRING := "z";
+        c : WSTRING := "y";
+        d : WSTRING := "x";
+    END_VAR    
+        main := GE(a, b, c, d);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_eq_wstring() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : WSTRING := "same";
+        b : WSTRING := "same";
+        c : WSTRING := "same";
+    END_VAR    
+        main := EQ(a, b, c);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_lt_wstring() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : WSTRING := "z";
+        b : WSTRING := "z";
+        c : WSTRING := "y";
+        d : WSTRING := "x";
+    END_VAR   
+        main := LT(d, c, b, a);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res == false);
+}
+
+#[test]
+fn test_le_wstring() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : WSTRING := "z";
+        b : WSTRING := "z";
+        c : WSTRING := "y";
+        d : WSTRING := "x";
+    END_VAR    
+        main := LE(d, c, b, a);
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_ne_wstring() {
+    let src = r#"
+    FUNCTION main : BOOL
+        main := NE("lhs == rhs", "this very long unimaginative sentence claims the previous statement is dishonest and untrue");
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+// string equality - operators
+
+#[test]
+fn test_string_greater_operator_works_if_result_is_true() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'zyx';
+        b : STRING := 'yx';
+    END_VAR    
+        main := a > b;
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[derive(PartialEq, Default)]
+struct MainType {
+    lt: bool,
+    le: bool,
+    eq: bool,
+    ge: bool,
+    gt: bool,
+    ne: bool,
+}
+
+#[test]
+fn test_string_binary_operator_wrapper_functions_work_if_expressions_evaluate_to_true() {
+    let src = r#"
+    PROGRAM main
+    VAR
+        lt, le, eq, ge, gt, ne : BOOL;
+    END_VAR
+    VAR_TEMP
+        a : STRING := 'abc';
+        b : STRING := 'abc';
+        c : STRING := 'bcd';
+        d : STRING := 'cba';
+    END_VAR    
+        lt := a < c AND b < c AND c < d;
+        le := a <= b AND a <= c;
+        eq := a = b;
+        ge := d >= d AND d >= c AND a >= b AND a >= a;
+        gt := d > c AND c > a;
+        ne := a <> d AND b <> c AND c <> d;
+    END_PROGRAM
+    "#;
+
+    let mut maintype = MainType::default();
+    let source = add_std!(src, "string_functions.st");
+    let _: i32 = common::compile_and_run(source, &mut maintype);
+    let expected = MainType {
+        lt: true,
+        le: true,
+        eq: true,
+        ge: true,
+        gt: true,
+        ne: true,
+    };
+    assert!(expected == maintype);
+}
+
+#[test]
+fn test_wstring_binary_operator_wrapper_functions_work() {
+    let src = r#"
+    PROGRAM main
+    VAR
+        lt, le, eq, ge, gt, ne : BOOL;
+    END_VAR
+    VAR_TEMP
+        a : WSTRING := "abc";
+        b : WSTRING := "abc";
+        c : WSTRING := "bcd";
+        d : WSTRING := "cba";
+    END_VAR    
+        lt := a < c AND b < c AND c < d;
+        le := a <= b AND a <= c;
+        eq := a = b;
+        ge := d >= d AND d >= c AND a >= b AND a >= a;
+        gt := d > c AND c > a;
+        ne := a <> d AND b <> c AND c <> d;
+    END_PROGRAM
+    "#;
+
+    let mut maintype = MainType::default();
+    let source = add_std!(src, "string_functions.st");
+    let _: i32 = common::compile_and_run(source, &mut maintype);
+    let expected = MainType {
+        lt: true,
+        le: true,
+        eq: true,
+        ge: true,
+        gt: true,
+        ne: true,
+    };
+    assert!(expected == maintype);
+}
+
+#[test]
+fn test_string_binary_operator_wrapper_functions_work_if_expressions_evaluate_to_false() {
+    let src = r#"
+    PROGRAM main
+    VAR
+        lt, le, eq, ge, gt, ne : BOOL;
+    END_VAR
+    VAR_TEMP
+        a : STRING := 'abc';
+        b : STRING := 'abc';
+        c : STRING := 'bcd';
+        d : STRING := 'cba';
+    END_VAR    
+        lt := c < a OR c < b OR d < c;
+        le := c <= a OR d <= c;
+        eq := a = d OR a = c OR c = d;
+        ge := c >= d OR b >= c OR a >= c;
+        gt := c > d OR a > c;
+        ne := a <> b;
+    END_PROGRAM
+    "#;
+
+    let mut maintype = MainType {
+        lt: true,
+        le: true,
+        eq: true,
+        ge: true,
+        gt: true,
+        ne: true,
+    };
+    let source = add_std!(src, "string_functions.st");
+    let _: i32 = common::compile_and_run(source, &mut maintype);
+    let expected = MainType::default();
+    assert!(expected == maintype);
+}
+
+#[test]
+fn test_string_equality_operator_works_for_long_strings() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'this very long unimaginative sentence consists of the same characters in the same sequence twice';
+        b : STRING := 'this very long unimaginative sentence consists of the same characters in the same sequence twice';
+    END_VAR    
+        main := a = b;
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_string_not_equal_operator_works_for_long_strings() {
+    let src = r#"
+    FUNCTION main : BOOL
+    VAR_TEMP
+        a : STRING := 'this very long unimaginative sentence consists of the same characters in the same sequence twice';
+        b : STRING := 'this very long unimaginative sentence claims the previous string is dishonest';
+    END_VAR    
+        main := a <> b;
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_string_equal_operator_works_for_long_literals() {
+    let src = r#"
+    FUNCTION main : BOOL
+        main := 'this very long unimaginative sentence consists of the same characters in the same sequence twice' = 'this very long unimaginative sentence consists of the same characters in the same sequence twice';
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
+    assert!(res);
+}
+
+#[test]
+fn test_string_not_equal_operator_works_for_long_literals() {
+    let src = r#"
+    FUNCTION main : BOOL
+        main := 'this very long unimaginative sentence consists of the same characters in the same sequence twice' <> 'this very long unimaginative sentence claims the previous string is dishonest';
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: bool = compile_and_run_no_params(source);
     assert!(res);
 }
