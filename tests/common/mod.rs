@@ -1124,6 +1124,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         vec![],
         None,
         Diagnostician::default(),
+        rusty::OptimizationLevel::None,
+        rusty::DebugLevel::None,
     )
     .unwrap();
     #[cfg(feature = "debug")]
