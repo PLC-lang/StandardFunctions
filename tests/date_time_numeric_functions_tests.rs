@@ -721,14 +721,14 @@ fn mul_real() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, -8478000640); // -8_478_000_640ns = -8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
+    assert_eq!(maintype.a, -8478000641); // -8_478_000_640ns = -8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
     assert_eq!(
         maintype.b,
         chrono::Duration::seconds(847_800) // 847_800s => 9d 19h 30m
             .num_nanoseconds()
             .unwrap()
     );
-    assert_eq!(maintype.c, -8478000640); // -8_478_000_640ns = -8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
+    assert_eq!(maintype.c, -8478000641); // -8_478_000_640ns = -8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
 }
 
 #[test]
@@ -811,7 +811,7 @@ fn mul_time() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, 8478000640); // 8_478_000_640ns = 8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
+    assert_eq!(maintype.a, 8478000641); // 8_478_000_640ns = 8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
     assert_eq!(
         maintype.b,
         chrono::Duration::seconds(847_800) // 847_800s => 9d 19h 30m
@@ -834,7 +834,7 @@ fn mul_ltime() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(maintype.a, 8478000640); // 8_478_000_640ns = 8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
+    assert_eq!(maintype.a, 8478000641); // 8_478_000_640ns = 8s 478ms [640ns -> deviation see example std::time::Duration::mul_f32()]
     assert_eq!(
         maintype.b,
         chrono::Duration::seconds(847_800) // 847_800s => 9d 19h 30m
