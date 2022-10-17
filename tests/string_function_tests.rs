@@ -677,26 +677,27 @@ fn test_concat_ext_string() {
     }
 }
 
-// #[test]
-// fn test_concat_long_string_literals() {
-//     let src = r#"
-//     FUNCTION main : STRING[2048]
-//         main := CONCAT('     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.', '$N', 'the                same           is   true                    for             this                     string.');
-//     END_FUNCTION
-//     "#;
+#[test]
+#[ignore = "variadic string literals are currently only supported up to length 80"]
+fn test_concat_long_string_literals() {
+    let src = r#"
+    FUNCTION main : STRING[2048]
+        main := CONCAT('     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.', '$N', 'the                same           is   true                    for             this                     string.');
+    END_FUNCTION
+    "#;
 
-//     let source = add_std!(src, "string_functions.st");
-//     let res: [u8; 245] = compile_and_run_no_params(source);
+    let source = add_std!(src, "string_functions.st");
+    let res: [u8; 245] = compile_and_run_no_params(source);
 
-//     if let Ok(result) = str_from_u8_utf8(&res) {
-//         assert_eq!(
-//             result,
-//             r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.the                same           is   true                    for             this                     string."
-//             );
-//     } else {
-//         panic!("Given string is not UTF8-encoded")
-//     }
-// }
+    if let Ok(result) = str_from_u8_utf8(&res) {
+        assert_eq!(
+            result,
+            r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.the                same           is   true                    for             this                     string."
+        );
+    } else {
+        panic!("Given string is not UTF8-encoded")
+    }
+}
 
 // utf16 tests
 #[test]

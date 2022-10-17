@@ -9,7 +9,7 @@ use rusty::{
     compile_module,
     diagnostics::Diagnostician,
     runner::{run, run_no_param, Compilable},
-    FilePath, SourceCode, SourceContainer, OptimizationLevel, DebugLevel,
+    DebugLevel, FilePath, OptimizationLevel, SourceCode, SourceContainer,
 };
 
 #[allow(unused_macros)] //This is actually used in subtests
@@ -1253,7 +1253,7 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         None,
         Diagnostician::default(),
         OptimizationLevel::None,
-        DebugLevel::None
+        DebugLevel::None,
     )
     .unwrap();
     #[cfg(feature = "debug")]
