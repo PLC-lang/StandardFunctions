@@ -50,9 +50,9 @@ type Utf8Iterator<'a> = core::str::Chars<'a>;
 
 pub trait CharsDecoder<T: PrimInt> {
     type IteratorType: Iterator;
-    /// Decodes raw utf8 or utf16 codepoints into a character iterator. Does not account
+    /// Decodes raw UTF-8 or UTF-16 codepoints into a character iterator. Does not account
     /// for grapheme clusters.
-    /// 
+    ///
     /// # Safety
     ///
     /// Works on raw pointers, inherently unsafe.
@@ -60,9 +60,9 @@ pub trait CharsDecoder<T: PrimInt> {
 }
 
 pub trait CharsEncoder<T: PrimInt>: Iterator {
-    /// Encodes utf8 or utf16 character iterator. Its raw codepoints are written
+    /// Encodes UTF-8 or UTF-16 character iterator. Its raw codepoints are written
     /// into given destination buffer address.
-    /// 
+    ///
     /// # Safety
     ///
     /// Works on raw pointers, inherently unsafe. Does not ensure that the buffer at the
