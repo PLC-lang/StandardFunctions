@@ -1432,7 +1432,7 @@ mod test {
     fn test_greater_than_string_is_false_for_equal_strings() {
         let argv = ["hællø wørlÞ\0".as_ptr(), "hællø wørlÞ\0".as_ptr()];
         let argc = argv.len() as i32;
-        unsafe { assert!(GT__STRING(argc, argv.as_ptr()) == false) }
+        unsafe { assert!(!GT__STRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1450,14 +1450,14 @@ mod test {
     fn test_greater_than_string_is_false_for_increasing_sequence() {
         let argv = ["abc\0".as_ptr(), "bce\0".as_ptr(), "xyz\0".as_ptr()];
         let argc = argv.len() as i32;
-        unsafe { assert!(GT__STRING(argc, argv.as_ptr()) == false) }
+        unsafe { assert!(!GT__STRING(argc, argv.as_ptr())) }
     }
 
     #[test]
     fn test_greater_than_string_works_correctly_for_two_params() {
         let argv = ["zyxAabcdefghijklmn\0".as_ptr(), "zyxZ".as_ptr()];
         let argc = argv.len() as i32;
-        unsafe { assert!(GT__STRING(argc, argv.as_ptr()) == false) }
+        unsafe { assert!(!GT__STRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1490,7 +1490,7 @@ mod test {
             "hællø wørlÞZZc\0".as_ptr(),
         ];
         let argc = argv.len() as i32;
-        unsafe { assert!(EQ__STRING(argc, argv.as_ptr()) == false) }
+        unsafe { assert!(!EQ__STRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1504,7 +1504,7 @@ mod test {
     fn test_lesser_than_string_is_false() {
         let argv = ["z\0".as_ptr(), "hællø wørlÞzbc\0".as_ptr()];
         let argc = argv.len() as i32;
-        unsafe { assert!(LT__STRING(argc, argv.as_ptr()) == false) }
+        unsafe { assert!(!LT__STRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1538,7 +1538,7 @@ mod test {
             "a".as_ptr(),
         ];
         let argc = argv.len() as i32;
-        unsafe { assert!(LE__STRING(argc, argv.as_ptr()) == false) }
+        unsafe { assert!(!LE__STRING(argc, argv.as_ptr())) }
     }
 
     #[test]
@@ -1552,7 +1552,7 @@ mod test {
     fn test_not_equal_string_is_false_for_equal_strings() {
         let string1 = "these strings are  equal".as_ptr();
         let string2 = "these strings are  equal".as_ptr();
-        unsafe { assert!(NE__STRING(string1, string2) == false) }
+        unsafe { assert!(!NE__STRING(string1, string2)) }
     }
 
     // -----------------------------------UTF16
