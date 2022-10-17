@@ -13,7 +13,7 @@ pub struct Wrapper<T> {
 
 /// # Helper function
 ///
-/// Gets the amount of continuous characters in u8 array before
+/// Gets the amount of continuous characters before
 /// the first null-terminator.
 ///
 /// # Safety
@@ -33,7 +33,7 @@ fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
 
 /// # Helper function
 ///
-/// Get slice from null-terminated u8 pointer.
+/// Get slice from null-terminated pointer.
 /// If no number of bytes is given, nbytes will be determined
 /// by finding the nul-terminator.
 ///
@@ -50,7 +50,9 @@ type Utf8Iterator<'a> = core::str::Chars<'a>;
 
 pub trait CharsDecoder<T: PrimInt> {
     type IteratorType: Iterator;
-    /// Decodes raw utf8 or utf16 codepoints into a character iterator
+    /// Decodes raw utf8 or utf16 codepoints into a character iterator. Does not account
+    /// for grapheme clusters.
+    /// 
     /// # Safety
     ///
     /// Works on raw pointers, inherently unsafe.
@@ -60,6 +62,7 @@ pub trait CharsDecoder<T: PrimInt> {
 pub trait CharsEncoder<T: PrimInt>: Iterator {
     /// Encodes utf8 or utf16 character iterator. Its raw codepoints are written
     /// into given destination buffer address.
+    /// 
     /// # Safety
     ///
     /// Works on raw pointers, inherently unsafe. Does not ensure that the buffer at the
@@ -132,7 +135,7 @@ impl<'a> CharsDecoder<u16> for EncodedCharsIter<Utf16Iterator<'a>> {
 }
 
 /// Gets length of the given character string.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
@@ -148,7 +151,7 @@ pub unsafe extern "C" fn LEN__STRING(src: *const u8) -> i32 {
 }
 
 /// Gets length of the given string.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
@@ -164,8 +167,8 @@ pub unsafe extern "C" fn LEN__WSTRING(src: *const u16) -> i32 {
 }
 
 /// Finds the first occurance of the second string (in2)
-/// within the first string (in1).
-/// Encoding: utf8
+/// in the first string (in1).
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -197,7 +200,7 @@ pub unsafe extern "C" fn FIND__STRING(src1: *const u8, src2: *const u8) -> i32 {
 }
 /// Finds the first occurance of the second string (src2)
 /// within the first string (src1).
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -229,7 +232,7 @@ pub unsafe extern "C" fn FIND__WSTRING(src1: *const u16, src2: *const u16) -> i3
 
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, beginning with the first (leftmost) character.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -256,7 +259,7 @@ pub unsafe extern "C" fn LEFT_EXT__STRING(src: *const u8, substr_len: i32, dest:
 
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, beginning with the first (leftmost) character.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -287,7 +290,7 @@ pub unsafe extern "C" fn LEFT_EXT__WSTRING(
 
 /// Writes a substring of a specified length from the given string,
 /// to the destination buffer, ending with the last (rightmost) character.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -314,7 +317,7 @@ pub unsafe extern "C" fn RIGHT_EXT__STRING(src: *const u8, substr_len: i32, dest
 
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, ending with the last (rightmost) character.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -344,7 +347,7 @@ pub unsafe extern "C" fn RIGHT_EXT__WSTRING(
 
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, beginning at the given index.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -388,7 +391,7 @@ pub unsafe extern "C" fn MID_EXT__STRING(
 
 /// Writes a substring of a specified length from the given string
 /// to the destination buffer, beginning at the given index.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -433,7 +436,7 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
 /// Inserts a string into another string at the
 /// specified position and writes the resulting string to
 /// the destination buffer.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -466,7 +469,7 @@ pub unsafe extern "C" fn INSERT_EXT__STRING(
 /// Inserts a string into another string at the
 /// specified position and writes the resulting string to
 /// the destination buffer.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -499,7 +502,7 @@ pub unsafe extern "C" fn INSERT_EXT__WSTRING(
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
 /// string into a destination buffer.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -548,7 +551,7 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
 /// Deletes the given amount of characters in a string,
 /// starting from the specified position. Writes the resulting
 /// string into a destination buffer.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -592,7 +595,7 @@ pub unsafe extern "C" fn DELETE_EXT__WSTRING(
 /// Replaces the given amount of characters in a string, starting
 /// from a specified location in the string, with another string and
 /// writes it to the destination buffer.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -640,7 +643,7 @@ pub unsafe extern "C" fn REPLACE_EXT__STRING(
 /// Replaces the given amount of characters in a string, starting
 /// from a specified location in the string, with another string and
 /// writes it to the destination buffer.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -688,7 +691,7 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -717,7 +720,7 @@ pub unsafe extern "C" fn CONCAT__STRING(argc: i32, argv: *const *const u8) -> Wr
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -748,7 +751,7 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -781,7 +784,7 @@ pub unsafe extern "C" fn CONCAT__WSTRING(
 /// Strings are passed as pointer of pointer to u8, where each pointer represents
 /// the starting address of each string. The amount of strings must be passed as
 /// argument.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -833,7 +836,7 @@ where
 }
 
 /// Extensible "greater than" comparison function.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -845,7 +848,7 @@ pub unsafe extern "C" fn GT__STRING(argc: i32, argv: *const *const u8) -> bool {
 }
 
 /// Extensible "greater than" comparison function.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -857,7 +860,7 @@ pub unsafe extern "C" fn GT__WSTRING(argc: i32, argv: *const *const u16) -> bool
 }
 
 /// Extensible "greater or equal" comparison function.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -869,7 +872,7 @@ pub unsafe extern "C" fn GE__STRING(argc: i32, argv: *const *const u8) -> bool {
 }
 
 /// Extensible "greater or equal" comparison function.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -881,7 +884,7 @@ pub unsafe extern "C" fn GE__WSTRING(argc: i32, argv: *const *const u16) -> bool
 }
 
 /// Extensible "equal" comparison function.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -893,7 +896,7 @@ pub unsafe extern "C" fn EQ__STRING(argc: i32, argv: *const *const u8) -> bool {
 }
 
 /// Extensible "equal" comparison function.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -905,7 +908,7 @@ pub unsafe extern "C" fn EQ__WSTRING(argc: i32, argv: *const *const u16) -> bool
 }
 
 /// Extensible "less or equal" comparison function.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -917,7 +920,7 @@ pub unsafe extern "C" fn LE__STRING(argc: i32, argv: *const *const u8) -> bool {
 }
 
 /// Extensible "less or equal" comparison function.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -929,7 +932,7 @@ pub unsafe extern "C" fn LE__WSTRING(argc: i32, argv: *const *const u16) -> bool
 }
 
 /// Extensible "less than" comparison function.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -941,7 +944,7 @@ pub unsafe extern "C" fn LT__STRING(argc: i32, argv: *const *const u8) -> bool {
 }
 
 /// Extensible "less than" comparison function.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
@@ -953,7 +956,7 @@ pub unsafe extern "C" fn LT__WSTRING(argc: i32, argv: *const *const u16) -> bool
 }
 
 /// "Not equal" comparison function.
-/// Encoding: utf8
+/// Encoding: UTF-8
 ///
 /// # Safety
 ///
@@ -965,7 +968,7 @@ pub unsafe extern "C" fn NE__STRING(string1: *const u8, string2: *const u8) -> b
 }
 
 /// "Not equal" comparison function.
-/// Encoding: utf16
+/// Encoding: UTF-16
 ///
 /// # Safety
 ///
