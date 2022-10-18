@@ -8,8 +8,8 @@ pub struct CTUParams<T> {
     cu: bool,
     r: bool,
     pv: T,
-    q: *mut bool,
-    cv: *mut T,
+    q: bool,
+    cv: T,
     internal: Signal,
 }
 
@@ -22,8 +22,8 @@ where
             cu: Default::default(),
             r: Default::default(),
             pv: Default::default(),
-            q: std::ptr::null_mut(),
-            cv: std::ptr::null_mut(),
+            q: Default::default(),
+            cv: Default::default(),
             internal: Default::default(),
         }
     }
@@ -34,21 +34,15 @@ where
     T: Integer + Copy,
 {
     unsafe fn update_q(&mut self) {
-        if !self.q.is_null() {
-            *self.q = *self.cv >= self.pv
-        }
+        self.q = self.cv >= self.pv
     }
 
     unsafe fn reset(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = Zero::zero();
-        }
+        self.cv = Zero::zero()
     }
 
     unsafe fn inc(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = *self.cv + One::one();
-        }
+        self.cv = self.cv + One::one();
     }
 
     fn r_edge(&mut self) -> bool {
@@ -62,7 +56,7 @@ where
 {
     if params.r {
         params.reset();
-    } else if params.r_edge() & (*params.cv < T::max_value()) {
+    } else if params.r_edge() & (params.cv < T::max_value()) {
         params.inc();
     }
     params.update_q();
@@ -146,8 +140,8 @@ pub struct CTDParams<T> {
     cd: bool,
     ld: bool,
     pv: T,
-    q: *mut bool,
-    cv: *mut T,
+    q: bool,
+    cv: T,
     internal: Signal,
 }
 
@@ -160,8 +154,8 @@ where
             cd: Default::default(),
             ld: Default::default(),
             pv: Default::default(),
-            q: std::ptr::null_mut(),
-            cv: std::ptr::null_mut(),
+            q: Default::default(),
+            cv: Default::default(),
             internal: Default::default(),
         }
     }
@@ -172,21 +166,15 @@ where
     T: Integer + Copy,
 {
     unsafe fn update_q(&mut self) {
-        if !self.q.is_null() {
-            *self.q = *self.cv <= Zero::zero();
-        }
+        self.q = self.cv <= Zero::zero()
     }
 
     unsafe fn load(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = self.pv;
-        }
+        self.cv = self.pv
     }
 
     unsafe fn dec(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = *self.cv - One::one();
-        }
+        self.cv = self.cv - One::one();
     }
 
     fn r_edge(&mut self) -> bool {
@@ -200,7 +188,7 @@ where
 {
     if params.ld {
         params.load();
-    } else if params.r_edge() & (*params.cv > T::min_value()) {
+    } else if params.r_edge() & (params.cv > T::min_value()) {
         params.dec();
     }
     params.update_q();
@@ -286,9 +274,9 @@ pub struct CTUDParams<T> {
     r: bool,
     ld: bool,
     pv: T,
-    qu: *mut bool,
-    qd: *mut bool,
-    cv: *mut T,
+    qu: bool,
+    qd: bool,
+    cv: T,
     internal_up: Signal,
     internal_down: Signal,
 }
@@ -304,9 +292,9 @@ where
             r: Default::default(),
             ld: Default::default(),
             pv: Default::default(),
-            qu: std::ptr::null_mut(),
-            qd: std::ptr::null_mut(),
-            cv: std::ptr::null_mut(),
+            qu: Default::default(),
+            qd: Default::default(),
+            cv: Default::default(),
             internal_up: Default::default(),
             internal_down: Default::default(),
         }
@@ -318,39 +306,27 @@ where
     T: Integer + Copy,
 {
     unsafe fn update_qu(&mut self) {
-        if !self.qu.is_null() {
-            *self.qu = *self.cv >= self.pv
-        }
+        self.qu = self.cv >= self.pv
     }
 
     unsafe fn update_qd(&mut self) {
-        if !self.qd.is_null() {
-            *self.qd = *self.cv <= Zero::zero();
-        }
+        self.qd = self.cv <= Zero::zero()
     }
 
     unsafe fn reset(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = Zero::zero();
-        }
+        self.cv = Zero::zero()
     }
 
     unsafe fn load(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = self.pv;
-        }
+        self.cv = self.pv
     }
 
     unsafe fn inc(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = *self.cv + One::one();
-        }
+        self.cv = self.cv + One::one();
     }
 
     unsafe fn dec(&mut self) {
-        if !self.cv.is_null() {
-            *self.cv = *self.cv - One::one();
-        }
+        self.cv = self.cv - One::one();
     }
 
     fn cu_r_edge(&mut self) -> bool {
@@ -374,9 +350,9 @@ where
         let r_edge_up = params.cu_r_edge();
         let r_edge_down = params.cd_r_edge();
         if !(r_edge_up & r_edge_down) {
-            if r_edge_up & (*params.cv < T::max_value()) {
+            if r_edge_up & (params.cv < T::max_value()) {
                 params.inc();
-            } else if r_edge_down & (*params.cv > T::min_value()) {
+            } else if r_edge_down & (params.cv > T::min_value()) {
                 params.dec();
             }
         }
