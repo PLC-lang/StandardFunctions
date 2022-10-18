@@ -23,7 +23,6 @@ pub struct TimerParams {
     start_time: Option<Instant>,
 }
 
-
 impl TimerParams {
     /// This method returns true if the timer has already started
     /// It does not take into consideration the preset/range for the timer
