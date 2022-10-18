@@ -1,19 +1,9 @@
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct SetResetParams {
     set: bool,
     reset: bool,
     output: bool,
-}
-
-impl Default for SetResetParams {
-    fn default() -> Self {
-        Self {
-            set: Default::default(),
-            reset: Default::default(),
-            output: Default::default(),
-        }
-    }
 }
 
 impl SetResetParams {

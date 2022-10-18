@@ -1,30 +1,16 @@
 use crate::utils::Signal;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 #[repr(C)]
 pub struct Trigger {
     clk: bool,
-    output: *mut bool,
+    output: bool,
     internal: Signal,
-}
-
-impl Default for Trigger {
-    fn default() -> Self {
-        Self {
-            clk: Default::default(),
-            output: std::ptr::null_mut(),
-            internal: Default::default(),
-        }
-    }
 }
 
 impl Trigger {
     fn set_output(&mut self, val: bool) {
-        if !self.output.is_null() {
-            unsafe {
-                *self.output = val;
-            }
-        }
+        self.output = val
     }
 }
 
