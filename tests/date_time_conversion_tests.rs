@@ -82,7 +82,7 @@ fn ldt_to_date_conversion() {
 fn ldt_to_ltod_conversion() {
     let src = "
 	FUNCTION main : LTOD
-		main := LDT_TO_LTOD(LDT#2000-01-01-15:36:30.123);
+		main := LDT_TO_LTOD(LDT#2000-01-01-15:36:30.123456);
 	END_FUNCTION";
     let sources = add_std!(src, "date_time_conversion.st");
     let mut maintype = MainType::default();
@@ -91,7 +91,7 @@ fn ldt_to_ltod_conversion() {
         res,
         chrono::Utc
             .ymd(1970, 1, 1)
-            .and_hms_milli(15, 36, 30, 123)
+            .and_hms_nano(15, 36, 30, 123456000)
             .timestamp_nanos()
     );
 }
