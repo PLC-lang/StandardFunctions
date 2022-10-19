@@ -13,27 +13,14 @@ pub mod test_time_helpers;
 pub type Time = i64;
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct TimerParams {
     input: bool,
     preset_time: Time,
-    output: *mut bool,
-    elapsed_time: *mut Time,
+    output: bool,
+    elapsed_time: Time,
     input_edge: Signal,
     start_time: Option<Instant>,
-}
-
-impl Default for TimerParams {
-    fn default() -> Self {
-        Self {
-            input: Default::default(),
-            preset_time: Default::default(),
-            output: std::ptr::null_mut(),
-            elapsed_time: std::ptr::null_mut(),
-            input_edge: Default::default(),
-            start_time: Default::default(),
-        }
-    }
 }
 
 impl TimerParams {
@@ -55,11 +42,7 @@ impl TimerParams {
     }
 
     fn set_elapsed_time(&mut self, duration: i64) {
-        unsafe {
-            if !self.elapsed_time.is_null() {
-                *self.elapsed_time = duration;
-            }
-        };
+        self.elapsed_time = duration;
     }
 
     /// Sets the elapsed time to either the preset time or the real elapsed time, whatever is smaller
@@ -84,11 +67,7 @@ impl TimerParams {
     }
 
     fn set_output(&mut self, value: bool) {
-        unsafe {
-            if !self.output.is_null() {
-                *self.output = value;
-            }
-        }
+        self.output = value;
     }
 
     fn input_rising_edge(&mut self) -> bool {
