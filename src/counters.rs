@@ -3,7 +3,7 @@ use num::{Bounded, Integer, One, Zero};
 use crate::utils::Signal;
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CTUParams<T> {
     cu: bool,
     r: bool,
@@ -11,22 +11,6 @@ pub struct CTUParams<T> {
     q: bool,
     cv: T,
     internal: Signal,
-}
-
-impl<T> Default for CTUParams<T>
-where
-    T: Default,
-{
-    fn default() -> Self {
-        Self {
-            cu: Default::default(),
-            r: Default::default(),
-            pv: Default::default(),
-            q: Default::default(),
-            cv: Default::default(),
-            internal: Default::default(),
-        }
-    }
 }
 
 impl<T> CTUParams<T>
@@ -135,7 +119,7 @@ pub unsafe extern "C" fn CTU_ULINT(params: &mut CTUParams<u64>) {
 }
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CTDParams<T> {
     cd: bool,
     ld: bool,
@@ -143,22 +127,6 @@ pub struct CTDParams<T> {
     q: bool,
     cv: T,
     internal: Signal,
-}
-
-impl<T> Default for CTDParams<T>
-where
-    T: Default,
-{
-    fn default() -> Self {
-        Self {
-            cd: Default::default(),
-            ld: Default::default(),
-            pv: Default::default(),
-            q: Default::default(),
-            cv: Default::default(),
-            internal: Default::default(),
-        }
-    }
 }
 
 impl<T> CTDParams<T>
@@ -267,7 +235,7 @@ pub unsafe extern "C" fn CTD_ULINT(params: &mut CTDParams<u64>) {
 }
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CTUDParams<T> {
     cu: bool,
     cd: bool,
@@ -279,26 +247,6 @@ pub struct CTUDParams<T> {
     cv: T,
     internal_up: Signal,
     internal_down: Signal,
-}
-
-impl<T> Default for CTUDParams<T>
-where
-    T: Default,
-{
-    fn default() -> Self {
-        Self {
-            cu: Default::default(),
-            cd: Default::default(),
-            r: Default::default(),
-            ld: Default::default(),
-            pv: Default::default(),
-            qu: Default::default(),
-            qd: Default::default(),
-            cv: Default::default(),
-            internal_up: Default::default(),
-            internal_down: Default::default(),
-        }
-    }
 }
 
 impl<T> CTUDParams<T>
