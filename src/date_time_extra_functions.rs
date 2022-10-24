@@ -11,9 +11,9 @@ pub extern "C" fn CONCAT_DATE_TOD(in1: i64, in2: i64) -> i64 {
     let hour = tod.hour();
     let min = tod.minute();
     let sec = tod.second();
-    let milli = tod.timestamp_subsec_millis();
+    let nano = tod.timestamp_subsec_nanos();
 
-    date.and_hms_milli(hour, min, sec, milli).timestamp_nanos()
+    date.and_hms_nano(hour, min, sec, nano).timestamp_nanos()
 }
 
 /// .

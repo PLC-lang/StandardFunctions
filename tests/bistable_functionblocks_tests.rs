@@ -37,19 +37,15 @@ fn sr() {
 			f_f_t  : BOOL;
 			f_f_f  : BOOL;
 		END_VAR
-			t_t_t := TRUE;
-			t_f_t := TRUE;
-			f_t_t := TRUE;
-			f_f_t := TRUE;
-
-			sr_inst(SET1 := TRUE, RESET := TRUE, Q1 => t_t_t);
-			sr_inst(SET1 := TRUE, RESET := TRUE, Q1 => t_t_f);
-			sr_inst(SET1 := TRUE, RESET := FALSE, Q1 => t_f_t);
-			sr_inst(SET1 := TRUE, RESET := FALSE, Q1 => t_f_f);
-			sr_inst(SET1 := FALSE, RESET := TRUE, Q1 => f_t_t);
-			sr_inst(SET1 := FALSE, RESET := TRUE, Q1 => f_t_f);
-			sr_inst(SET1 := FALSE, RESET := FALSE, Q1 => f_f_t);
-			sr_inst(SET1 := FALSE, RESET := FALSE, Q1 => f_f_f);
+			sr_inst(SET1 := TRUE, RESET := TRUE, Q1 => t_t_f); (* Q is in default state, S and R are asserted -> Q goes high *)
+			sr_inst(SET1 := FALSE, RESET := TRUE, Q1 => f_t_t); (* Q is high, R is asserted -> Q goes low *)
+			sr_inst(SET1 := FALSE, RESET := FALSE, Q1 => f_f_f); (* Q is low, neither S nor R are asserted -> Q stays low*)
+			sr_inst(SET1 := TRUE, RESET := FALSE, Q1 => t_f_f); (* Q is low, S is asserted -> Q goes high *)
+			sr_inst(SET1 := TRUE, RESET := TRUE, Q1 => t_t_t); (* Q is high, S and R are asserted -> Q stays high *)
+			sr_inst(SET1 := TRUE, RESET := FALSE, Q1 => t_f_t); (* Q is high, S is asserted -> Q stays high *)
+			sr_inst(SET1 := FALSE, RESET := FALSE, Q1 => f_f_t); (* Q is high, neither S nor R are asserted -> Q stays high *)
+            sr_inst(SET1 := FALSE, RESET := TRUE, Q1 => f_t_f); (* reset *)
+			sr_inst(SET1 := FALSE, RESET := TRUE, Q1 => f_t_f); (* Q is low, R is asserted -> Q stays low *)
         END_PROGRAM
     "#;
 
@@ -60,15 +56,14 @@ fn sr() {
         ..MainType::default()
     };
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
-    assert!(main_inst.t_t_t);
     assert!(main_inst.t_t_f);
-    assert!(main_inst.t_f_t);
-    assert!(main_inst.t_f_f);
-
     assert!(!main_inst.f_t_t);
-    assert!(!main_inst.f_t_f);
-    assert!(main_inst.f_f_t);
     assert!(!main_inst.f_f_f);
+    assert!(main_inst.t_f_f);
+    assert!(main_inst.t_t_t);
+    assert!(main_inst.t_f_t);
+    assert!(main_inst.f_f_t);
+    assert!(!main_inst.f_t_f);
 }
 
 #[test]
@@ -86,19 +81,15 @@ fn rs() {
 			f_f_t  : BOOL;
 			f_f_f  : BOOL;
 		END_VAR
-			t_t_t := TRUE;
-			t_f_t := TRUE;
-			f_t_t := TRUE;
-			f_f_t := TRUE;
-
-			rs_inst(SET := TRUE, RESET1 := TRUE, Q1 => t_t_t);
-			rs_inst(SET := TRUE, RESET1 := TRUE, Q1 => t_t_f);
-			rs_inst(SET := TRUE, RESET1 := FALSE, Q1 => t_f_t);
-			rs_inst(SET := TRUE, RESET1 := FALSE, Q1 => t_f_f);
-			rs_inst(SET := FALSE, RESET1 := TRUE, Q1 => f_t_t);
-			rs_inst(SET := FALSE, RESET1 := TRUE, Q1 => f_t_f);
-			rs_inst(SET := FALSE, RESET1 := FALSE, Q1 => f_f_t);
-			rs_inst(SET := FALSE, RESET1 := FALSE, Q1 => f_f_f);
+            rs_inst(SET := TRUE, RESET1 := TRUE, Q1 => t_t_f); (* Q is in default state, S and R are asserted -> Q stays low *)
+            rs_inst(SET := FALSE, RESET1 := FALSE, Q1 => f_f_f); (* Q is low, neither S nor R are asserted -> Q stays low*)
+            rs_inst(SET := TRUE, RESET1 := FALSE, Q1 => t_f_f); (* Q is low, S is asserted -> Q goes high *)
+            rs_inst(SET := FALSE, RESET1 := TRUE, Q1 => f_t_t); (* Q is high, R is asserted -> Q goes low *)
+            rs_inst(SET := FALSE, RESET1 := TRUE, Q1 => f_t_f); (* Q is low, R is asserted -> Q stays low *)
+            rs_inst(SET := TRUE, RESET1 := FALSE, Q1 => t_f_t); (* set *)
+            rs_inst(SET := TRUE, RESET1 := FALSE, Q1 => t_f_t); (* Q is high, S is asserted -> Q stays high *)
+            rs_inst(SET := FALSE, RESET1 := FALSE, Q1 => f_f_t); (* Q is high, neither S nor R are asserted -> Q stays high *)
+            rs_inst(SET := TRUE, RESET1 := TRUE, Q1 => t_t_t); (* Q is high, S and R are asserted -> Q goes low *)
         END_PROGRAM
     "#;
 
@@ -109,13 +100,12 @@ fn rs() {
         ..MainType::default()
     };
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
-    assert!(!main_inst.t_t_t);
     assert!(!main_inst.t_t_f);
-    assert!(main_inst.t_f_t);
+    assert!(!main_inst.f_f_f);
     assert!(main_inst.t_f_f);
-
     assert!(!main_inst.f_t_t);
     assert!(!main_inst.f_t_f);
+    assert!(main_inst.t_f_t);
     assert!(main_inst.f_f_t);
-    assert!(!main_inst.f_f_f);
+    assert!(!main_inst.t_t_t);
 }

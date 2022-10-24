@@ -25,30 +25,30 @@ fn get_time_from_hms_milli(hour: u32, min: u32, sec: u32, milli: u32) -> chrono:
 fn concat_date_tod() {
     let src = "
 	FUNCTION main : DT
-		main := CONCAT_DATE_TOD(D#2010-03-12, TOD#12:30:15.121);
+		main := CONCAT_DATE_TOD(D#2010-03-12, TOD#12:30:15.121121121);
 	END_FUNCTION";
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = SingleType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2010y_3m_12d_12h_30m_15s_121ms = chrono::NaiveDate::from_ymd(2010, 3, 12)
-        .and_hms_milli(12, 30, 15, 121)
+    let dt_2010y_3m_12d_12h_30m_15s_121121121ns = chrono::NaiveDate::from_ymd(2010, 3, 12)
+        .and_hms_nano(12, 30, 15, 121121121)
         .timestamp_nanos();
-    assert_eq!(res, dt_2010y_3m_12d_12h_30m_15s_121ms);
+    assert_eq!(res, dt_2010y_3m_12d_12h_30m_15s_121121121ns);
 }
 
 #[test]
 fn concat_date_ltod() {
     let src = "
 	FUNCTION main : LDT
-		main := CONCAT_DATE_LTOD(D#2010-03-12, LTOD#12:30:15.121);
+		main := CONCAT_DATE_LTOD(D#2010-03-12, LTOD#12:30:15.121121121);
 	END_FUNCTION";
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = SingleType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2010y_3m_12d_12h_30m_15s_121ms = chrono::NaiveDate::from_ymd(2010, 3, 12)
-        .and_hms_milli(12, 30, 15, 121)
+    let dt_2010y_3m_12d_12h_30m_15s_121121121ns = chrono::NaiveDate::from_ymd(2010, 3, 12)
+        .and_hms_nano(12, 30, 15, 121121121)
         .timestamp_nanos();
-    assert_eq!(res, dt_2010y_3m_12d_12h_30m_15s_121ms);
+    assert_eq!(res, dt_2010y_3m_12d_12h_30m_15s_121121121ns);
 }
 
 #[derive(Default)]
