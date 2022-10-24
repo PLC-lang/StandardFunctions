@@ -3,7 +3,7 @@ use num::{Bounded, Integer, One, Zero};
 use crate::utils::Signal;
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CTUParams<T> {
     cu: bool,
     r: bool,
@@ -11,22 +11,6 @@ pub struct CTUParams<T> {
     q: bool,
     cv: T,
     internal: Signal,
-}
-
-impl<T> Default for CTUParams<T>
-where
-    T: Default,
-{
-    fn default() -> Self {
-        Self {
-            cu: Default::default(),
-            r: Default::default(),
-            pv: Default::default(),
-            q: Default::default(),
-            cv: Default::default(),
-            internal: Default::default(),
-        }
-    }
 }
 
 impl<T> CTUParams<T>
