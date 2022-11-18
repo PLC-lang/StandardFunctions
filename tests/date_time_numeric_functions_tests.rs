@@ -18,11 +18,17 @@ struct MainType {
 }
 
 fn get_time_from_hms(hour: u32, min: u32, sec: u32) -> chrono::NaiveDateTime {
-    chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms(hour, min, sec)
+    chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+        .unwrap()
+        .and_hms_opt(hour, min, sec)
+        .unwrap()
 }
 
 fn get_time_from_hms_milli(hour: u32, min: u32, sec: u32, milli: u32) -> chrono::NaiveDateTime {
-    chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_milli(hour, min, sec, milli)
+    chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+        .unwrap()
+        .and_hms_milli_opt(hour, min, sec, milli)
+        .unwrap()
 }
 
 #[test]
@@ -95,8 +101,10 @@ fn add_dt_time() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2000y_1m_2d_12h_12m_12s_123ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
-        .and_hms_milli(12, 12, 12, 123)
+    let dt_2000y_1m_2d_12h_12m_12s_123ms = chrono::NaiveDate::from_ymd_opt(2000, 1, 2)
+        .unwrap()
+        .and_hms_milli_opt(12, 12, 12, 123)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, dt_2000y_1m_2d_12h_12m_12s_123ms);
     assert_eq!(maintype.b, dt_2000y_1m_2d_12h_12m_12s_123ms);
@@ -240,8 +248,10 @@ fn sub_dt_time() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2000y_1m_1d_20h = chrono::NaiveDate::from_ymd(2000, 1, 1)
-        .and_hms(20, 0, 0)
+    let dt_2000y_1m_1d_20h = chrono::NaiveDate::from_ymd_opt(2000, 1, 1)
+        .unwrap()
+        .and_hms_opt(20, 0, 0)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, dt_2000y_1m_1d_20h);
     assert_eq!(maintype.b, dt_2000y_1m_1d_20h);
@@ -878,14 +888,14 @@ fn div_real() {
             .timestamp_nanos(maintype.a)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(-2_700) // -2_700ms => -2s 700ms
+        chrono::Utc.timestamp_millis_opt(-2_700).unwrap() // -2_700ms => -2s 700ms
     );
     assert_eq!(
         chrono::Utc
             .timestamp_nanos(maintype.b)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(2_700) // 2_700ms => 2s 700ms
+        chrono::Utc.timestamp_millis_opt(2_700).unwrap() // 2_700ms => 2s 700ms
     );
 }
 
@@ -923,14 +933,14 @@ fn div_lreal() {
             .timestamp_nanos(maintype.a)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(-2_700) // -2_700ms => -2s 700ms
+        chrono::Utc.timestamp_millis_opt(-2_700).unwrap() // -2_700ms => -2s 700ms
     );
     assert_eq!(
         chrono::Utc
             .timestamp_nanos(maintype.b)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(2_700) // 2_700ms => 2s 700ms
+        chrono::Utc.timestamp_millis_opt(2_700).unwrap() // 2_700ms => 2s 700ms
     );
 }
 
@@ -968,14 +978,14 @@ fn div_time() {
             .timestamp_nanos(maintype.a)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(2_700) // 2_700ms => 2s 700ms
+        chrono::Utc.timestamp_millis_opt(2_700).unwrap() // 2_700ms => 2s 700ms
     );
     assert_eq!(
         chrono::Utc
             .timestamp_nanos(maintype.b)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(2_700) // 2_700ms => 2s 700ms
+        chrono::Utc.timestamp_millis_opt(2_700).unwrap() // 2_700ms => 2s 700ms
     );
 }
 
@@ -998,13 +1008,13 @@ fn div_ltime() {
             .timestamp_nanos(maintype.a)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(2_700) // 2_700ms => 2s 700ms
+        chrono::Utc.timestamp_millis_opt(2_700).unwrap() // 2_700ms => 2s 700ms
     );
     assert_eq!(
         chrono::Utc
             .timestamp_nanos(maintype.b)
             .duration_round(chrono::Duration::microseconds(1))
             .unwrap(),
-        chrono::Utc.timestamp_millis(2_700) // 2_700ms => 2s 700ms
+        chrono::Utc.timestamp_millis_opt(2_700).unwrap() // 2_700ms => 2s 700ms
     );
 }

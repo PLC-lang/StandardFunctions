@@ -18,7 +18,10 @@ impl Default for SingleType {
 }
 
 fn get_time_from_hms_milli(hour: u32, min: u32, sec: u32, milli: u32) -> chrono::NaiveDateTime {
-    chrono::NaiveDate::from_ymd(1970, 1, 1).and_hms_milli(hour, min, sec, milli)
+    chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+        .unwrap()
+        .and_hms_milli_opt(hour, min, sec, milli)
+        .unwrap()
 }
 
 #[test]
@@ -30,8 +33,10 @@ fn concat_date_tod() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = SingleType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2010y_3m_12d_12h_30m_15s_121121121ns = chrono::NaiveDate::from_ymd(2010, 3, 12)
-        .and_hms_nano(12, 30, 15, 121121121)
+    let dt_2010y_3m_12d_12h_30m_15s_121121121ns = chrono::NaiveDate::from_ymd_opt(2010, 3, 12)
+        .unwrap()
+        .and_hms_nano_opt(12, 30, 15, 121121121)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(res, dt_2010y_3m_12d_12h_30m_15s_121121121ns);
 }
@@ -45,8 +50,10 @@ fn concat_date_ltod() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = SingleType::default();
     let res: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2010y_3m_12d_12h_30m_15s_121121121ns = chrono::NaiveDate::from_ymd(2010, 3, 12)
-        .and_hms_nano(12, 30, 15, 121121121)
+    let dt_2010y_3m_12d_12h_30m_15s_121121121ns = chrono::NaiveDate::from_ymd_opt(2010, 3, 12)
+        .unwrap()
+        .and_hms_nano_opt(12, 30, 15, 121121121)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(res, dt_2010y_3m_12d_12h_30m_15s_121121121ns);
 }
@@ -78,8 +85,10 @@ fn concat_date_signed_ints() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let date_2000y_1m_1d = chrono::NaiveDate::from_ymd(2000, 1, 1)
-        .and_hms(0, 0, 0)
+    let date_2000y_1m_1d = chrono::NaiveDate::from_ymd_opt(2000, 1, 1)
+        .unwrap()
+        .and_hms_opt(0, 0, 0)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, date_2000y_1m_1d);
     assert_eq!(maintype.b, date_2000y_1m_1d);
@@ -102,8 +111,10 @@ fn concat_date_unsigned_ints() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let date_2000y_1m_1d = chrono::NaiveDate::from_ymd(2000, 1, 1)
-        .and_hms(0, 0, 0)
+    let date_2000y_1m_1d = chrono::NaiveDate::from_ymd_opt(2000, 1, 1)
+        .unwrap()
+        .and_hms_opt(0, 0, 0)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, date_2000y_1m_1d);
     assert_eq!(maintype.b, date_2000y_1m_1d);
@@ -238,8 +249,10 @@ fn concat_dt_signed_ints() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
-        .and_hms_milli(20, 15, 12, 111)
+    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd_opt(2000, 1, 2)
+        .unwrap()
+        .and_hms_milli_opt(20, 15, 12, 111)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, dt_2000y_1m_2d_20h_15m_12s_111ms);
     assert_eq!(maintype.b, dt_2000y_1m_2d_20h_15m_12s_111ms);
@@ -262,8 +275,10 @@ fn concat_dt_unsigned_ints() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
-        .and_hms_milli(20, 15, 12, 111)
+    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd_opt(2000, 1, 2)
+        .unwrap()
+        .and_hms_milli_opt(20, 15, 12, 111)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, dt_2000y_1m_2d_20h_15m_12s_111ms);
     assert_eq!(maintype.b, dt_2000y_1m_2d_20h_15m_12s_111ms);
@@ -286,8 +301,10 @@ fn concat_ldt_signed_ints() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
-        .and_hms_milli(20, 15, 12, 111)
+    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd_opt(2000, 1, 2)
+        .unwrap()
+        .and_hms_milli_opt(20, 15, 12, 111)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, dt_2000y_1m_2d_20h_15m_12s_111ms);
     assert_eq!(maintype.b, dt_2000y_1m_2d_20h_15m_12s_111ms);
@@ -310,8 +327,10 @@ fn concat_ldt_unsigned_ints() {
     let sources = add_std!(src, "date_time_extra_functions.st");
     let mut maintype = MainType::<i64>::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd(2000, 1, 2)
-        .and_hms_milli(20, 15, 12, 111)
+    let dt_2000y_1m_2d_20h_15m_12s_111ms = chrono::NaiveDate::from_ymd_opt(2000, 1, 2)
+        .unwrap()
+        .and_hms_milli_opt(20, 15, 12, 111)
+        .unwrap()
         .timestamp_nanos();
     assert_eq!(maintype.a, dt_2000y_1m_2d_20h_15m_12s_111ms);
     assert_eq!(maintype.b, dt_2000y_1m_2d_20h_15m_12s_111ms);
