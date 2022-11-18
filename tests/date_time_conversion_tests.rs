@@ -1,4 +1,3 @@
-use chrono::TimeZone;
 use common::compile_and_run;
 
 // Import common functionality into the integration tests
@@ -53,9 +52,10 @@ fn ldt_to_dt_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(2021, 4, 20)
-            .and_hms(22, 33, 14)
+        chrono::NaiveDate::from_ymd_opt(2021, 4, 20)
+            .unwrap()
+            .and_hms_opt(22, 33, 14)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -71,9 +71,10 @@ fn ldt_to_date_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(2000, 1, 1)
-            .and_hms(0, 0, 0)
+        chrono::NaiveDate::from_ymd_opt(2000, 1, 1)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -89,9 +90,10 @@ fn ldt_to_ltod_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(1970, 1, 1)
-            .and_hms_nano(15, 36, 30, 123456000)
+        chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+            .unwrap()
+            .and_hms_nano_opt(15, 36, 30, 123456000)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -107,9 +109,10 @@ fn ldt_to_tod_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(1970, 1, 1)
-            .and_hms_milli(20, 15, 11, 543)
+        chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+            .unwrap()
+            .and_hms_milli_opt(20, 15, 11, 543)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -125,9 +128,10 @@ fn dt_to_ldt_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(2021, 4, 20)
-            .and_hms(22, 33, 14)
+        chrono::NaiveDate::from_ymd_opt(2021, 4, 20)
+            .unwrap()
+            .and_hms_opt(22, 33, 14)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -143,9 +147,10 @@ fn dt_to_date_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(2000, 1, 1)
-            .and_hms(0, 0, 0)
+        chrono::NaiveDate::from_ymd_opt(2000, 1, 1)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -161,9 +166,10 @@ fn dt_to_ltod_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(1970, 1, 1)
-            .and_hms_milli(15, 36, 30, 123)
+        chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+            .unwrap()
+            .and_hms_milli_opt(15, 36, 30, 123)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -179,9 +185,10 @@ fn dt_to_tod_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(1970, 1, 1)
-            .and_hms_milli(20, 15, 11, 543)
+        chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+            .unwrap()
+            .and_hms_milli_opt(20, 15, 11, 543)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -197,9 +204,10 @@ fn ltod_to_tod_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(1970, 1, 1)
-            .and_hms(10, 20, 30)
+        chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+            .unwrap()
+            .and_hms_opt(10, 20, 30)
+            .unwrap()
             .timestamp_nanos()
     );
 }
@@ -215,9 +223,10 @@ fn tod_to_ltod_conversion() {
     let res: i64 = compile_and_run(sources, &mut maintype);
     assert_eq!(
         res,
-        chrono::Utc
-            .ymd(1970, 1, 1)
-            .and_hms(10, 20, 30)
+        chrono::NaiveDate::from_ymd_opt(1970, 1, 1)
+            .unwrap()
+            .and_hms_opt(10, 20, 30)
+            .unwrap()
             .timestamp_nanos()
     );
 }
