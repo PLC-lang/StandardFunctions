@@ -1,8 +1,7 @@
 // Import common functionality into the integration tests
 mod common;
 use crate::common::compile_and_run_no_params;
-use chrono::TimeZone;
-use chrono::Utc;
+use chrono::NaiveDate;
 use common::add_std;
 
 const DURATION_MILLIS: i64 = (22 * 3600 + 22 * 60 + 22) * 1000;
@@ -607,8 +606,10 @@ fn test_to_big_endian_date() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -622,7 +623,14 @@ fn test_to_little_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -633,7 +641,14 @@ fn test_from_big_endian_date() {
 "#;
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -646,8 +661,10 @@ fn test_from_little_endian_date() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -714,8 +731,10 @@ fn test_to_big_endian_dt() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -730,7 +749,14 @@ fn test_to_little_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -742,7 +768,14 @@ fn test_from_big_endian_dt() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -756,8 +789,10 @@ fn test_from_little_endian_dt() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -776,8 +811,10 @@ fn test_to_big_endian_ldate_nanos() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -792,7 +829,14 @@ fn test_to_little_endian_ldate_nanos() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -804,7 +848,14 @@ fn test_from_big_endian_ldate_nanos() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -818,8 +869,10 @@ fn test_from_little_endian_ldate_nanos() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -838,8 +891,10 @@ fn test_to_big_endian_ldt_nanos() {
 
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms_nano(0, 0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_nano_opt(0, 0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
@@ -854,7 +909,14 @@ fn test_to_little_endian_ldt_nanos() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -866,7 +928,14 @@ fn test_from_big_endian_nanos() {
 
     let src = add_std!(src, "endianness_conversion_functions.st");
     let res: i64 = compile_and_run_no_params(src);
-    assert_eq!(res, Utc.ymd(1984, 6, 25).and_hms(0, 0, 0).timestamp_nanos())
+    assert_eq!(
+        res,
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .timestamp_nanos()
+    )
 }
 
 #[test]
@@ -880,8 +949,10 @@ fn test_from_little_endian_nanos() {
     let res: i64 = compile_and_run_no_params(src);
     assert_eq!(
         res,
-        Utc.ymd(1984, 6, 25)
-            .and_hms(0, 0, 0)
+        NaiveDate::from_ymd_opt(1984, 6, 25)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
             .timestamp_nanos()
             .to_be()
     )
