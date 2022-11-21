@@ -1,10 +1,4 @@
-use std::{ffi::CStr, os::raw::c_char};
-
-#[repr(C)]
-#[derive(Debug)]
-pub struct Wrapper<T> {
-    pub inner: T,
-}
+use crate::string_functions::{CharsDecoder, CharsEncoder, EncodedCharsIter};
 
 /// .
 /// Converts WSTRING to STRING
@@ -16,31 +10,13 @@ pub struct Wrapper<T> {
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn WSTRING_TO_STRING(input: *const i16) -> Wrapper<[u8; 81]> {
-    let mut widestring = input;
-    let mut count = 0;
-    let len = loop {
-        if widestring.is_null() || *widestring == 0 {
-            break count;
-        }
-        widestring = widestring.add(1);
-        count += 1;
-    };
+pub unsafe extern "C" fn WSTRING_TO_STRING_EXT(src: *const u16, dest: *mut u8) -> i32 {
+    let mut dest = dest;
+    EncodedCharsIter::decode(src)
+        .map(|c| c.unwrap_or(char::REPLACEMENT_CHARACTER))
+        .encode(&mut dest);
 
-    let input = std::slice::from_raw_parts(input as *const u16, len);
-
-    let string = String::from_utf16_lossy(input);
-    let mut arr = [0; 81];
-    for (idx, b) in string.bytes().enumerate() {
-        //Don't fill the null terminator
-        if idx < arr.len() - 1 {
-            arr[idx] = b;
-        } else {
-            //no need to loop further, the target size of 80 is done
-            break;
-        }
-    }
-    Wrapper { inner: arr }
+    0
 }
 
 /// .
@@ -53,20 +29,18 @@ pub unsafe extern "C" fn WSTRING_TO_STRING(input: *const i16) -> Wrapper<[u8; 81
 ///
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn STRING_TO_WSTRING(input: *const c_char) -> Wrapper<[u16; 81]> {
-    //find the \0
-    let string = CStr::from_ptr(input).to_string_lossy();
-    let mut arr: [u16; 81] = [0; 81];
-    for (i, e) in string.encode_utf16().enumerate() {
-        //Don't fill the null terminator
-        if i < arr.len() - 1 {
-            arr[i] = e;
-        } else {
-            //No need to go further if the string is bigger than the target string
-            break;
+pub unsafe extern "C" fn STRING_TO_WSTRING_EXT(src: *const u8, dest: *mut u16) -> i32 {
+    let mut dest = dest;
+    let mut buffer = [0_u16; 2];
+    for char in EncodedCharsIter::decode(src) {
+        let slice = char.encode_utf16(&mut buffer);
+        for word in slice {
+            *dest = *word;
+            dest = dest.add(1);
         }
     }
-    Wrapper { inner: arr }
+
+    0
 }
 
 /// .

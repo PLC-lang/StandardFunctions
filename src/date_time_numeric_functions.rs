@@ -679,7 +679,7 @@ fn checked_mul_time_with_f32(in1: i64, in2: f32) -> i64 {
     let res: i64 = duration.mul_f32(in2.abs()).as_nanos().try_into().unwrap();
 
     // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    let should_res_be_negative = is_in1_negative ^ is_in2_negative;
     match should_res_be_negative {
         true => -res,
         false => res,
@@ -727,7 +727,7 @@ fn checked_mul_time_with_f64(in1: i64, in2: f64) -> i64 {
     let res: i64 = duration.mul_f64(in2.abs()).as_nanos().try_into().unwrap();
 
     // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    let should_res_be_negative = is_in1_negative ^ is_in2_negative;
     match should_res_be_negative {
         true => -res,
         false => res,
@@ -775,7 +775,7 @@ fn checked_div_time_by_f32(in1: i64, in2: f32) -> i64 {
     let res: i64 = duration.div_f32(in2.abs()).as_nanos().try_into().unwrap();
 
     // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    let should_res_be_negative = is_in1_negative ^ is_in2_negative;
     match should_res_be_negative {
         true => -res,
         false => res,
@@ -823,20 +823,9 @@ fn checked_div_time_by_f64(in1: i64, in2: f64) -> i64 {
     let res: i64 = duration.div_f64(in2.abs()).as_nanos().try_into().unwrap();
 
     // convert to negative if necessary
-    let should_res_be_negative = should_result_be_negative(is_in1_negative, is_in2_negative);
+    let should_res_be_negative = is_in1_negative ^ is_in2_negative;
     match should_res_be_negative {
         true => -res,
         false => res,
-    }
-}
-
-fn should_result_be_negative(in1_is_negative: bool, in2_is_negative: bool) -> bool {
-    if !in1_is_negative & !in2_is_negative {
-        // if both params are negative, result will be positive
-        false
-    } else {
-        // if any of the params is nagative and the other positive
-        // result will be negative
-        !in1_is_negative | !in2_is_negative
     }
 }

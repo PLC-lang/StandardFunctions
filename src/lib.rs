@@ -12,6 +12,7 @@ pub mod endianness_conversion_functions;
 pub mod flanks;
 pub mod numerical_functions;
 pub mod string_conversion;
+pub mod string_functions;
 pub mod timers;
 pub mod types;
 pub mod utils;

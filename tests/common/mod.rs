@@ -9,7 +9,7 @@ use rusty::{
     compile_module,
     diagnostics::Diagnostician,
     runner::{run, run_no_param, Compilable},
-    FilePath, SourceCode, SourceContainer,
+    DebugLevel, FilePath, OptimizationLevel, SourceCode, SourceContainer,
 };
 
 #[allow(unused_macros)] //This is actually used in subtests
@@ -176,12 +176,12 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::bit_num_conversion::REAL_TO_DWORD as usize,
         ),
         (
-            "WSTRING_TO_STRING",
-            iec61131std::string_conversion::WSTRING_TO_STRING as usize,
+            "WSTRING_TO_STRING_EXT",
+            iec61131std::string_conversion::WSTRING_TO_STRING_EXT as usize,
         ),
         (
-            "STRING_TO_WSTRING",
-            iec61131std::string_conversion::STRING_TO_WSTRING as usize,
+            "STRING_TO_WSTRING_EXT",
+            iec61131std::string_conversion::STRING_TO_WSTRING_EXT as usize,
         ),
         (
             "WCHAR_TO_CHAR",
@@ -816,6 +816,134 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ("CTUD_LINT", iec61131std::counters::CTUD_LINT as usize),
         ("CTUD_ULINT", iec61131std::counters::CTUD_ULINT as usize),
         (
+            "LEN__STRING",
+            iec61131std::string_functions::LEN__STRING as usize,
+        ),
+        (
+            "LEN__WSTRING",
+            iec61131std::string_functions::LEN__WSTRING as usize,
+        ),
+        (
+            "FIND__STRING",
+            iec61131std::string_functions::FIND__STRING as usize,
+        ),
+        (
+            "FIND__WSTRING",
+            iec61131std::string_functions::FIND__WSTRING as usize,
+        ),
+        (
+            "LEFT_EXT__STRING",
+            iec61131std::string_functions::LEFT_EXT__STRING as usize,
+        ),
+        (
+            "LEFT_EXT__WSTRING",
+            iec61131std::string_functions::LEFT_EXT__WSTRING as usize,
+        ),
+        (
+            "RIGHT_EXT__STRING",
+            iec61131std::string_functions::RIGHT_EXT__STRING as usize,
+        ),
+        (
+            "RIGHT_EXT__WSTRING",
+            iec61131std::string_functions::RIGHT_EXT__WSTRING as usize,
+        ),
+        (
+            "MID_EXT__STRING",
+            iec61131std::string_functions::MID_EXT__STRING as usize,
+        ),
+        (
+            "MID_EXT__WSTRING",
+            iec61131std::string_functions::MID_EXT__WSTRING as usize,
+        ),
+        (
+            "INSERT_EXT__STRING",
+            iec61131std::string_functions::INSERT_EXT__STRING as usize,
+        ),
+        (
+            "INSERT_EXT__WSTRING",
+            iec61131std::string_functions::INSERT_EXT__WSTRING as usize,
+        ),
+        (
+            "DELETE_EXT__STRING",
+            iec61131std::string_functions::DELETE_EXT__STRING as usize,
+        ),
+        (
+            "DELETE_EXT__WSTRING",
+            iec61131std::string_functions::DELETE_EXT__WSTRING as usize,
+        ),
+        (
+            "REPLACE_EXT__STRING",
+            iec61131std::string_functions::REPLACE_EXT__STRING as usize,
+        ),
+        (
+            "REPLACE_EXT__WSTRING",
+            iec61131std::string_functions::REPLACE_EXT__WSTRING as usize,
+        ),
+        (
+            "CONCAT__STRING",
+            iec61131std::string_functions::CONCAT__STRING as usize,
+        ),
+        (
+            "CONCAT_EXT__STRING",
+            iec61131std::string_functions::CONCAT_EXT__STRING as usize,
+        ),
+        (
+            "CONCAT__WSTRING",
+            iec61131std::string_functions::CONCAT__WSTRING as usize,
+        ),
+        (
+            "CONCAT_EXT__WSTRING",
+            iec61131std::string_functions::CONCAT_EXT__WSTRING as usize,
+        ),
+        (
+            "GT__STRING",
+            iec61131std::string_functions::GT__STRING as usize,
+        ),
+        (
+            "GT__WSTRING",
+            iec61131std::string_functions::GT__WSTRING as usize,
+        ),
+        (
+            "GE__STRING",
+            iec61131std::string_functions::GE__STRING as usize,
+        ),
+        (
+            "GE__WSTRING",
+            iec61131std::string_functions::GE__WSTRING as usize,
+        ),
+        (
+            "EQ__STRING",
+            iec61131std::string_functions::EQ__STRING as usize,
+        ),
+        (
+            "EQ__WSTRING",
+            iec61131std::string_functions::EQ__WSTRING as usize,
+        ),
+        (
+            "LE__STRING",
+            iec61131std::string_functions::LE__STRING as usize,
+        ),
+        (
+            "LE__WSTRING",
+            iec61131std::string_functions::LE__WSTRING as usize,
+        ),
+        (
+            "LT__STRING",
+            iec61131std::string_functions::LT__STRING as usize,
+        ),
+        (
+            "LT__WSTRING",
+            iec61131std::string_functions::LT__WSTRING as usize,
+        ),
+        (
+            "NE__STRING",
+            iec61131std::string_functions::NE__STRING as usize,
+        ),
+        (
+            "NE__WSTRING",
+            iec61131std::string_functions::NE__WSTRING as usize,
+        ),
+        (
             "EXPT__DINT__UDINT",
             iec61131std::arithmetic_functions::EXPT__DINT__UDINT as usize,
         ),
@@ -1123,8 +1251,8 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         vec![],
         None,
         Diagnostician::default(),
-        rusty::OptimizationLevel::None,
-        rusty::DebugLevel::None,
+        OptimizationLevel::None,
+        DebugLevel::None,
     )
     .unwrap();
     #[cfg(feature = "debug")]
