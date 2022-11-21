@@ -535,12 +535,6 @@ pub unsafe extern "C" fn DELETE_EXT__STRING(
         )
     }
 
-    // let chars = dbg!(EncodedCharsIter::decode(src));
-    // let chars = dbg!(chars.take(pos));
-    // let chars = dbg!(chars.chain(EncodedCharsIter::decode(src).skip(pos + ndel)));
-    // chars.encode(&mut dest);
-    // dbg!(ptr_to_slice(dest));
-
     EncodedCharsIter::decode(src)
         .take(pos)
         .chain(EncodedCharsIter::decode(src).skip(ndel + pos))
@@ -701,18 +695,8 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 #[allow(non_snake_case)]
 #[no_mangle]
 pub unsafe extern "C" fn CONCAT__STRING(argc: i32, argv: *const *const u8) -> Wrapper<[u8; 2048]> {
-    if argv.is_null() {
-        panic!("Received null-pointer.")
-    }
     let mut dest = [0_u8; 2048];
-    let mut dest_ptr = dest.as_mut_ptr();
-    let mut argv = argv;
-    // what should happen if passed parameters exceed 2048 bytes? how to check without
-    // introducing too much overhead?
-    for _ in 0..argc {
-        EncodedCharsIter::decode(*argv).encode(&mut dest_ptr);
-        argv = argv.add(1);
-    }
+    let _ = CONCAT_EXT__STRING(dest.as_mut_ptr(), argc, argv);
     Wrapper { inner: dest }
 }
 
@@ -764,19 +748,8 @@ pub unsafe extern "C" fn CONCAT__WSTRING(
     argc: i32,
     argv: *const *const u16,
 ) -> Wrapper<[u16; 2048]> {
-    if argv.is_null() {
-        panic!("Received null-pointer.")
-    }
     let mut dest = [0_u16; 2048];
-    let mut dest_ptr = dest.as_mut_ptr();
-    let mut argv = argv;
-    // what should happen if passed parameters exceed 2048 bytes? how to check without
-    // introducing too much overhead?
-    for _ in 0..argc {
-        EncodedCharsIter::decode(*argv).encode(&mut dest_ptr);
-        argv = argv.add(1);
-    }
-
+    let _ = CONCAT_EXT__WSTRING(dest.as_mut_ptr(), argc, argv);
     Wrapper { inner: dest }
 }
 
@@ -817,8 +790,7 @@ where
     T: Ord + PrimInt,
 {
     if argc < 2 {
-        // what is the desired behaviour for this? panic? true or false?
-        return false;
+        panic!("Too few arguments for function call.")
     }
     let mut argv = argv;
     unsafe {
