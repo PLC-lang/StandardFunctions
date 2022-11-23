@@ -1208,6 +1208,22 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::endianness_conversion_functions::FROM_LITTLE_ENDIAN__DATE_AND_TIME
                 as usize,
         ),
+        (
+            "BYTE_TO_STRING_EXT",
+            iec61131std::extra_functions::BYTE_TO_STRING_EXT as usize,
+        ),
+        (
+            "LWORD_TO_STRING_EXT",
+            iec61131std::extra_functions::LWORD_TO_STRING_EXT as usize,
+        ),
+        (
+            "LINT_TO_STRING_EXT",
+            iec61131std::extra_functions::LINT_TO_STRING_EXT as usize,
+        ),
+        (
+            "LREAL_TO_STRING_EXT",
+            iec61131std::extra_functions::LREAL_TO_STRING_EXT as usize,
+        ),
     ];
 
     let variables = vec![
@@ -1278,7 +1294,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             eprintln!("No definition for {} in test", var_name)
         }
     }
-
     exec_engine
 }
 
