@@ -1224,6 +1224,23 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             "LREAL_TO_STRING_EXT",
             iec61131std::extra_functions::LREAL_TO_STRING_EXT as usize,
         ),
+        (
+            "STRING_TO_LINT",
+            iec61131std::extra_functions::STRING_TO_LINT as usize,
+        ),
+        (
+            "STRING_TO_DINT",
+            iec61131std::extra_functions::STRING_TO_DINT as usize,
+        ),
+        (
+            "STRING_TO_LREAL",
+            iec61131std::extra_functions::STRING_TO_LREAL as usize,
+        ),
+        (
+            "STRING_TO_REAL",
+            iec61131std::extra_functions::STRING_TO_REAL as usize,
+        ),
+        ("TIME", iec61131std::extra_functions::TIME as usize),
     ];
 
     let variables = vec![
@@ -1277,7 +1294,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         .module
         .create_jit_execution_engine(inkwell::OptimizationLevel::None)
         .unwrap();
-
     for (fn_name, fn_addr) in functions {
         if let Some(fn_value) = code_gen.module.get_function(fn_name) {
             exec_engine.add_global_mapping(&fn_value, fn_addr);
