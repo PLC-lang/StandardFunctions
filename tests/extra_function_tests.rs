@@ -1269,6 +1269,7 @@ fn trunc_lreal_to_lint() {
 }
 
 #[test]
+#[ignore = "as of now, TIME() returns current system time as unix timestamp."]
 fn test_time() {
     use iec61131std::timers::test_time_helpers::MockClock;
     #[derive(Default)]
