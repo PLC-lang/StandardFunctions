@@ -1,8 +1,11 @@
-// #[cfg(not(feature = "mock_time"))]
-// use std::time::Instant;
+#[cfg(not(feature = "mock_time"))]
+use chrono::{offset::Local, Timelike};
 
-// #[cfg(feature = "mock_time")]
-// use test_time_helpers::Instant;
+#[cfg(feature = "mock_time")]
+use crate::extra_functions::test_time_helpers::Local;
+
+#[cfg(feature = "mock_time")]
+pub mod test_time_helpers;
 
 use crate::string_functions::ptr_to_slice;
 use num::{Float, PrimInt};
@@ -159,14 +162,8 @@ pub unsafe extern "C" fn STRING_TO_REAL(src: *const u8) -> f32 {
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn TIME() -> i64 {
-    let now = std::time::SystemTime::now();
-    let since = now.duration_since(std::time::UNIX_EPOCH);
-    match since {
-        Ok(time) => time.as_nanos() as i64,
-        Err(e) => panic!("Could not retrieve system time: {e}"),
-    }
-
-    // let now = Instant::now();
+    let dt = Local::now();
+    dt.num_seconds_from_midnight() as i64 * 1e9 as i64 + dt.nanosecond() as i64
 }
 
 // tests

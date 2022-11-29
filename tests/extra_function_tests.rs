@@ -5,7 +5,6 @@ use common::{compile_and_run, compile_and_run_no_params, compile_with_native};
 use inkwell::context::Context;
 use num::PrimInt;
 use rusty::runner::run;
-use std::time::Duration;
 
 const STR_SIZE: usize = 81;
 struct MainType<T: PrimInt> {
@@ -1057,6 +1056,7 @@ fn lword_to_ltime_conversion() {
     assert_eq!(93784005005005, res);
 }
 
+// TODO: seconds.millis? nanos truncated?
 #[test]
 fn lreal_to_ltime_conversion() {
     let src = r#"
@@ -1269,13 +1269,10 @@ fn trunc_lreal_to_lint() {
 }
 
 #[test]
-#[ignore = "as of now, TIME() returns current system time as unix timestamp."]
 fn test_time() {
-    use iec61131std::timers::test_time_helpers::MockClock;
+    use iec61131std::extra_functions::test_time_helpers::MockClock;
     #[derive(Default)]
-    struct MainType {
-        time: i64,
-    }
+    struct MainType;
 
     let src = r#"
     FUNCTION main : TIME
@@ -1290,19 +1287,21 @@ fn test_time() {
         "extra_functions.st",
         "numerical_functions.st"
     );
-    let mut main_inst = MainType::default();
     let context: Context = Context::create();
     let exec_engine = compile_with_native(&context, sources);
 
-    run::<_, ()>(&exec_engine, "main", &mut main_inst);
+    MockClock::set_time(23 * 3600 + 59 * 60 + 30);
+    let now = run::<_, i64>(&exec_engine, "main", &mut MainType::default());
+    let expected = (23 * 3600 + 59 * 60 + 30) * 1e9 as i64 + 100;
+    assert_eq!(expected, now);
 
-    let now = main_inst.time;
-    MockClock::advance(Duration::from_millis(10));
+    MockClock::advance(29);
+    let later = run::<_, i64>(&exec_engine, "main", &mut MainType::default());
+    let expected = (23 * 3600 + 59 * 60 + 59) * 1e9 as i64 + 100;
+    assert_eq!(expected, later);
 
-    run::<_, ()>(&exec_engine, "main", &mut main_inst);
-
-    let later = main_inst.time;
-
-    let delta = later - now;
-    assert_eq!(10e6 as i64, delta);
+    MockClock::advance(2);
+    let new_day = run::<_, i64>(&exec_engine, "main", &mut MainType::default());
+    let expected = 1e9 as i64 + 100;
+    assert_eq!(expected, new_day);
 }

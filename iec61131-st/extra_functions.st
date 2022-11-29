@@ -624,7 +624,7 @@ END_FUNCTION
 
 (******************************************************************************
 *
-* Returns a TIME system-timestamp which can be used make relative measurements
+* Returns the local TIME since midnight, which can be used make relative measurements
 * by calculating the difference between TIME return-values.
 *
 ******************************************************************************)
