@@ -1365,7 +1365,7 @@ fn test_lt_string() {
 
     let source = add_std!(src, "string_functions.st");
     let res: bool = compile_and_run_no_params(source);
-    assert!(res == false);
+    assert!(!res);
 }
 
 #[test]
@@ -1475,7 +1475,7 @@ fn test_lt_wstring() {
 
     let source = add_std!(src, "string_functions.st");
     let res: bool = compile_and_run_no_params(source);
-    assert!(res == false);
+    assert!(!res);
 }
 
 #[test]

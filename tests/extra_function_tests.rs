@@ -90,7 +90,7 @@ fn lword_to_string_conversion() {
         "numerical_functions.st"
     );
 
-    let expected = 0xDEAD_BEEF_DECAF_BAD_u64.to_string();
+    let expected = 0xDEAD_BEEF_DECA_FBAD_u64.to_string();
     let _: i32 = compile_and_run(sources, &mut maintype);
     let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
     assert_eq!(expected, res.to_string());
@@ -175,7 +175,7 @@ fn lword_to_wstring_conversion() {
         "numerical_functions.st"
     );
 
-    let expected = 0xDEAD_BEEF_DECAF_BAD_u64.to_string();
+    let expected = 0xDEAD_BEEF_DECA_FBAD_u64.to_string();
     let _: i32 = compile_and_run(sources, &mut maintype);
     let str = String::from_utf16_lossy(&maintype.s);
     let res = str.trim_end_matches('\0');
@@ -1297,7 +1297,7 @@ fn test_time() {
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
 
     let now = main_inst.time;
-    // MockClock::advance(Duration::from_millis(10));
+    MockClock::advance(Duration::from_millis(10));
 
     run::<_, ()>(&exec_engine, "main", &mut main_inst);
 

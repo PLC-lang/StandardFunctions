@@ -20,7 +20,7 @@ const DEFAULT_STRING_LEN: usize = 81;
 pub unsafe extern "C" fn BYTE_TO_STRING_EXT(input: u8, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
 
-    write!(&mut buf[..], "{}", input).unwrap();
+    write!(&mut *buf, "{}", input).unwrap();
 
     0
 }
@@ -31,8 +31,8 @@ pub unsafe extern "C" fn BYTE_TO_STRING_EXT(input: u8, dest: *mut u8) -> i32 {
 #[no_mangle]
 pub unsafe extern "C" fn LWORD_TO_STRING_EXT(input: u64, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
-    dbg!(&buf.len());
-    write!(&mut buf[..], "{}", input).unwrap();
+
+    write!(&mut *buf, "{}", input).unwrap();
 
     0
 }
@@ -43,7 +43,7 @@ pub unsafe extern "C" fn LWORD_TO_STRING_EXT(input: u64, dest: *mut u8) -> i32 {
 #[no_mangle]
 pub unsafe extern "C" fn LINT_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
-    write!(&mut buf[..], "{}", input).unwrap();
+    write!(&mut *buf, "{}", input).unwrap();
 
     0
 }
@@ -56,9 +56,9 @@ pub unsafe extern "C" fn LREAL_TO_STRING_EXT(input: f64, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
     // double: 52 bits are used for the mantissa (about 16 decimal digits)
     if input.floor() < 1e14 {
-        write!(&mut buf[..], "{:.6}", input).unwrap()
+        write!(&mut *buf, "{:.6}", input).unwrap()
     } else {
-        write!(&mut buf[..], "{:.6e}", input).unwrap()
+        write!(&mut *buf, "{:.6e}", input).unwrap()
     }
 
     0
@@ -74,9 +74,9 @@ pub unsafe extern "C" fn REAL_TO_STRING_EXT(input: f64, dest: *mut u8) -> i32 {
 
     // TODO: discuss when scientific notation should be displayed
     if input.floor() < 1e6 {
-        write!(&mut buf[..], "{:.6}", input).unwrap()
+        write!(&mut *buf, "{:.6}", input).unwrap()
     } else {
-        write!(&mut buf[..], "{:.6e}", input).unwrap()
+        write!(&mut *buf, "{:.6e}", input).unwrap()
     }
 
     0
@@ -214,7 +214,7 @@ fn lreal_to_string_conversion() {
     let lreal = 10230.2321123121;
     let lreal_neg = lreal * -1.0;
     let pre_e_notation = 99_999_999_999_999.25;
-    let e_notation = 123_456_789_123_456.125125;
+    let e_notation = 123_456_789_123_456.13;
     let mut dest = [0_u8; 81];
     let dest_ptr = dest.as_mut_ptr();
     let _ = unsafe { LREAL_TO_STRING_EXT(lreal, dest_ptr) };
