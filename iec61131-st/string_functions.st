@@ -1,5 +1,5 @@
 VAR_GLOBAL CONSTANT
-    __STRING_LENGTH : DINT := 80;
+    __STRING_LENGTH : DINT := 2048;
 END_VAR
 
 (******************************************************************************

@@ -105,7 +105,7 @@ fn left_string() {
 #[ignore = "will fail until longer return types are supported - see #654"]
 fn left_string_long_string() {
     let src = r#"
-	FUNCTION main : STRING[100]
+	FUNCTION main : STRING[2048]
     VAR_TEMP
         in : STRING[100];
     END_VAR
@@ -239,7 +239,7 @@ fn right_ext_string() {
 #[ignore = "will fail until longer return types are supported - see #654"]
 fn right_string_long_string() {
     let src = r#"
-	FUNCTION main : STRING[100]
+	FUNCTION main : STRING[2048]
     VAR_TEMP
         in : STRING[100];
         l : DINT;
@@ -266,7 +266,7 @@ fn right_string_long_string() {
 #[ignore = "will fail until longer return types are supported - see #654"]
 fn right_ext_string_long_string() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : STRING[2048]
     VAR_TEMP
         in : STRING[128];
         out : STRING[128];
@@ -347,7 +347,7 @@ fn mid_ext_string() {
 #[ignore = "will fail until longer return types are supported - see #654"]
 fn mid_string_long_string() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : STRING[2048]
     VAR_TEMP
         in : STRING[128];
         l : DINT;
@@ -376,7 +376,7 @@ fn mid_string_long_string() {
 #[ignore = "will fail until longer return types are supported - see #654"]
 fn mid_ext_string_long_string() {
     let src = r#"
-	FUNCTION main : STRING[128]
+	FUNCTION main : STRING[2048]
     VAR_TEMP
         in : STRING[128];
         out : STRING[128];
@@ -692,7 +692,7 @@ fn test_concat_long_string_literals() {
     "#;
 
     let source = add_std!(src, "string_functions.st");
-    let res: [u8; 245] = compile_and_run_no_params(source);
+    let res: [u8; 2048] = compile_and_run_no_params(source);
 
     if let Ok(result) = str_from_u8_utf8(&res) {
         assert_eq!(
