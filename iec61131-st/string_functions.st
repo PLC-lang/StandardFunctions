@@ -259,6 +259,19 @@ Return:
     as the given string parameters.
 ******************************************************************************)
 {external}
+FUNCTION CONCAT__STRING : STRING[2048]
+VAR_INPUT {ref}
+	args : {sized} STRING...;
+END_VAR
+END_FUNCTION
+
+{external}
+FUNCTION CONCAT__WSTRING : WSTRING[2048]
+VAR_INPUT {ref}
+	args : {sized} WSTRING...;
+END_VAR
+END_FUNCTION
+
 FUNCTION CONCAT <T: ANY_STRING> : T
 VAR_INPUT {ref}
 	args : {sized} T...;

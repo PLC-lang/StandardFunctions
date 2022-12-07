@@ -102,7 +102,6 @@ fn left_string() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn left_string_long_string() {
     let src = r#"
 	FUNCTION main : STRING[2048]
@@ -115,7 +114,7 @@ fn left_string_long_string() {
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 101] = compile_and_run_no_params(sources);
+    let res: [u8; 2048] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -236,7 +235,6 @@ fn right_ext_string() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn right_string_long_string() {
     let src = r#"
 	FUNCTION main : STRING[2048]
@@ -251,7 +249,7 @@ fn right_string_long_string() {
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 101] = compile_and_run_no_params(sources);
+    let res: [u8; 2048] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -263,7 +261,6 @@ fn right_string_long_string() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn right_ext_string_long_string() {
     let src = r#"
 	FUNCTION main : STRING[2048]
@@ -280,7 +277,7 @@ fn right_ext_string_long_string() {
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 128] = compile_and_run_no_params(sources);
+    let res: [u8; 2048] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -317,6 +314,33 @@ fn mid_string() {
 }
 
 #[test]
+fn mid_string_long_literal() {
+    let src = r#"
+	FUNCTION main : STRING
+    VAR_TEMP
+        l : DINT;
+        p : DINT;
+    END_VAR
+        l := 4;
+        p := 6;
+		main := MID(
+            '     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.the                same           is   true                    for             this                     string.',
+            l, 
+            p
+        );
+    END_FUNCTION
+        "#;
+
+    let sources = add_std!(src, "string_functions.st");
+    let res: [u8; 128] = compile_and_run_no_params(sources);
+    if let Ok(res) = str_from_u8_utf8(&res) {
+        assert_eq!(res, "this");
+    } else {
+        panic!("Given string is not UTF8-encoded")
+    }
+}
+
+#[test]
 fn mid_ext_string() {
     let src = r#"
 	FUNCTION main : STRING
@@ -344,7 +368,6 @@ fn mid_ext_string() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn mid_string_long_string() {
     let src = r#"
 	FUNCTION main : STRING[2048]
@@ -361,7 +384,7 @@ fn mid_string_long_string() {
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 128] = compile_and_run_no_params(sources);
+    let res: [u8; 2048] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -373,7 +396,6 @@ fn mid_string_long_string() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn mid_ext_string_long_string() {
     let src = r#"
 	FUNCTION main : STRING[2048]
@@ -386,13 +408,12 @@ fn mid_ext_string_long_string() {
         in := '7gAN5pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW';
         l := 99;
         p := 10;
-        MID_EXT(in, l, p, out);
-		main := out;
+        MID_EXT(in, l, p, main);
     END_FUNCTION
         "#;
 
     let sources = add_std!(src, "string_functions.st");
-    let res: [u8; 128] = compile_and_run_no_params(sources);
+    let res: [u8; 2048] = compile_and_run_no_params(sources);
     if let Ok(res) = str_from_u8_utf8(&res) {
         assert_eq!(
             res,
@@ -683,11 +704,15 @@ fn test_concat_ext_string() {
 }
 
 #[test]
-#[ignore = "variadic string literals are currently only supported up to length 80"]
-fn test_concat_long_string_literals() {
+fn test_concat_long_strings() {
     let src = r#"
     FUNCTION main : STRING[2048]
-        main := CONCAT('     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.', '$N', 'the                same           is   true                    for             this                     string.');
+    VAR_TEMP
+        s1 : STRING[256] := '     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.';
+        s2 : STRING := '$N';
+        s3 : STRING[256] := 'the                same           is   true                    for             this                     string.';
+    END_VAR
+        main := CONCAT(s1, s2, s3);
     END_FUNCTION
     "#;
 
@@ -697,7 +722,30 @@ fn test_concat_long_string_literals() {
     if let Ok(result) = str_from_u8_utf8(&res) {
         assert_eq!(
             result,
-            r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.the                same           is   true                    for             this                     string."
+            r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.
+the                same           is   true                    for             this                     string."
+        );
+    } else {
+        panic!("Given string is not UTF8-encoded")
+    }
+}
+
+#[test]
+fn test_concat_long_string_literals() {
+    let src = r#"
+    FUNCTION main : STRING[2048]
+        main := CONCAT('     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.', '$N', 'the                same           is   true                    for             this                     string.');
+    END_FUNCTION
+    "#;
+
+    let source = add_std!(src, "string_functions.st");
+    let res: [u8; 2049] = compile_and_run_no_params(source);
+
+    if let Ok(result) = str_from_u8_utf8(&res) {
+        assert_eq!(
+            result,
+            r"     this is   a  very   long           sentence   with plenty  of    characters and weird  spacing.
+the                same           is   true                    for             this                     string."
         );
     } else {
         panic!("Given string is not UTF8-encoded")
@@ -880,7 +928,6 @@ fn right_ext_wstring() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn right_string_long_wstring() {
     let src = r#"
 	FUNCTION main : WSTRING[128]
@@ -904,7 +951,6 @@ fn right_string_long_wstring() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn right_ext_string_long_wstring() {
     let src = r#"
 	FUNCTION main : WSTRING[128]
@@ -915,8 +961,7 @@ fn right_ext_string_long_wstring() {
     END_VAR 
         in := "7gAN5pmmSXqHJ3zZCXnBwi𝄞𝄞9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW";
         l := 99;
-        RIGHT_EXT(in, l, out);
-		main := out;
+        RIGHT_EXT(in, l, main);
     END_FUNCTION
         "#;
 
@@ -982,7 +1027,6 @@ fn mid_ext_wstring() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn mid_string_long_wstring() {
     let src = r#"
 	FUNCTION main : WSTRING[128]
@@ -1008,21 +1052,18 @@ fn mid_string_long_wstring() {
 }
 
 #[test]
-#[ignore = "will fail until longer return types are supported - see #654"]
 fn mid_ext_string_long_wstring() {
     let src = r#"
 	FUNCTION main : WSTRING[128]
     VAR_TEMP
         in : WSTRING[128];
-        out : WSTRING[128];
         l : DINT;
         p : DINT;
     END_VAR 
         in := "𝄞muϗ😀pmmSXqHJ3zZCXnBwika9N8RPXpTAdX4LdwHbLjwv9g3mU3dtpCT2MHVPxwtMw6jMQkip3HDy8Ruw42pVi56fiVhYn8faPLUKRghytQcBFgZhMXGhpBW";
         l := 99;
         p := 10;
-        MID_EXT(in, l, p, out);
-		main := out;
+        MID_EXT(in, l, p, main);
     END_FUNCTION
         "#;
 
@@ -1365,7 +1406,7 @@ fn test_lt_string() {
 
     let source = add_std!(src, "string_functions.st");
     let res: bool = compile_and_run_no_params(source);
-    assert!(res == false);
+    assert!(!res);
 }
 
 #[test]
@@ -1475,7 +1516,7 @@ fn test_lt_wstring() {
 
     let source = add_std!(src, "string_functions.st");
     let res: bool = compile_and_run_no_params(source);
-    assert!(res == false);
+    assert!(!res);
 }
 
 #[test]

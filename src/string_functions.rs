@@ -688,14 +688,8 @@ pub unsafe extern "C" fn REPLACE_EXT__WSTRING(
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn CONCAT__STRING(
-    dest: *mut u8,
-    argc: i32,
-    argv: *const *const u8,
-) -> *const u8 {
+pub unsafe extern "C" fn CONCAT__STRING(dest: *mut u8, argc: i32, argv: *const *const u8) {
     let _ = CONCAT_EXT__STRING(dest, argc, argv);
-
-    dest
 }
 
 /// Concatenates all given strings in the order in which they are given.
@@ -742,14 +736,8 @@ pub unsafe extern "C" fn CONCAT_EXT__STRING(
 /// to replace more characters than remaining.
 #[allow(non_snake_case)]
 #[no_mangle]
-pub unsafe extern "C" fn CONCAT__WSTRING(
-    dest: *mut u16,
-    argc: i32,
-    argv: *const *const u16,
-) -> *const u16 {
+pub unsafe extern "C" fn CONCAT__WSTRING(dest: *mut u16, argc: i32, argv: *const *const u16) {
     let _ = CONCAT_EXT__WSTRING(dest, argc, argv);
-
-    dest
 }
 
 /// Concatenates all given strings in the order in which they are given.
@@ -1369,10 +1357,11 @@ mod test {
             "hello world\0".as_ptr(),
             "𝄞music\0".as_ptr(),
         ];
-        let mut dest: [u8; DEFAULT_STRING_SIZE] = [0; DEFAULT_STRING_SIZE];
         unsafe {
-            let res = CONCAT__STRING(dest.as_mut_ptr(), argv.len() as i32, argv.as_ptr());
-            let string = String::from_utf8_lossy(ptr_to_slice(res));
+            let mut arr = [0_u8; 2049];
+            let dest = arr.as_mut_ptr();
+            CONCAT__STRING(dest, argv.len() as i32, argv.as_ptr());
+            let string = String::from_utf8_lossy(ptr_to_slice(dest));
             let result = string.trim_end_matches('\0');
             assert_eq!("hællø wørlÞhello world𝄞music", result)
         }
@@ -1898,10 +1887,11 @@ mod test {
         for (i, arg) in argvec.iter().enumerate() {
             argv[i] = arg.as_ptr();
         }
-        let mut dest: [u16; DEFAULT_STRING_SIZE] = [0; DEFAULT_STRING_SIZE];
         unsafe {
-            let res = CONCAT__WSTRING(dest.as_mut_ptr(), argv.len() as i32, argv.as_ptr());
-            let string = String::from_utf16_lossy(ptr_to_slice(res));
+            let mut arr = [0_u16; 2049];
+            let dest = arr.as_mut_ptr();
+            CONCAT__WSTRING(dest, argv.len() as i32, argv.as_ptr());
+            let string = String::from_utf16_lossy(ptr_to_slice(dest));
             let result = string.trim_end_matches('\0');
             assert_eq!("hællø wørlÞhello world𝄞music", result)
         }
