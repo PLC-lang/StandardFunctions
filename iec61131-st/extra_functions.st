@@ -307,7 +307,7 @@ END_FUNCTION
 * Converts DT to LINT.
 *
 ******************************************************************************)
-FUNCTION DT_TO_LINT : ULINT
+FUNCTION DT_TO_LINT : LINT
 VAR_INPUT
     IN: DT;
 END_VAR
@@ -401,7 +401,6 @@ VAR_INPUT {ref}
     IN: STRING;
 END_VAR
 END_FUNCTION
-
 
 (******************************************************************************
 *
