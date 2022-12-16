@@ -15,7 +15,7 @@ use num::PrimInt;
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
 /// array filled with (non-zero) garbage values.
-fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
+pub fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
     unsafe {
         if src.is_null() {
             return 0;
@@ -34,7 +34,7 @@ fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
 /// # Safety
 ///
 /// Works on raw pointers, inherently unsafe.
-unsafe fn ptr_to_slice<'a, T: num::PrimInt>(src: *const T) -> &'a [T] {
+pub unsafe fn ptr_to_slice<'a, T: num::PrimInt>(src: *const T) -> &'a [T] {
     let nbytes = get_null_terminated_len(src);
     std::slice::from_raw_parts(src, nbytes)
 }
