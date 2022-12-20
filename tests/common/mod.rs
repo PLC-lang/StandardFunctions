@@ -944,14 +944,6 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::string_functions::NE__WSTRING as usize,
         ),
         (
-            "EXPT__DINT__UDINT",
-            iec61131std::arithmetic_functions::EXPT__DINT__UDINT as usize,
-        ),
-        (
-            "EXPT__LINT__UDINT",
-            iec61131std::arithmetic_functions::EXPT__LINT__UDINT as usize,
-        ),
-        (
             "EXPT__REAL__DINT",
             iec61131std::arithmetic_functions::EXPT__REAL__DINT as usize,
         ),
