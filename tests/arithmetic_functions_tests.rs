@@ -2,7 +2,7 @@
 mod common;
 
 use common::add_std;
-use std::{fmt::Debug};
+use std::fmt::Debug;
 
 use common::compile_and_run;
 
@@ -13,6 +13,7 @@ where
 {
     a: T,
     b: T,
+    c: T,
 }
 
 #[test]
@@ -430,7 +431,7 @@ fn expt_called_on_real() {
     "#;
     let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
-    let _ : i32 = compile_and_run(sources, &mut maintype);
+    let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert!((maintype.a - 128.0) <= f32::EPSILON);
 }
@@ -449,7 +450,7 @@ fn expt_called_on_dint_literal() {
     "#;
     let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<i32>::default();
-    let _ : i32 = compile_and_run(sources, &mut maintype);
+    let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert_eq!(4, maintype.a);
     assert_eq!(128, maintype.b);
@@ -463,12 +464,13 @@ fn expt_called_on_lint_lreal() {
             a: LREAL;
             b: LINT;
         END_VAR
-            a := EXPT(LINT#2, LREAL#7.0);
+            a := EXPT(DINT#2, DINT#-2);
+            b := EXPT(LINT#2, LREAL#7.0);
         END_PROGRAM
     "#;
     let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f64>::default();
-    let _ : i32 = compile_and_run(sources, &mut maintype);
+    let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert_eq!(0.25_f64, maintype.a);
     assert!(maintype.b - 128_f64 <= f64::EPSILON);
@@ -486,7 +488,7 @@ fn expt_called_with_operator() {
     "#;
     let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
-    let _ : i32 = compile_and_run(sources, &mut maintype);
+    let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert!((maintype.a - 128.0) <= f32::EPSILON);
 }
@@ -498,6 +500,7 @@ fn expt_called_with_references() {
         VAR
             a: REAL;
             b: REAL;
+            c: REAL;
         END_VAR
         VAR_TEMP
             x: REAL := 2.0;
@@ -505,13 +508,15 @@ fn expt_called_with_references() {
             z: UDINT := 2;
         END_VAR
             a := x**y;
-            // b := x**z;
+            b := x**z;
+            c := z**x;
         END_PROGRAM
     "#;
     let sources = add_std!(src, "arithmetic_functions.st");
     let mut maintype = MainType::<f32>::default();
-    let _ : i32 = compile_and_run(sources, &mut maintype);
+    let _: i32 = compile_and_run(sources, &mut maintype);
 
     assert_eq!(0.25, maintype.a);
     assert_eq!(4.0, maintype.b);
+    assert_eq!(4.0, maintype.c);
 }
