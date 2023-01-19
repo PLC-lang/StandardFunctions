@@ -952,8 +952,16 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::arithmetic_functions::EXPT__REAL__REAL as usize,
         ),
         (
+            "EXPT__REAL__LREAL",
+            iec61131std::arithmetic_functions::EXPT__REAL__LREAL as usize,
+        ),
+        (
             "EXPT__LREAL__DINT",
             iec61131std::arithmetic_functions::EXPT__LREAL__DINT as usize,
+        ),
+        (
+            "EXPT__LREAL__REAL",
+            iec61131std::arithmetic_functions::EXPT__LREAL__REAL as usize,
         ),
         (
             "EXPT__LREAL__LREAL",

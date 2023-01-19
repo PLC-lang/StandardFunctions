@@ -132,11 +132,30 @@ VAR_INPUT
 END_VAR
 END_FUNCTION
 
+(* LREAL to REAL conversion will happen for the exponent
+   This will produce the closest possible REAL value
+   On overflow, infinity of the same sign as the input is produced *)
+{external}
+FUNCTION EXPT__REAL__LREAL : REAL
+VAR_INPUT 
+	in1 : REAL;
+	in2 : LREAL;
+END_VAR
+END_FUNCTION
+
 {external}
 FUNCTION EXPT__LREAL__DINT : LREAL
 VAR_INPUT 
 	in1 : LREAL;
 	in2 : DINT;
+END_VAR
+END_FUNCTION
+
+{external}
+FUNCTION EXPT__LREAL__REAL : LREAL
+VAR_INPUT 
+	in1 : LREAL;
+	in2 : REAL;
 END_VAR
 END_FUNCTION
 
