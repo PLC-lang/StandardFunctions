@@ -58,7 +58,7 @@ fn is_valid_lreal() {
     let src = "
 	VAR_GLOBAL
 		MAX : LREAL := 1.7976931348623157e308;
-		MIN : LREAL := -1.7976931348623157e308;
+		MIN : LREAL := LREAL#-1.7976931348623157e308;
 		INF : LREAL := 1.0 / 0.0;
 		NaN : LREAL := 0.0 / 0.0;
 	END_VAR
