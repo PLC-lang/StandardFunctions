@@ -21,7 +21,7 @@ pub fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
             return 0;
         }
 
-        (0..).take_while(|&i| !(*src.add(i)).is_zero()).count() as usize
+        (0..).take_while(|&i| !(*src.add(i)).is_zero()).count()
     }
 }
 
