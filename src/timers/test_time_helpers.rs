@@ -8,7 +8,7 @@ thread_local! {
 }
 
 pub fn with_time(d: impl Fn(&mut Duration)) {
-    TIME.with(|t| d(&mut *t.borrow_mut()))
+    TIME.with(|t| d(&mut t.borrow_mut()))
 }
 
 pub fn get_time() -> Duration {

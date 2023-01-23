@@ -3,6 +3,8 @@ use rusty::runner::MainType;
 
 mod common;
 
+use common::add_std;
+
 #[test]
 fn int_to_int_expt() {
     let prog = "
@@ -11,7 +13,8 @@ fn int_to_int_expt() {
     END_FUNCTION
     ";
 
-    let res: i32 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: i32 = compile_and_run(sources, &mut MainType::default());
     assert_eq!(res, 8)
 }
 
@@ -23,7 +26,8 @@ fn lint_to_int_expt() {
     END_FUNCTION
     ";
 
-    let res: i64 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: i64 = compile_and_run(sources, &mut MainType::default());
     assert_eq!(res, 8)
 }
 
@@ -35,7 +39,8 @@ fn lint_to_lint_expt() {
     END_FUNCTION
     ";
 
-    let res: i64 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: i64 = compile_and_run(sources, &mut MainType::default());
     assert_eq!(res, 8)
 }
 
@@ -47,7 +52,8 @@ fn int_to_real_expt() {
     END_FUNCTION
     ";
 
-    let res: f32 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: f32 = compile_and_run(sources, &mut MainType::default());
     assert_almost_eq!(res, 2.0f32.sqrt(), f32::EPSILON);
 }
 
@@ -59,7 +65,8 @@ fn real_to_real_expt() {
     END_FUNCTION
     ";
 
-    let res: f32 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: f32 = compile_and_run(sources, &mut MainType::default());
     assert_almost_eq!(res, 2.0f32.powf(0.1), f32::EPSILON);
 }
 
@@ -71,7 +78,8 @@ fn real_to_int_expt() {
     END_FUNCTION
     ";
 
-    let res: f32 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: f32 = compile_and_run(sources, &mut MainType::default());
     assert_almost_eq!(res, 9.0f32, f32::EPSILON);
 }
 
@@ -83,20 +91,22 @@ fn lreal_to_real_expt() {
     END_FUNCTION
     ";
 
-    let res: f64 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: f64 = compile_and_run(sources, &mut MainType::default());
     assert_almost_eq!(res, 9.0_f64, f64::EPSILON);
 }
 
 #[test]
 fn real_to_lreal_expt() {
     let prog = "
-    FUNCTION main : LREAL
+    FUNCTION main : REAL
         main := REAL#4**LREAL#0.3;
     END_FUNCTION
     ";
 
-    let res: f64 = compile_and_run(prog.to_string(), &mut MainType::default());
-    assert_almost_eq!(res, 4.0f64.powf(0.3), f64::EPSILON);
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: f32 = compile_and_run(sources, &mut MainType::default());
+    assert_almost_eq!(res, 4.0f32.powf(0.3f64 as f32), f32::EPSILON);
 }
 
 #[test]
@@ -107,6 +117,7 @@ fn lreal_to_lreal_expt() {
     END_FUNCTION
     ";
 
-    let res: f64 = compile_and_run(prog.to_string(), &mut MainType::default());
+    let sources = add_std!(prog, "arithmetic_functions.st");
+    let res: f64 = compile_and_run(sources, &mut MainType::default());
     assert_almost_eq!(res, 5.0f64.powf(0.4), f64::EPSILON);
 }

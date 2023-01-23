@@ -8,7 +8,7 @@ thread_local! {
 }
 
 pub fn with_time(d: impl Fn(&mut u32)) {
-    TIME.with(|t| d(&mut *t.borrow_mut()))
+    TIME.with(|t| d(&mut t.borrow_mut()))
 }
 
 pub fn get_time() -> u32 {
