@@ -98,6 +98,121 @@ VAR_IN_OUT
 END_VAR
 END_FUNCTION
 
+(******************************************************************************
+*
+* Converts DT to STRING.
+*
+***************************************************************************** *)
+FUNCTION DT_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DT;
+END_VAR
+    DT_TO_STRING_EXT(IN, DT_TO_STRING);
+END_FUNCTION
+
+FUNCTION LDT_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DT;
+END_VAR
+    DT_TO_STRING_EXT(IN, LDT_TO_STRING);
+END_FUNCTION
+
+{external}
+FUNCTION DT_TO_STRING_EXT : DINT
+VAR_INPUT
+    IN : DT;
+END_VAR
+VAR_IN_OUT
+    OUT : STRING[__STRING_LENGTH];
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts TIME to STRING.
+*
+***************************************************************************** *)
+FUNCTION TIME_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    TIME_TO_STRING_EXT(IN, TIME_TO_STRING);
+END_FUNCTION
+
+FUNCTION LTIME_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    TIME_TO_STRING_EXT(IN, LTIME_TO_STRING);
+END_FUNCTION
+
+{external}
+FUNCTION TIME_TO_STRING_EXT : DINT
+VAR_INPUT
+    IN : TIME;
+END_VAR
+VAR_IN_OUT
+    OUT : STRING[__STRING_LENGTH];
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts DATE to STRING.
+*
+***************************************************************************** *)
+FUNCTION DATE_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    DATE_TO_STRING_EXT(IN, DATE_TO_STRING);
+END_FUNCTION
+
+FUNCTION LDATE_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    DATE_TO_STRING_EXT(IN, LDATE_TO_STRING);
+END_FUNCTION
+
+{external}
+FUNCTION DATE_TO_STRING_EXT : DINT
+VAR_INPUT
+    IN : DATE;
+END_VAR
+VAR_IN_OUT
+    OUT : STRING[__STRING_LENGTH];
+END_VAR
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts TOD to STRING.
+*
+***************************************************************************** *)
+FUNCTION TOD_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    TOD_TO_STRING_EXT(IN, TOD_TO_STRING);
+END_FUNCTION
+
+FUNCTION LTOD_TO_STRING : STRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    TOD_TO_STRING_EXT(IN, LTOD_TO_STRING);
+END_FUNCTION
+
+{external}
+FUNCTION TOD_TO_STRING_EXT : DINT
+VAR_INPUT
+    IN : TOD;
+END_VAR
+VAR_IN_OUT
+    OUT : STRING[__STRING_LENGTH];
+END_VAR
+END_FUNCTION
 
 (******************************************************************************
 *
@@ -219,6 +334,13 @@ END_VAR
     TOD_TO_LWORD := IN;
 END_FUNCTION
 
+FUNCTION LTOD_TO_LWORD : LWORD
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    LTOD_TO_LWORD := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts DT to LWORD.
@@ -226,9 +348,16 @@ END_FUNCTION
 ***************************************************************************** *)
 FUNCTION DT_TO_LWORD : LWORD
 VAR_INPUT
-    IN : TOD;
+    IN : DT;
 END_VAR
     DT_TO_LWORD := IN;
+END_FUNCTION
+
+FUNCTION LDT_TO_LWORD : LWORD
+VAR_INPUT
+    IN : DT;
+END_VAR
+    LDT_TO_LWORD := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -243,6 +372,13 @@ END_VAR
     DATE_TO_LWORD := IN;
 END_FUNCTION
 
+FUNCTION LDATE_TO_LWORD : LWORD
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    LDATE_TO_LWORD := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts TIME to LWORD.
@@ -253,6 +389,13 @@ VAR_INPUT
     IN : TIME;
 END_VAR
     TIME_TO_LWORD := IN;
+END_FUNCTION
+
+FUNCTION LTIME_TO_LWORD : LWORD
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    LTIME_TO_LWORD := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -295,11 +438,30 @@ END_VAR
     TIME_TO_LINT := IN;
 END_FUNCTION
 
+FUNCTION LTIME_TO_LINT : LINT
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    LTIME_TO_LINT := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts TOD to LINT.
+*
+***************************************************************************** *)
 FUNCTION TOD_TO_LINT : LINT
 VAR_INPUT
     IN : TOD;
 END_VAR
     TOD_TO_LINT := IN;
+END_FUNCTION
+
+FUNCTION LTOD_TO_LINT : LINT
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    LTOD_TO_LINT := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -314,6 +476,32 @@ END_VAR
     DT_TO_LINT := IN;
 END_FUNCTION
 
+FUNCTION LDT_TO_LINT : LINT
+VAR_INPUT
+    IN : DT;
+END_VAR
+    LDT_TO_LINT := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts DATE to LINT.
+*
+***************************************************************************** *)
+FUNCTION DATE_TO_LINT : LINT
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    DATE_TO_LINT := IN;
+END_FUNCTION
+
+FUNCTION LDATE_TO_LINT : LINT
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    LDATE_TO_LINT := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts DT to ULINT.
@@ -326,6 +514,13 @@ END_VAR
     DT_TO_ULINT := IN;
 END_FUNCTION
 
+FUNCTION LDT_TO_ULINT : ULINT
+VAR_INPUT
+    IN : DT;
+END_VAR
+    LDT_TO_ULINT := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts TIME to ULINT.
@@ -333,9 +528,16 @@ END_FUNCTION
 ***************************************************************************** *)
 FUNCTION TIME_TO_ULINT : ULINT
 VAR_INPUT
-    IN : DT;
+    IN : TIME;
 END_VAR
     TIME_TO_ULINT := IN;
+END_FUNCTION
+
+FUNCTION LTIME_TO_ULINT : ULINT
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    LTIME_TO_ULINT := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -360,6 +562,13 @@ VAR_INPUT
     IN : TOD;
 END_VAR
     TOD_TO_ULINT := IN;
+END_FUNCTION
+
+FUNCTION LTOD_TO_ULINT : ULINT
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    LTOD_TO_ULINT := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -459,16 +668,11 @@ END_VAR
     TIME_TO_LREAL := IN;
 END_FUNCTION
 
-(******************************************************************************
-*
-* Converts LWORD to TIME.
-*
-***************************************************************************** *)
-FUNCTION LWORD_TO_TIME : TIME
+FUNCTION LTIME_TO_LREAL : LREAL
 VAR_INPUT
-    IN : LWORD;
+    IN : TIME;
 END_VAR
-    LWORD_TO_TIME := IN;
+    LTIME_TO_LREAL := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -480,20 +684,15 @@ FUNCTION LREAL_TO_TIME : TIME
 VAR_INPUT
     IN : LREAL;
 END_VAR
-// seconds.millis? round as nanos?
+// TODO: seconds.millis? round as nanos?
     LREAL_TO_TIME := ROUND(IN);
 END_FUNCTION
 
-(******************************************************************************
-*
-* Converts LINT to TIME.
-*
-***************************************************************************** *)
-FUNCTION LINT_TO_TIME : TIME
+FUNCTION LREAL_TO_LTIME : TIME
 VAR_INPUT
-    IN : LINT;
+    IN : LREAL;
 END_VAR
-    LINT_TO_TIME := IN;
+    LREAL_TO_LTIME := ROUND(IN);
 END_FUNCTION
 
 (******************************************************************************
@@ -508,28 +707,11 @@ END_VAR
     LWORD_TO_DATE := IN;
 END_FUNCTION
 
-(******************************************************************************
-*
-* Converts ULINT to DATE.
-*
-***************************************************************************** *)
-FUNCTION ULINT_TO_DATE : DATE
+FUNCTION LWORD_TO_LDATE : DATE
 VAR_INPUT
-    IN : ULINT;
+    IN : LWORD;
 END_VAR
-    ULINT_TO_DATE := IN;
-END_FUNCTION
-
-(******************************************************************************
-*
-* Converts ULINT to DT.
-*
-***************************************************************************** *)
-FUNCTION ULINT_TO_DT : DT
-VAR_INPUT
-    IN : ULINT;
-END_VAR
-    ULINT_TO_DT := IN;
+    LWORD_TO_LDATE := IN;
 END_FUNCTION
 
 (******************************************************************************
@@ -544,6 +726,13 @@ END_VAR
     LWORD_TO_DT := IN;
 END_FUNCTION
 
+FUNCTION LWORD_TO_LDT : DT
+VAR_INPUT
+    IN : LWORD;
+END_VAR
+    LWORD_TO_LDT := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts LWORD to TOD.
@@ -556,6 +745,127 @@ END_VAR
     LWORD_TO_TOD := IN;
 END_FUNCTION
 
+FUNCTION LWORD_TO_LTOD : TOD
+VAR_INPUT
+    IN : LWORD;
+END_VAR
+    LWORD_TO_LTOD := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts LWORD to TIME.
+*
+***************************************************************************** *)
+FUNCTION LWORD_TO_TIME : TIME
+VAR_INPUT
+    IN : LWORD;
+END_VAR
+    LWORD_TO_TIME := IN;
+END_FUNCTION
+
+FUNCTION LWORD_TO_LTIME : TIME
+VAR_INPUT
+    IN : LWORD;
+END_VAR
+    LWORD_TO_LTIME := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts ULINT to DATE.
+*
+***************************************************************************** *)
+FUNCTION ULINT_TO_DATE : DATE
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_DATE := IN;
+END_FUNCTION
+
+FUNCTION ULINT_TO_LDATE : DATE
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_LDATE := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts ULINT to DT.
+*
+***************************************************************************** *)
+FUNCTION ULINT_TO_DT : DT
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_DT := IN;
+END_FUNCTION
+
+FUNCTION ULINT_TO_LDT : DT
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_LDT := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts ULINT to TOD.
+*
+***************************************************************************** *)
+FUNCTION ULINT_TO_TOD : TOD
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_TOD := IN;
+END_FUNCTION
+
+FUNCTION ULINT_TO_LTOD : TOD
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_LTOD := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts ULINT to TIME.
+*
+***************************************************************************** *)
+FUNCTION ULINT_TO_TIME : TIME
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_TIME := IN;
+END_FUNCTION
+
+FUNCTION ULINT_TO_LTIME : LTIME
+VAR_INPUT
+    IN : ULINT;
+END_VAR
+    ULINT_TO_LTIME := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts LINT to TIME.
+*
+***************************************************************************** *)
+FUNCTION LINT_TO_TIME : TIME
+VAR_INPUT
+    IN : LINT;
+END_VAR
+    LINT_TO_TIME := IN;
+END_FUNCTION
+
+FUNCTION LINT_TO_LTIME : TIME
+VAR_INPUT
+    IN : LINT;
+END_VAR
+    LINT_TO_LTIME := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts LINT to TOD.
@@ -566,6 +876,32 @@ VAR_INPUT
     IN : LINT;
 END_VAR
     LINT_TO_TOD := IN;
+END_FUNCTION
+
+FUNCTION LINT_TO_LTOD : TOD
+VAR_INPUT
+    IN : LINT;
+END_VAR
+    LINT_TO_LTOD := IN;
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts LINT to DATE.
+*
+***************************************************************************** *)
+FUNCTION LINT_TO_DATE : DATE
+VAR_INPUT
+    IN : LINT;
+END_VAR
+    LINT_TO_DATE := IN;
+END_FUNCTION
+
+FUNCTION LINT_TO_LDATE : DATE
+VAR_INPUT
+    IN : LINT;
+END_VAR
+    LINT_TO_LDATE := IN;
 END_FUNCTION
 
 (******************************************************************************
