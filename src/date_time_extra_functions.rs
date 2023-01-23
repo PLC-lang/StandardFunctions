@@ -135,7 +135,7 @@ pub extern "C" fn CONCAT_TOD__DINT(in1: i32, in2: i32, in3: i32, in4: i32) -> i6
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn CONCAT_TOD__UDINT(in1: u32, in2: u32, in3: u32, in4: u32) -> i64 {
-    concat_tod(in1, in2 as u32, in3, in4)
+    concat_tod(in1, in2, in3, in4)
 }
 
 /// .
@@ -237,8 +237,8 @@ pub extern "C" fn SPLIT_DATE__UDINT(
     let date = chrono::Utc.timestamp_nanos(in1).date_naive();
     // if year does not fit in target data type -> panic
     *out1 = date.year().try_into().unwrap();
-    *out2 = date.month() as u32;
-    *out3 = date.day() as u32;
+    *out2 = date.month();
+    *out3 = date.day();
 
     0
 }
@@ -360,10 +360,10 @@ pub extern "C" fn SPLIT_TOD__UDINT(
     out4: &mut u32,
 ) -> i16 {
     let tod = chrono::Utc.timestamp_nanos(in1);
-    *out1 = tod.hour() as u32;
-    *out2 = tod.minute() as u32;
-    *out3 = tod.second() as u32;
-    *out4 = tod.timestamp_subsec_millis() as u32;
+    *out1 = tod.hour();
+    *out2 = tod.minute();
+    *out3 = tod.second();
+    *out4 = tod.timestamp_subsec_millis();
 
     0
 }
@@ -511,12 +511,12 @@ pub extern "C" fn SPLIT_DT__UDINT(
     let dt = chrono::Utc.timestamp_nanos(in1);
     // if year does not fit in target data type -> panic
     *out1 = dt.year().try_into().unwrap();
-    *out2 = dt.month() as u32;
-    *out3 = dt.day() as u32;
-    *out4 = dt.hour() as u32;
-    *out5 = dt.minute() as u32;
-    *out6 = dt.second() as u32;
-    *out7 = dt.timestamp_subsec_millis() as u32;
+    *out2 = dt.month();
+    *out3 = dt.day();
+    *out4 = dt.hour();
+    *out5 = dt.minute();
+    *out6 = dt.second();
+    *out7 = dt.timestamp_subsec_millis();
 
     0
 }

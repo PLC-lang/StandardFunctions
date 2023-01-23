@@ -218,18 +218,6 @@ pub extern "C" fn ATAN2__LREAL(in1: f64, in2: f64) -> f64 {
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn EXPT__DINT__UDINT(in1: i32, in2: u32) -> i32 {
-    in1.pow(in2)
-}
-
-#[allow(non_snake_case)]
-#[no_mangle]
-pub extern "C" fn EXPT__LINT__UDINT(in1: i64, in2: u32) -> i64 {
-    in1.pow(in2)
-}
-
-#[allow(non_snake_case)]
-#[no_mangle]
 pub extern "C" fn EXPT__REAL__DINT(in1: f32, in2: i32) -> f32 {
     in1.powi(in2)
 }
@@ -244,6 +232,21 @@ pub extern "C" fn EXPT__LREAL__DINT(in1: f64, in2: i32) -> f64 {
 #[no_mangle]
 pub extern "C" fn EXPT__REAL__REAL(in1: f32, in2: f32) -> f32 {
     in1.powf(in2)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__REAL__LREAL(in1: f32, in2: f64) -> f32 {
+    // casting from an f32 to an f64 will produce the closest possible f32
+    // on overflow, infinity of the same sign as the input
+    in1.powf(in2 as f32)
+}
+
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "C" fn EXPT__LREAL__REAL(in1: f64, in2: f32) -> f64 {
+    // casting from an f32 to an f64 is perfect and lossless
+    in1.powf(in2 as f64)
 }
 
 #[allow(non_snake_case)]
