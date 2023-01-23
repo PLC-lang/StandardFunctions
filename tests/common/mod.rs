@@ -1241,6 +1241,22 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
             iec61131std::extra_functions::STRING_TO_REAL as usize,
         ),
         ("TIME", iec61131std::extra_functions::TIME as usize),
+        (
+            "DT_TO_STRING_EXT",
+            iec61131std::extra_functions::DT_TO_STRING_EXT as usize,
+        ),
+        (
+            "TIME_TO_STRING_EXT",
+            iec61131std::extra_functions::TIME_TO_STRING_EXT as usize,
+        ),
+        (
+            "DATE_TO_STRING_EXT",
+            iec61131std::extra_functions::DATE_TO_STRING_EXT as usize,
+        ),
+        (
+            "TOD_TO_STRING_EXT",
+            iec61131std::extra_functions::TOD_TO_STRING_EXT as usize,
+        ),
     ];
 
     let variables = vec![

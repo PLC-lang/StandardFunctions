@@ -1,3 +1,4 @@
+use chrono::TimeZone;
 #[cfg(not(feature = "mock_time"))]
 use chrono::{offset::Local, Timelike};
 
@@ -166,6 +167,85 @@ pub extern "C" fn TIME() -> i64 {
     dt.num_seconds_from_midnight() as i64 * 1e9 as i64 + dt.nanosecond() as i64
 }
 
+/// # Safety
+/// Uses raw pointers, inherently unsafe.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn TIME_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
+    let mut dest = dest;
+    let literals = parse_timestamp(input);
+    literals.iter().filter(|&it| it.0 != 0).for_each(|it| {
+        let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
+        write!(&mut *buf, "{}{}", it.0, it.1).unwrap();
+        let idx = buf.iter().position(|&c| c == 0).unwrap();
+        dest = dest.add(idx);
+    });
+
+    0
+}
+
+fn parse_timestamp<'a>(timestamp_nanos: i64) -> [(i64, &'a str); 7] {
+    let (nanos, timestamp_micros) = (timestamp_nanos % 1000, timestamp_nanos / 1000);
+    let (micros, timestamp_millis) = (timestamp_micros % 1000, timestamp_micros / 1000);
+    let (millis, timestamp_seconds) = (timestamp_millis % 1000, timestamp_millis / 1000);
+    let (seconds, timestamp_minutes) = (timestamp_seconds % 60, timestamp_seconds / 60);
+    let (minutes, timestamp_hours) = (timestamp_minutes % 60, timestamp_minutes / 60);
+    let (hours, days) = (timestamp_hours % 24, timestamp_hours / 24);
+
+    [
+        (days, "d"),
+        (hours, "h"),
+        (minutes, "m"),
+        (seconds, "s"),
+        (millis, "ms"),
+        (micros, "us"),
+        (nanos, "ns"),
+    ]
+}
+
+/// # Safety
+/// Uses raw pointers, inherently unsafe.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn DT_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
+    let datetime = chrono::Utc.timestamp_nanos(input);
+    let date = datetime.date_naive().to_string();
+    let time = datetime.time().to_string();
+    let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
+
+    write!(&mut *buf, "{}-{}", date, time).unwrap();
+
+    0
+}
+
+/// # Safety
+/// Uses raw pointers, inherently unsafe.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn DATE_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
+    let datetime = chrono::Utc.timestamp_nanos(input).date_naive();
+    let date = datetime.to_string();
+    let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
+
+    write!(&mut *buf, "{}", date).unwrap();
+
+    0
+}
+
+/// # Safety
+/// Uses raw pointers, inherently unsafe.
+#[allow(non_snake_case)]
+#[no_mangle]
+pub unsafe extern "C" fn TOD_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
+    let datetime = chrono::Utc.timestamp_nanos(input);
+    let time = datetime.time().to_string();
+    let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
+
+    write!(&mut *buf, "{}", time).unwrap();
+
+    0
+}
+
 // tests
 #[test]
 fn byte_to_string_conversion() {
@@ -250,65 +330,141 @@ fn lreal_to_string_conversion() {
     );
 }
 
-#[test]
-fn string_to_lint_conversion() {
-    let string = "12345\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(12345_i64, result);
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn string_to_lint_conversion() {
+        let string = "12345\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(12345_i64, result);
 
-    let string = "2#1111\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(15_i64, result);
+        let string = "2#1111\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(15_i64, result);
 
-    let string = "8#77\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(63_i64, result);
+        let string = "8#77\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(63_i64, result);
 
-    let string = "16#FF\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(255_i64, result);
+        let string = "16#FF\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(255_i64, result);
 
-    let string = "0b1111\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(15_i64, result);
+        let string = "0b1111\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(15_i64, result);
 
-    let string = "0B1111\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(15_i64, result);
+        let string = "0B1111\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(15_i64, result);
 
-    let string = "0xFF\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(255_i64, result);
+        let string = "0xFF\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(255_i64, result);
 
-    let string = "0XFF\0";
-    let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
-    assert_eq!(255_i64, result);
-}
+        let string = "0XFF\0";
+        let result = unsafe { STRING_TO_LINT(string.as_ptr()) };
+        assert_eq!(255_i64, result);
+    }
 
-#[test]
-#[should_panic]
-fn string_to_lint_conversion_panics_if_given_invalid_string() {
-    let string = "ab456\0";
-    let _ = unsafe { STRING_TO_LINT(string.as_ptr()) };
-}
+    #[test]
+    #[should_panic]
+    fn string_to_lint_conversion_panics_if_given_invalid_string() {
+        let string = "ab456\0";
+        let _ = unsafe { STRING_TO_LINT(string.as_ptr()) };
+    }
 
-#[test]
-fn string_to_lreal_conversion() {
-    let string = "1.25\0";
-    let result = unsafe { STRING_TO_LREAL(string.as_ptr()) };
-    assert_eq!(1.25, result);
-}
+    #[test]
+    fn string_to_lreal_conversion() {
+        let string = "1.25\0";
+        let result = unsafe { STRING_TO_LREAL(string.as_ptr()) };
+        assert_eq!(1.25, result);
+    }
 
-#[test]
-fn string_to_real_conversion() {
-    let string = "1.25\0";
-    let result = unsafe { STRING_TO_REAL(string.as_ptr()) };
-    assert_eq!(1.25, result);
-}
+    #[test]
+    fn string_to_real_conversion() {
+        let string = "1.25\0";
+        let result = unsafe { STRING_TO_REAL(string.as_ptr()) };
+        assert_eq!(1.25, result);
+    }
 
-#[test]
-#[should_panic]
-fn string_to_lreal_conversion_panics_if_given_invalid_string() {
-    let string = "1,25f\0";
-    let _ = unsafe { STRING_TO_LREAL(string.as_ptr()) };
+    #[test]
+    #[should_panic]
+    fn string_to_lreal_conversion_panics_if_given_invalid_string() {
+        let string = "1,25f\0";
+        let _ = unsafe { STRING_TO_LREAL(string.as_ptr()) };
+    }
+
+    #[test]
+    fn date_to_string_is_converted_in_correct_format() {
+        let datetime = chrono::NaiveDate::from_ymd_opt(1982, 12, 15)
+            .and_then(|date| date.and_hms_nano_opt(0, 0, 0, 0))
+            .expect("Cannot create date time from given parameters");
+        let timestamp = datetime.timestamp_nanos();
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { DATE_TO_STRING_EXT(timestamp, dest_ptr) };
+
+        let expected = "1982-12-15";
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+        let res = res.trim_end_matches('\0');
+        assert_eq!(expected, res);
+    }
+
+    #[test]
+    fn dt_to_string_is_converted_in_correct_format() {
+        let datetime = chrono::NaiveDate::from_ymd_opt(1982, 12, 15)
+            .and_then(|date| date.and_hms_nano_opt(10, 10, 2, 123456789))
+            .expect("Cannot create date time from given parameters");
+        let timestamp = datetime.timestamp_nanos();
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { DT_TO_STRING_EXT(timestamp, dest_ptr) };
+
+        let expected = "1982-12-15-10:10:02.123456789";
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+        let res = res.trim_end_matches('\0');
+        assert_eq!(expected, res);
+    }
+
+    #[test]
+    fn tod_to_string_is_converted_in_correct_format() {
+        let datetime = chrono::NaiveDate::from_ymd_opt(1982, 12, 15)
+            .and_then(|date| date.and_hms_nano_opt(10, 10, 2, 123456789))
+            .expect("Cannot create date time from given parameters");
+        let timestamp = datetime.timestamp_nanos();
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { TOD_TO_STRING_EXT(timestamp, dest_ptr) };
+
+        let expected = "10:10:02.123456789";
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+        let res = res.trim_end_matches('\0');
+        assert_eq!(expected, res);
+    }
+
+    #[test]
+    fn time_to_string_is_converted_in_correct_format() {
+        let datetime = chrono::NaiveDate::from_ymd_opt(2023, 1, 23)
+            .and_then(|date| date.and_hms_nano_opt(10, 10, 0, 123456789))
+            .expect("Cannot create date time from given parameters");
+        let timestamp = datetime.timestamp_nanos();
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { TIME_TO_STRING_EXT(timestamp, dest_ptr) };
+
+        let expected = "19380d10h10m123ms456us789ns";
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+        let res = res.trim_end_matches('\0');
+        assert_eq!(expected, res);
+    }
 }
