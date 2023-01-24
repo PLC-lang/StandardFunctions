@@ -129,6 +129,25 @@ END_FUNCTION
 
 (******************************************************************************
 *
+* Converts DT to WSTRING.
+*
+******************************************************************************)
+FUNCTION DT_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DT;
+END_VAR
+    STRING_TO_WSTRING_EXT(DT_TO_STRING(IN), DT_TO_WSTRING);
+END_FUNCTION
+
+FUNCTION LDT_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DT;
+END_VAR
+    STRING_TO_WSTRING_EXT(DT_TO_STRING(IN), LDT_TO_WSTRING);
+END_FUNCTION
+
+(******************************************************************************
+*
 * Converts TIME to STRING.
 *
 ******************************************************************************)
@@ -154,6 +173,25 @@ END_VAR
 VAR_IN_OUT
     OUT : STRING[__STRING_LENGTH];
 END_VAR
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts TIME to WSTRING.
+*
+******************************************************************************)
+FUNCTION TIME_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    STRING_TO_WSTRING_EXT(TIME_TO_STRING(IN), TIME_TO_WSTRING);
+END_FUNCTION
+
+FUNCTION LTIME_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TIME;
+END_VAR
+    STRING_TO_WSTRING_EXT(TIME_TO_STRING(IN), LTIME_TO_WSTRING);
 END_FUNCTION
 
 (******************************************************************************
@@ -187,6 +225,25 @@ END_FUNCTION
 
 (******************************************************************************
 *
+* Converts DATE to WSTRING.
+*
+******************************************************************************)
+FUNCTION DATE_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    STRING_TO_WSTRING_EXT(DATE_TO_STRING(IN), DATE_TO_WSTRING);
+END_FUNCTION
+
+FUNCTION LDATE_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    STRING_TO_WSTRING_EXT(DATE_TO_STRING(IN), LDATE_TO_WSTRING);
+END_FUNCTION
+
+(******************************************************************************
+*
 * Converts TOD to STRING.
 *
 ******************************************************************************)
@@ -212,6 +269,25 @@ END_VAR
 VAR_IN_OUT
     OUT : STRING[__STRING_LENGTH];
 END_VAR
+END_FUNCTION
+
+(******************************************************************************
+*
+* Converts TOD to WSTRING.
+*
+******************************************************************************)
+FUNCTION TOD_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    STRING_TO_WSTRING_EXT(TOD_TO_STRING(IN), TOD_TO_WSTRING);
+END_FUNCTION
+
+FUNCTION LTOD_TO_WSTRING : WSTRING[__STRING_LENGTH]
+VAR_INPUT
+    IN : TOD;
+END_VAR
+    STRING_TO_WSTRING_EXT(TOD_TO_STRING(IN), LTOD_TO_WSTRING);
 END_FUNCTION
 
 (******************************************************************************

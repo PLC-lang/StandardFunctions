@@ -469,7 +469,7 @@ fn ltime_to_lword_conversion() {
     VAR
         t: TIME := TIME#12h1m20s391ms10ns;
     END_VAR
-        main := TOD_TO_LWORD(t);
+        main := TIME_TO_LWORD(t);
     END_FUNCTION
     "#;
 
@@ -1304,4 +1304,232 @@ fn test_time() {
     let new_day = run::<_, i64>(&exec_engine, "main", &mut MainType::default());
     let expected = 1e9 as i64 + 100;
     assert_eq!(expected, new_day);
+}
+
+#[test]
+fn dt_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: DT := DT#1970-01-01-01:10:00;
+    END_VAR        
+        main := DT_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01-01:10:00";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn dt_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: DT := DT#1970-01-01-01:10:00;
+    END_VAR        
+        main := DT_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01-01:10:00";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn date_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: DATE := DATE#1970-01-01;
+    END_VAR
+        main := DATE_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn date_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: DATE := DATE#1970-01-01;
+    END_VAR        
+        main := DATE_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn time_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: TIME := T#6d3h2m9ns;
+    END_VAR        
+        main := TIME_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "6d3h2m9ns";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn time_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: TIME := T#6d3h2m9ns;
+    END_VAR        
+        main := TIME_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "6d3h2m9ns";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn tod_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: TOD := TOD#15:36:55.123;
+    END_VAR        
+        main := TOD_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "15:36:55.123";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn tod_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: TOD := TOD#15:36:55.123;
+    END_VAR        
+        main := TOD_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "15:36:55.123";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
 }
