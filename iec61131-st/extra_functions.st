@@ -628,6 +628,13 @@ END_VAR
     DATE_TO_ULINT := IN;
 END_FUNCTION
 
+FUNCTION LDATE_TO_ULINT : ULINT
+VAR_INPUT
+    IN : DATE;
+END_VAR
+    LDATE_TO_ULINT := IN;
+END_FUNCTION
+
 (******************************************************************************
 *
 * Converts TOD to ULINT.

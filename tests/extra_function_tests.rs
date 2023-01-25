@@ -437,7 +437,84 @@ fn tod_to_lword_conversion() {
 }
 
 #[test]
-fn ldate_to_lword_conversion() {
+fn ltod_to_lword_conversion() {
+    let src = r#"
+    FUNCTION main : LWORD
+    VAR
+        t: LTOD := LTOD#01:59:59.2567;
+    END_VAR
+        main := LTOD_TO_LWORD(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(1, 59, 59, 2567e5 as u32).unwrap();
+    let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn dt_to_lword_conversion() {
+    let src = r#"
+    FUNCTION main : LWORD
+    VAR
+        t: DT := DT#1999-12-31-01:59:59.2567;
+    END_VAR
+        main := DT_TO_LWORD(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_micro_opt(1, 59, 59, 256700).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ldt_to_lword_conversion() {
+    let src = r#"
+    FUNCTION main : LWORD
+    VAR
+        t: LDT := LDT#1999-12-31-01:59:59.2567;
+    END_VAR
+        main := LDT_TO_LWORD(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_micro_opt(1, 59, 59, 256700).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn date_to_lword_conversion() {
     let src = r#"
     FUNCTION main : LWORD
     VAR
@@ -463,13 +540,64 @@ fn ldate_to_lword_conversion() {
 }
 
 #[test]
-fn ltime_to_lword_conversion() {
+fn ldate_to_lword_conversion() {
+    let src = r#"
+    FUNCTION main : LWORD
+    VAR
+        t: LDATE := LDATE#1999-12-31;
+    END_VAR
+        main := LDATE_TO_LWORD(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn time_to_lword_conversion() {
     let src = r#"
     FUNCTION main : LWORD
     VAR
         t: TIME := TIME#12h1m20s391ms10ns;
     END_VAR
         main := TIME_TO_LWORD(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(12, 1, 20, 391e6 as u32 + 10).unwrap();
+    let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ltime_to_lword_conversion() {
+    let src = r#"
+    FUNCTION main : LWORD
+    VAR
+        t: LTIME := LT#12h1m20s391ms10ns;
+    END_VAR
+        main := LTIME_TO_LWORD(t);
     END_FUNCTION
     "#;
 
@@ -579,6 +707,7 @@ fn wstring_to_lint_conversion() {
     assert_eq!(342_391, maintype.i3);
     assert_eq!(3_737_844_653, maintype.i4);
 }
+
 // x to lint
 #[test]
 fn string_to_dint_conversion() {
@@ -663,7 +792,7 @@ fn wstring_to_dint_conversion() {
 }
 
 #[test]
-fn ltime_to_lint_conversion() {
+fn time_to_lint_conversion() {
     let src = r#"
     FUNCTION main : LINT
     VAR
@@ -689,7 +818,33 @@ fn ltime_to_lint_conversion() {
 }
 
 #[test]
-fn ltod_to_lint_conversion() {
+fn ltime_to_lint_conversion() {
+    let src = r#"
+    FUNCTION main : LINT
+    VAR
+        t: LTIME := LT#12h1m20s391ms10ns;
+    END_VAR
+        main := LTIME_TO_LINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let res: i64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(12, 1, 20, 391e6 as u32 + 10).unwrap();
+    let expected = time.num_seconds_from_midnight() as i64 * 1e9 as i64 + time.nanosecond() as i64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn tod_to_lint_conversion() {
     let src = r#"
     FUNCTION main : LINT
     VAR
@@ -710,6 +865,83 @@ fn ltod_to_lint_conversion() {
 
     let time = NaiveTime::from_hms_nano_opt(1, 59, 59, 2567e5 as u32).unwrap();
     let expected = time.num_seconds_from_midnight() as i64 * 1e9 as i64 + time.nanosecond() as i64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ltod_to_lint_conversion() {
+    let src = r#"
+    FUNCTION main : LINT
+    VAR
+        t: LTOD := LTOD#01:59:59.2567;
+    END_VAR
+        main := LTOD_TO_LINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: i64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(1, 59, 59, 2567e5 as u32).unwrap();
+    let expected = time.num_seconds_from_midnight() as i64 * 1e9 as i64 + time.nanosecond() as i64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn date_to_lint_conversion() {
+    let src = r#"
+    FUNCTION main : LINT
+    VAR
+        t: DATE := DATE#1999-12-31;
+    END_VAR
+        main := DATE_TO_LINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ldate_to_lint_conversion() {
+    let src = r#"
+    FUNCTION main : LINT
+    VAR
+        t: LDATE := LDATE#1999-12-31;
+    END_VAR
+        main := LDATE_TO_LINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
     assert_eq!(expected, res)
 }
 
@@ -743,13 +975,43 @@ fn dt_to_lint_conversion() {
 }
 
 #[test]
-fn ltime_to_ulint_conversion() {
+fn ldt_to_lint_conversion() {
+    let src = r#"
+    FUNCTION main : LINT
+    VAR
+        t: LDT := LDT#2000-01-12-23:23:00;
+    END_VAR
+        main := LDT_TO_LINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: i64 = compile_and_run_no_params(sources);
+
+    let naivedatetime_utc = NaiveDate::from_ymd_opt(2000, 1, 12)
+        .unwrap()
+        .and_hms_opt(23, 23, 0)
+        .unwrap();
+    let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+    let expected = datetime_utc.timestamp_nanos();
+    assert_eq!(expected, res)
+}
+
+// x to ulint
+#[test]
+fn time_to_ulint_conversion() {
     let src = r#"
     FUNCTION main : ULINT
     VAR
         t: TIME := TIME#12h1m20s391ms10ns;
     END_VAR
-        main := TOD_TO_ULINT(t);
+        main := TIME_TO_ULINT(t);
     END_FUNCTION
     "#;
 
@@ -765,6 +1027,134 @@ fn ltime_to_ulint_conversion() {
 
     let time = NaiveTime::from_hms_nano_opt(12, 1, 20, 391e6 as u32 + 10).unwrap();
     let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ltime_to_ulint_conversion() {
+    let src = r#"
+    FUNCTION main : ULINT
+    VAR
+        t: LTIME := LT#12h1m20s391ms10ns;
+    END_VAR
+        main := LTIME_TO_ULINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(12, 1, 20, 391e6 as u32 + 10).unwrap();
+    let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn tod_to_ulint_conversion() {
+    let src = r#"
+    FUNCTION main : ULINT
+    VAR
+        t: TOD := TOD#01:59:59.2567;
+    END_VAR
+        main := TOD_TO_ULINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(1, 59, 59, 2567e5 as u32).unwrap();
+    let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ltod_to_ulint_conversion() {
+    let src = r#"
+    FUNCTION main : ULINT
+    VAR
+        t: LTOD := LTOD#01:59:59.2567;
+    END_VAR
+        main := LTOD_TO_ULINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let time = NaiveTime::from_hms_nano_opt(1, 59, 59, 2567e5 as u32).unwrap();
+    let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn date_to_ulint_conversion() {
+    let src = r#"
+    FUNCTION main : ULINT
+    VAR
+        t: DATE := DATE#1999-12-31;
+    END_VAR
+        main := DATE_TO_ULINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
+    assert_eq!(expected, res)
+}
+
+#[test]
+fn ldate_to_ulint_conversion() {
+    let src = r#"
+    FUNCTION main : ULINT
+    VAR
+        t: LDATE := LDATE#1999-12-31;
+    END_VAR
+        main := LDATE_TO_ULINT(t);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+    let res: u64 = compile_and_run_no_params(sources);
+
+    let date = NaiveDate::from_ymd_opt(1999, 12, 31).unwrap();
+    let time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
+    let expected = NaiveDateTime::new(date, time).timestamp_nanos() as u64;
     assert_eq!(expected, res)
 }
 
@@ -798,13 +1188,13 @@ fn dt_to_ulint_conversion() {
 }
 
 #[test]
-fn ltod_to_ulint_conversion() {
+fn ldt_to_ulint_conversion() {
     let src = r#"
     FUNCTION main : ULINT
     VAR
-        t: TOD := TOD#01:59:59.2567;
+        t: LDT := LDT#2000-01-12-23:23:00;
     END_VAR
-        main := TOD_TO_ULINT(t);
+        main := LDT_TO_ULINT(t);
     END_FUNCTION
     "#;
 
@@ -817,8 +1207,12 @@ fn ltod_to_ulint_conversion() {
     );
     let res: u64 = compile_and_run_no_params(sources);
 
-    let time = NaiveTime::from_hms_nano_opt(1, 59, 59, 2567e5 as u32).unwrap();
-    let expected = time.num_seconds_from_midnight() as u64 * 1e9 as u64 + time.nanosecond() as u64;
+    let naivedatetime_utc = NaiveDate::from_ymd_opt(2000, 1, 12)
+        .unwrap()
+        .and_hms_opt(23, 23, 0)
+        .unwrap();
+    let datetime_utc = DateTime::<Utc>::from_utc(naivedatetime_utc, Utc);
+    let expected = datetime_utc.timestamp_nanos() as u64;
     assert_eq!(expected, res)
 }
 
@@ -1428,7 +1822,7 @@ fn time_to_string_conversion() {
     let src = r#"
     FUNCTION main : STRING
     VAR
-        in: TIME := T#6d3h2m9ns;
+        in: TIME := T#6d2m123ms456us789ns;
     END_VAR        
         main := TIME_TO_STRING(in);
     END_FUNCTION
@@ -1442,7 +1836,7 @@ fn time_to_string_conversion() {
         "numerical_functions.st"
     );
 
-    let expected = "6d3h2m9ns";
+    let expected = "6d2m123ms456us789ns";
     let _: i32 = compile_and_run(sources, &mut maintype);
     let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
     assert_eq!(expected, res);
@@ -1478,7 +1872,7 @@ fn time_to_wstring_conversion() {
 }
 
 #[test]
-fn tod_to_string_conversion() {
+fn tod_ltod_to_string_conversion() {
     let mut maintype = MainType {
         s: [0_u8; STR_SIZE],
     };
@@ -1516,6 +1910,234 @@ fn tod_to_wstring_conversion() {
         in: TOD := TOD#15:36:55.123;
     END_VAR        
         main := TOD_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "15:36:55.123";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ldt_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: LDT := LDT#1970-01-01-01:10:00;
+    END_VAR        
+        main := LDT_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01-01:10:00";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ldt_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: LDT := LDT#1970-01-01-01:10:00;
+    END_VAR        
+        main := LDT_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01-01:10:00";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ldate_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: LDATE := LDATE#1970-01-01;
+    END_VAR
+        main := LDATE_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ldate_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: LDATE := LDATE#1970-01-01;
+    END_VAR        
+        main := LDATE_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "1970-01-01";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ltime_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: LTIME := LT#6d3h2m9ns;
+    END_VAR        
+        main := LTIME_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "6d3h2m9ns";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ltime_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: LTIME := LT#6d3h2m9ns;
+    END_VAR        
+        main := LTIME_TO_WSTRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "6d3h2m9ns";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let str = String::from_utf16_lossy(&maintype.s);
+    let res = str.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ltod_to_string_conversion() {
+    let mut maintype = MainType {
+        s: [0_u8; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : STRING
+    VAR
+        in: LTOD := LTOD#15:36:55.123;
+    END_VAR        
+        main := LTOD_TO_STRING(in);
+    END_FUNCTION
+    "#;
+
+    let sources = add_std!(
+        src,
+        "string_functions.st",
+        "string_conversion.st",
+        "extra_functions.st",
+        "numerical_functions.st"
+    );
+
+    let expected = "15:36:55.123";
+    let _: i32 = compile_and_run(sources, &mut maintype);
+    let res = unsafe { std::str::from_utf8_unchecked(&maintype.s) }.trim_end_matches('\0');
+    assert_eq!(expected, res);
+}
+
+#[test]
+fn ltod_to_wstring_conversion() {
+    let mut maintype = MainType {
+        s: [0_u16; STR_SIZE],
+    };
+    let src = r#"
+    FUNCTION main : WSTRING
+    VAR
+        in: LTOD := LTOD#15:36:55.123;
+    END_VAR        
+        main := LTOD_TO_WSTRING(in);
     END_FUNCTION
     "#;
 

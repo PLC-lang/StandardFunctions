@@ -1,6 +1,5 @@
-use chrono::TimeZone;
 #[cfg(not(feature = "mock_time"))]
-use chrono::{offset::Local, Timelike};
+use chrono::offset::Local;
 
 #[cfg(feature = "mock_time")]
 use crate::extra_functions::test_time_helpers::Local;
@@ -9,6 +8,7 @@ use crate::extra_functions::test_time_helpers::Local;
 pub mod test_time_helpers;
 
 use crate::string_functions::ptr_to_slice;
+use chrono::{TimeZone, Timelike};
 use num::{Float, PrimInt};
 use std::{fmt::Display, io::Write, str::FromStr};
 
@@ -184,13 +184,18 @@ pub unsafe extern "C" fn TIME_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     0
 }
 
-fn parse_timestamp<'a>(timestamp_nanos: i64) -> [(i64, &'a str); 7] {
-    let (nanos, timestamp_micros) = (timestamp_nanos % 1000, timestamp_nanos / 1000);
-    let (micros, timestamp_millis) = (timestamp_micros % 1000, timestamp_micros / 1000);
-    let (millis, timestamp_seconds) = (timestamp_millis % 1000, timestamp_millis / 1000);
-    let (seconds, timestamp_minutes) = (timestamp_seconds % 60, timestamp_seconds / 60);
-    let (minutes, timestamp_hours) = (timestamp_minutes % 60, timestamp_minutes / 60);
-    let (hours, days) = (timestamp_hours % 24, timestamp_hours / 24);
+fn parse_timestamp<'a>(timestamp_nanos: i64) -> [(u32, &'a str); 7] {
+    let datetime = chrono::Utc.timestamp_nanos(timestamp_nanos);
+    let (nanos, micros, millis, seconds, minutes, hours) = (
+        datetime.timestamp_subsec_nanos() % 1000,
+        datetime.timestamp_subsec_micros() % 1000,
+        datetime.timestamp_subsec_millis(),
+        datetime.second(),
+        datetime.minute(),
+        datetime.hour(),
+    );
+    let nanos_per_day = 1e9 as i64 * 3600 * 24;
+    let days = (timestamp_nanos / nanos_per_day) as u32;
 
     [
         (days, "d"),
@@ -246,93 +251,98 @@ pub unsafe extern "C" fn TOD_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     0
 }
 
-// tests
-#[test]
-fn byte_to_string_conversion() {
-    let byte = 0b1010_1010_u8;
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-
-    let _ = unsafe { BYTE_TO_STRING_EXT(byte, dest_ptr) };
-    let res = std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!(0b1010_1010_u8.to_string(), res.trim_end_matches('\0'));
-}
-
-#[test]
-fn lword_to_string_conversion() {
-    let lword = 0xFF_00_FF_00_00_FF_00_FF_u64;
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-
-    let _ = unsafe { LWORD_TO_STRING_EXT(lword, dest_ptr) };
-    let res = std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!(
-        0xFF_00_FF_00_00_FF_00_FF_u64.to_string(),
-        res.trim_end_matches('\0')
-    );
-}
-
-#[test]
-fn lint_to_string_conversion() {
-    let lint = 100_200_300_400_500_i64;
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-
-    let _ = unsafe { LINT_TO_STRING_EXT(lint, dest_ptr) };
-    let res = std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!("100200300400500", res.trim_end_matches('\0'));
-}
-
-#[test]
-fn lreal_to_string_conversion() {
-    let lreal = 10230.2321123121;
-    let lreal_neg = lreal * -1.0;
-    let pre_e_notation = 99_999_999_999_999.25;
-    let e_notation = 123_456_789_123_456.13;
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-    let _ = unsafe { LREAL_TO_STRING_EXT(lreal, dest_ptr) };
-    let res = std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!(format!("{:.6}", lreal), res.trim_end_matches('\0'));
-
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-    let _ = unsafe { LREAL_TO_STRING_EXT(lreal_neg, dest_ptr) };
-    let res_neg =
-        std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!(format!("{:.6}", lreal_neg), res_neg.trim_end_matches('\0'));
-
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-    let _ = unsafe { LREAL_TO_STRING_EXT(pre_e_notation, dest_ptr) };
-    let res_large =
-        std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!(
-        format!("{:.6}", pre_e_notation),
-        res_large.trim_end_matches('\0')
-    );
-
-    let mut dest = [0_u8; 81];
-    let dest_ptr = dest.as_mut_ptr();
-    let _ = unsafe { LREAL_TO_STRING_EXT(e_notation, dest_ptr) };
-    let res_scientific =
-        std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
-
-    assert_eq!(
-        format!("{:.6e}", e_notation),
-        res_scientific.trim_end_matches('\0')
-    );
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
+
+    // tests
+    #[test]
+    fn byte_to_string_conversion() {
+        let byte = 0b1010_1010_u8;
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+
+        let _ = unsafe { BYTE_TO_STRING_EXT(byte, dest_ptr) };
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!(0b1010_1010_u8.to_string(), res.trim_end_matches('\0'));
+    }
+
+    #[test]
+    fn lword_to_string_conversion() {
+        let lword = 0xFF_00_FF_00_00_FF_00_FF_u64;
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+
+        let _ = unsafe { LWORD_TO_STRING_EXT(lword, dest_ptr) };
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!(
+            0xFF_00_FF_00_00_FF_00_FF_u64.to_string(),
+            res.trim_end_matches('\0')
+        );
+    }
+
+    #[test]
+    fn lint_to_string_conversion() {
+        let lint = 100_200_300_400_500_i64;
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+
+        let _ = unsafe { LINT_TO_STRING_EXT(lint, dest_ptr) };
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!("100200300400500", res.trim_end_matches('\0'));
+    }
+
+    #[test]
+    fn lreal_to_string_conversion() {
+        let lreal = 10230.2321123121;
+        let lreal_neg = lreal * -1.0;
+        let pre_e_notation = 99_999_999_999_999.25;
+        let e_notation = 123_456_789_123_456.13;
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { LREAL_TO_STRING_EXT(lreal, dest_ptr) };
+        let res =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!(format!("{:.6}", lreal), res.trim_end_matches('\0'));
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { LREAL_TO_STRING_EXT(lreal_neg, dest_ptr) };
+        let res_neg =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!(format!("{:.6}", lreal_neg), res_neg.trim_end_matches('\0'));
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { LREAL_TO_STRING_EXT(pre_e_notation, dest_ptr) };
+        let res_large =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!(
+            format!("{:.6}", pre_e_notation),
+            res_large.trim_end_matches('\0')
+        );
+
+        let mut dest = [0_u8; 81];
+        let dest_ptr = dest.as_mut_ptr();
+        let _ = unsafe { LREAL_TO_STRING_EXT(e_notation, dest_ptr) };
+        let res_scientific =
+            std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
+
+        assert_eq!(
+            format!("{:.6e}", e_notation),
+            res_scientific.trim_end_matches('\0')
+        );
+    }
+
     #[test]
     fn string_to_lint_conversion() {
         let string = "12345\0";
