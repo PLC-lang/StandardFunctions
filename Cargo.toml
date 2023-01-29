@@ -14,7 +14,7 @@ branch="master"
 
 [dev-dependencies.iec61131std]
 path= "."
-features = "mock_time"
+features = ["mock_time"]
 
 [dev-dependencies.rusty]
 git = "https://github.com/PLC-lang/rusty"
@@ -23,7 +23,7 @@ branch="master"
 [dev-dependencies.inkwell]
 git = "https://github.com/TheDan64/inkwell"
 branch = "master"
-features = "llvm14-0"
+features = ["llvm14-0"]
 
 
 [dependencies]
