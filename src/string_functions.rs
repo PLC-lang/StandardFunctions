@@ -15,14 +15,12 @@ use num::PrimInt;
 /// Works on raw pointers, inherently unsafe.
 /// May return an incorrect value if passed an
 /// array filled with (non-zero) garbage values.
-pub fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
-    unsafe {
-        if src.is_null() {
-            return 0;
-        }
-
-        (0..).take_while(|&i| !(*src.add(i)).is_zero()).count()
+pub unsafe fn get_null_terminated_len<T: num::PrimInt>(src: *const T) -> usize {
+    if src.is_null() {
+        return 0;
     }
+
+    (0..).take_while(|&i| !(*src.add(i)).is_zero()).count()
 }
 
 /// # Helper function
