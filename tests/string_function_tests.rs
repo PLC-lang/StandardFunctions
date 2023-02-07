@@ -499,10 +499,7 @@ fn delete_string_with_escape_sequence() {
         .unwrap()
         .trim_end_matches('\0')
         .as_bytes();
-    assert_eq!(
-        format!("{:?}", "the$e '𝄞'".as_bytes()),
-        format!("{res:?}")
-    );
+    assert_eq!(format!("{:?}", "the$e '𝄞'".as_bytes()), format!("{res:?}"));
 }
 
 #[test]
@@ -556,10 +553,7 @@ fn delete_ext_string_with_escape_sequence() {
         .unwrap()
         .trim_end_matches('\0')
         .as_bytes();
-    assert_eq!(
-        format!("{:?}", "the$e '𝄞'".as_bytes()),
-        format!("{res:?}")
-    );
+    assert_eq!(format!("{:?}", "the$e '𝄞'".as_bytes()), format!("{res:?}"));
 }
 
 #[test]
