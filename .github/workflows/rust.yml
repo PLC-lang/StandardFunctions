@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/plc-lang/rust-llvm:latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Run Check
         run: |
@@ -27,7 +27,7 @@ jobs:
     container: ghcr.io/plc-lang/rust-llvm:latest
     needs: check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cargo test
         shell: bash
         run: |
@@ -38,7 +38,7 @@ jobs:
     container: ghcr.io/plc-lang/rust-llvm:latest
     needs: check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build and Package
         shell: bash
@@ -58,7 +58,7 @@ jobs:
     container: ghcr.io/plc-lang/rust-llvm:latest
     needs: check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cargo test
         shell: bash
