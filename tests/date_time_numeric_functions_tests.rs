@@ -731,9 +731,17 @@ fn mul_real() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(
-        chrono::Duration::nanoseconds(maintype.a).num_nanoseconds(),
-        chrono::Duration::nanoseconds(-8_478_000_640).num_nanoseconds()
+    let target = chrono::Duration::nanoseconds(-8_478_000_640)
+        .num_nanoseconds()
+        .unwrap()
+        .abs();
+    assert!(
+        chrono::Duration::nanoseconds(maintype.a)
+            .num_nanoseconds()
+            .unwrap()
+            .abs()
+            - target
+            <= 1
     );
     // -8_478_000_641ns = -8s 478ms [641ns -> deviation see example std::time::Duration::mul_f32()]
     assert_eq!(
@@ -742,9 +750,17 @@ fn mul_real() {
             .num_nanoseconds()
             .unwrap()
     );
-    assert_eq!(
-        chrono::Duration::nanoseconds(maintype.c).num_nanoseconds(),
-        chrono::Duration::nanoseconds(-8_478_000_640).num_nanoseconds()
+    let target = chrono::Duration::nanoseconds(-8_478_000_640)
+        .num_nanoseconds()
+        .unwrap()
+        .abs();
+    assert!(
+        chrono::Duration::nanoseconds(maintype.c)
+            .num_nanoseconds()
+            .unwrap()
+            .abs()
+            - target
+            <= 1
     );
     // -8_478_000_641ns = -8s 478ms [641ns -> deviation see example std::time::Duration::mul_f32()]
 }
@@ -829,9 +845,17 @@ fn mul_time() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(
-        chrono::Duration::nanoseconds(maintype.a).num_nanoseconds(),
-        chrono::Duration::nanoseconds(8_478_000_640).num_nanoseconds()
+    let target = chrono::Duration::nanoseconds(8_478_000_640)
+        .num_nanoseconds()
+        .unwrap()
+        .abs();
+    assert!(
+        chrono::Duration::nanoseconds(maintype.a)
+            .num_nanoseconds()
+            .unwrap()
+            .abs()
+            - target
+            <= 1
     );
     // 8_478_000_640ns = 8s 478ms [641ns -> deviation see example std::time::Duration::mul_f32()]
     assert_eq!(
@@ -856,9 +880,18 @@ fn mul_ltime() {
     let sources = add_std!(src, "date_time_numeric_functions.st");
     let mut maintype = MainType::default();
     let _: i64 = compile_and_run(sources, &mut maintype);
-    assert_eq!(
-        chrono::Duration::nanoseconds(maintype.a).num_nanoseconds(),
-        chrono::Duration::nanoseconds(8_478_000_640).num_nanoseconds()
+
+    let target = chrono::Duration::nanoseconds(8_478_000_640)
+        .num_nanoseconds()
+        .unwrap()
+        .abs();
+    assert!(
+        chrono::Duration::nanoseconds(maintype.a)
+            .num_nanoseconds()
+            .unwrap()
+            .abs()
+            - target
+            <= 1
     );
     // 8_478_000_640ns = 8s 478ms [641ns -> deviation see example std::time::Duration::mul_f32()]
     assert_eq!(

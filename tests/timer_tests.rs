@@ -49,9 +49,9 @@ use common::add_std;
 #[derive(Default, Debug)]
 struct MainType {
     value: bool,
-    tp_inst: TimerParams,
     tp_out: bool,
     tp_et: iec61131std::timers::Time,
+    tp_inst: TimerParams,
 }
 
 #[test]
@@ -62,12 +62,11 @@ fn tp_true_for_time() {
                 value : BOOL;
             END_VAR
             VAR
-                tp_inst : TP;
                 tp_out  : BOOL;
                 tp_et   : TIME;
+                tp_inst : TP;
             END_VAR
             tp_inst(IN := value, PT := T#10ms, Q => tp_out, ET => tp_et);
-
         END_PROGRAM
     "#;
 
@@ -113,9 +112,9 @@ fn tp_does_not_retrigger_on_consecutive_input() {
                 value : BOOL;
             END_VAR
             VAR
-                tp_inst : TP;
                 tp_out  : BOOL;
                 tp_et   : TIME;
+                tp_inst : TP;
             END_VAR
             tp_inst(IN := value, PT := T#10ms, Q => tp_out, ET => tp_et);
 
@@ -159,9 +158,9 @@ fn tp_not_interrupted_by_signal_change() {
                 value : BOOL;
             END_VAR
             VAR
-                tp_inst : TP;
                 tp_out  : BOOL;
                 tp_et   : TIME;
+                tp_inst : TP;
             END_VAR
             tp_inst(IN := value, PT := T#10ms, Q => tp_out, ET => tp_et);
         END_PROGRAM
@@ -206,9 +205,9 @@ fn ton_returns_true_after_time_preset() {
                 value : BOOL;
             END_VAR
             VAR
-                tp_inst : TON;
                 tp_out  : BOOL;
                 tp_et   : TIME;
+                tp_inst : TON;
             END_VAR
             tp_inst(IN := value, PT := T#10ms, Q => tp_out, ET => tp_et);
         END_PROGRAM
@@ -259,9 +258,9 @@ fn ton_counts_elapsed_time_while_waiting() {
                 value : BOOL;
             END_VAR
             VAR
-                tp_inst : TON;
                 tp_out  : BOOL;
                 tp_et   : TIME;
+                tp_inst : TON;
             END_VAR
             tp_inst(IN := value, PT := T#10ms, Q => tp_out, ET => tp_et);
         END_PROGRAM
@@ -300,9 +299,9 @@ fn ton_waits_again_after_turining_off() {
                 value : BOOL;
             END_VAR
             VAR
-                tp_inst : TON;
                 tp_out  : BOOL;
                 tp_et   : TIME;
+                tp_inst : TON;
             END_VAR
             tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
         END_PROGRAM
@@ -359,9 +358,9 @@ fn toff_starts_timer_after_input_is_off() {
             value : BOOL;
         END_VAR
         VAR
-            tp_inst : TOF;
             tp_out  : BOOL;
             tp_et   : TIME;
+            tp_inst : TOF;
         END_VAR
         tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
     END_PROGRAM
@@ -399,9 +398,9 @@ fn toff_runs_for_preset_time() {
             value : BOOL;
         END_VAR
         VAR
-            tp_inst : TOF;
             tp_out  : BOOL;
             tp_et   : TIME;
+            tp_inst : TOF;
         END_VAR
         tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
     END_PROGRAM
@@ -447,9 +446,9 @@ fn toff_keeps_returning_true_if_input_returns_to_true() {
             value : BOOL;
         END_VAR
         VAR
-            tp_inst : TOF;
             tp_out  : BOOL;
             tp_et   : TIME;
+            tp_inst : TOF;
         END_VAR
         tp_inst(IN := value, PT := T#9ms, Q => tp_out, ET => tp_et);
     END_PROGRAM

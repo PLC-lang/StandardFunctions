@@ -369,8 +369,7 @@ pub unsafe extern "C" fn MID_EXT__STRING(
     let start_index = start_index - 1;
     if nchars < substr_len + start_index {
         panic!(
-            "Requested substring length {} from position {} exceeds string length.",
-            substr_len, start_index
+            "Requested substring length {substr_len} from position {start_index} exceeds string length."
         )
     }
     let chars = EncodedCharsIter::decode(src)
@@ -413,8 +412,7 @@ pub unsafe extern "C" fn MID_EXT__WSTRING(
     let start_index = start_index - 1;
     if nchars < substr_len + start_index {
         panic!(
-            "Requested substring length {} from position {} exceeds string length.",
-            substr_len, start_index
+            "Requested substring length {substr_len} from position {start_index} exceeds string length."
         )
     }
     let chars = EncodedCharsIter::decode(src)

@@ -24,7 +24,7 @@ const DEFAULT_STRING_LEN: usize = 81;
 pub unsafe extern "C" fn BYTE_TO_STRING_EXT(input: u8, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
 
-    write!(&mut *buf, "{}", input).unwrap();
+    write!(&mut *buf, "{input}").unwrap();
 
     0
 }
@@ -36,7 +36,7 @@ pub unsafe extern "C" fn BYTE_TO_STRING_EXT(input: u8, dest: *mut u8) -> i32 {
 pub unsafe extern "C" fn LWORD_TO_STRING_EXT(input: u64, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
 
-    write!(&mut *buf, "{}", input).unwrap();
+    write!(&mut *buf, "{input}").unwrap();
 
     0
 }
@@ -47,7 +47,7 @@ pub unsafe extern "C" fn LWORD_TO_STRING_EXT(input: u64, dest: *mut u8) -> i32 {
 #[no_mangle]
 pub unsafe extern "C" fn LINT_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
-    write!(&mut *buf, "{}", input).unwrap();
+    write!(&mut *buf, "{input}").unwrap();
 
     0
 }
@@ -60,9 +60,9 @@ pub unsafe extern "C" fn LREAL_TO_STRING_EXT(input: f64, dest: *mut u8) -> i32 {
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
     // double: 52 bits are used for the mantissa (about 16 decimal digits)
     if input.floor() < 1e14 {
-        write!(&mut *buf, "{:.6}", input).unwrap()
+        write!(&mut *buf, "{input:.6}").unwrap()
     } else {
-        write!(&mut *buf, "{:.6e}", input).unwrap()
+        write!(&mut *buf, "{input:.6e}").unwrap()
     }
 
     0
@@ -78,9 +78,9 @@ pub unsafe extern "C" fn REAL_TO_STRING_EXT(input: f64, dest: *mut u8) -> i32 {
 
     // TODO: discuss when scientific notation should be displayed
     if input.floor() < 1e6 {
-        write!(&mut *buf, "{:.6}", input).unwrap()
+        write!(&mut *buf, "{input:.6}").unwrap()
     } else {
-        write!(&mut *buf, "{:.6e}", input).unwrap()
+        write!(&mut *buf, "{input:.6e}").unwrap()
     }
 
     0
@@ -218,7 +218,7 @@ pub unsafe extern "C" fn DT_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     let time = datetime.time().to_string();
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
 
-    write!(&mut *buf, "{}-{}", date, time).unwrap();
+    write!(&mut *buf, "{date}-{time}").unwrap();
 
     0
 }
@@ -232,7 +232,7 @@ pub unsafe extern "C" fn DATE_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     let date = datetime.to_string();
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
 
-    write!(&mut *buf, "{}", date).unwrap();
+    write!(&mut *buf, "{date}").unwrap();
 
     0
 }
@@ -246,7 +246,7 @@ pub unsafe extern "C" fn TOD_TO_STRING_EXT(input: i64, dest: *mut u8) -> i32 {
     let time = datetime.time().to_string();
     let buf = core::slice::from_raw_parts_mut(dest, DEFAULT_STRING_LEN);
 
-    write!(&mut *buf, "{}", time).unwrap();
+    write!(&mut *buf, "{time}").unwrap();
 
     0
 }
@@ -310,7 +310,7 @@ mod test {
         let res =
             std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
 
-        assert_eq!(format!("{:.6}", lreal), res.trim_end_matches('\0'));
+        assert_eq!(format!("{lreal:.6}"), res.trim_end_matches('\0'));
 
         let mut dest = [0_u8; 81];
         let dest_ptr = dest.as_mut_ptr();
@@ -318,7 +318,7 @@ mod test {
         let res_neg =
             std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
 
-        assert_eq!(format!("{:.6}", lreal_neg), res_neg.trim_end_matches('\0'));
+        assert_eq!(format!("{lreal_neg:.6}"), res_neg.trim_end_matches('\0'));
 
         let mut dest = [0_u8; 81];
         let dest_ptr = dest.as_mut_ptr();
@@ -327,7 +327,7 @@ mod test {
             std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
 
         assert_eq!(
-            format!("{:.6}", pre_e_notation),
+            format!("{pre_e_notation:.6}"),
             res_large.trim_end_matches('\0')
         );
 
@@ -338,7 +338,7 @@ mod test {
             std::str::from_utf8(unsafe { core::slice::from_raw_parts(dest_ptr, 81) }).unwrap();
 
         assert_eq!(
-            format!("{:.6e}", e_notation),
+            format!("{e_notation:.6e}"),
             res_scientific.trim_end_matches('\0')
         );
     }

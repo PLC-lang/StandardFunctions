@@ -31,15 +31,15 @@ function get_compiler() {
 	if command -v clang &> /dev/null
 	then
 		log "Found clang, using as default"
-		res=clang-13
+		res=clang
 	else
-		log "Trying clang-13"
-		if command -v clang-13 &> /dev/null
+		log "Trying clang-14"
+		if command -v clang-14 &> /dev/null
 		then
 			log "Found clang, using as default"
-			res=clang-13
+			res=clang-14
 		else 
-			echo 'Error : clang / clang-13 not found'
+			echo 'Error : clang / clang-14 not found'
 			exit 1
 		fi
 	fi
