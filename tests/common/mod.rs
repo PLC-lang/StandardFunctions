@@ -7,9 +7,8 @@ use inkwell::{
 };
 use rusty::{
     compile_module,
-    diagnostics::Diagnostician,
     runner::{run, run_no_param, Compilable},
-    DebugLevel, FilePath, OptimizationLevel, SourceCode, SourceContainer,
+    CompileOptions, FilePath, SourceCode, SourceContainer,
 };
 
 #[allow(unused_macros)] //This is actually used in subtests
@@ -1294,16 +1293,12 @@ pub fn compile_with_native<T: Compilable>(context: &Context, source: T) -> Execu
         ),
     ];
     Target::initialize_native(&InitializationConfig::default()).unwrap();
-    let (_, code_gen) = compile_module(
-        context,
-        source.containers(),
-        vec![],
-        None,
-        Diagnostician::default(),
-        OptimizationLevel::None,
-        DebugLevel::None,
-    )
-    .unwrap();
+    let compile_options = CompileOptions {
+        error_format: rusty::ErrorFormat::Rich,
+        ..Default::default()
+    };
+    let (_, code_gen) =
+        compile_module(context, source.containers(), vec![], None, &compile_options).unwrap();
     #[cfg(feature = "debug")]
     code_gen.module.print_to_stderr();
     let exec_engine = code_gen
