@@ -1,3 +1,6 @@
+# DEPRECATED - Project Moved
+This project has moved to the [RuSTy](https://github.com/PLC-lang/rusty/) repository under `libs/stdlib`
+
 # StandardFunctions
 Standard functions for PLC as described by IEC61131
 
